@@ -1,1 +1,2 @@
 Django~=5.0
+dingtalk-stream==0.18.1

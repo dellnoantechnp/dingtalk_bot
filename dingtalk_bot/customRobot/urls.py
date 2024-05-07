@@ -3,5 +3,7 @@ from . import views
 
 
 urlpatterns = [
-    path('', views.index)
+    path('test', views.index),
+    path("test2", views.dingtalk_stream1),
+    path("test3", views.dingtalk_test)
 ]
