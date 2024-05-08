@@ -48,29 +48,37 @@ def create_client() -> dingtalkim_1_0Client:
 @csrf_exempt
 def dingtalk_test(request):
     logger = setup_logger()
-    logger.info(request.POST.get("appKey") + " " + request.POST.get("appSecret"))
+    logger.info(request.POST.get("appKey") + "_" + request.POST.get("appSecret"))
     dd = dingtalk.Dingtalk_Base.Dingtalk_Base(request.POST.get("appKey"), request.POST.get("appSecret"))
     token = dd.getAccessToken()
 
     send_interactive_card_headers = dingtalkim__1__0_models.SendInteractiveCardHeaders()
     send_interactive_card_headers.x_acs_dingtalk_access_token = token
+
     send_interactive_card_request = dingtalkim__1__0_models.SendInteractiveCardRequest()
     send_interactive_card_request.card_template_id = "b2a8bb23-0b04-45c7-8686-e3668b082ed8.schema"
     send_interactive_card_request.out_track_id = "b2a8bb23-0b04-45c7-8686-e3668b082ed8.schema.1715069378009"
     send_interactive_card_request.robot_code = "dingqkoo0gpksjflc7ih"
-    # send_interactive_card_request.card_data = dingtalkim__1__0_models.InteractiveCardCreateInstanceRequestCardData({"title": "123", "detailUrl": "https://dingtalk.com", "status": "pending", "sys_ful_json_obj": "{}"})
-    send_interactive_card_request.card_data = {"cardParamMap": {"title": "朱小志提交的财务报销", "detailUrl": "https://dingtalk.com", "status": "pending", "sys_full_json_obj": "{}"}}
     send_interactive_card_request.open_conversation_id = "cidUQXUpOwFEbiRNp87JyFE3w=="
+    send_interactive_card_request.conversation_type = 1
+
+    card_data = dingtalkim__1__0_models.SendInteractiveCardRequestCardData()
+    card_data.card_param_map = {"title": "朱小志提交的财务报销", "detailUrl": "https://dingtalk.com", "status": "pending", "sys_full_json_obj": "{}"}
+    card_data.card_media_id_param_map = {}
+    # send_interactive_card_request.card_data = dingtalkim__1__0_models.InteractiveCardCreateInstanceRequestCardData({"title": "123", "detailUrl": "https://dingtalk.com", "status": "pending", "sys_ful_json_obj": "{}"})
+    # send_interactive_card_request.card_data = {"cardParamMap": {"title": "朱小志提交的财务报销", "detailUrl": "https://dingtalk.com", "status": "pending", "sys_full_json_obj": "{}"}}
+    send_interactive_card_request.card_data = card_data
 
     # logger.warn(send_interactive_card_request.from_map())
 
     client = create_client()
     try:
-        client.send_interactive_card_with_options(send_interactive_card_request, send_interactive_card_headers, util_models.RuntimeOptions())
+        send_interactive_card_request.validate()
+        resp = client.send_interactive_card_with_options(send_interactive_card_request, send_interactive_card_headers, util_models.RuntimeOptions())
     except Exception as err:
         logger.error(err)
 
 
-    return HttpResponse(dd.getAccessToken())
-    # return HttpResponse(123)
+    # return HttpResponse(dd.getAccessToken())
+    return HttpResponse(resp.body)
 
