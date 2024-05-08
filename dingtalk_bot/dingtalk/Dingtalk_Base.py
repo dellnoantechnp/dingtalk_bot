@@ -9,6 +9,7 @@ class Dingtalk_Base:
     def __init__(self, appKey=None, appSecret=None):
         self.appKey = appKey
         self.appSecret = appSecret
+        self.client = self.create_client()
 
     # @staticmethod
     def create_client(self) -> dingtalkoauth2_1_0Client:
@@ -40,13 +41,12 @@ class Dingtalk_Base:
     #             pass
 
     def getAccessToken(self) -> str:
-        client = self.create_client()
         get_access_token_request = dingtalkoauth_2__1__0_models.GetAccessTokenRequest(
             app_key=self.appKey,
             app_secret=self.appSecret
         )
         try:
-            token_resp = client.get_access_token(get_access_token_request)
+            token_resp = self.client.get_access_token(get_access_token_request)
             return token_resp.body.access_token
         except Exception as err:
             if not UtilClient.empty(err.code) and not UtilClient.empty(err.message):
