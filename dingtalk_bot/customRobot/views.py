@@ -136,4 +136,3 @@ def dingtalk_test(request):
 
     # return HttpResponse(dd.getAccessToken())
     return HttpResponse(resp.body)
-
