@@ -1,4 +1,5 @@
 import asyncio
+import os
 
 from django.apps import AppConfig
 import dingtalk_stream
@@ -17,11 +18,13 @@ class CustomrobotConfig(AppConfig):
 
     def run_dingtalk_stream(self):
         threads = []
-        client_id = ""
-        client_secret = ""
+        client_id = os.environ.get("DINGTALK_CLIENT_ID")
+        client_secret = os.environ.get("DINGTALK_CLIENT_SECRET")
         credential = dingtalk_stream.Credential(client_id=client_id, client_secret=client_secret)
         client = dingtalk_stream.DingTalkStreamClient(credential)
-        client.register_callback_handler(dingtalk_stream.chatbot.ChatbotMessage.TOPIC, self.EchoMarkdownHandler())
+        logger = logging.getLogger()
+        logger.setLevel(7)
+        client.register_callback_handler(dingtalk_stream.chatbot.ChatbotMessage.TOPIC, self.EchoMarkdownHandler(logger=logger))
         t = threading.Thread(target=client.start_forever, name="dingtalk_stream")
         t.daemon = True
         threads.append(t)
@@ -40,5 +43,8 @@ class CustomrobotConfig(AppConfig):
             incoming_message = dingtalk_stream.ChatbotMessage.from_dict(callback.data)
             text = 'echo received message:\n'
             text += '\n'.join(['> 1. %s' % i for i in incoming_message.text.content.strip().split('\n')])
-            self.reply_markdown('dingtalk-tutorial-python', text, incoming_message)
+            # 回复一个 markdown 卡片消息
+            #self.reply_markdown('dingtalk-tutorial-python', text, incoming_message)
+            # 回复一个普通文本消息
+            self.reply_text(text=text, incoming_message=incoming_message)
             return AckMessage.STATUS_OK, 'OK'

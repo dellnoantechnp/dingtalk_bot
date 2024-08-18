@@ -70,6 +70,7 @@ def dingtalk_test(request):
     logger.info("token: " + token)
     time_tag = int(time.time() * 1000)
     card_template_id = "bd57beb1-d127-45e5-92d4-81277c59c87b.schema"
+    #card_template_id = "98a61096-31e1-4611-be4e-b1d2f6897225.schema"
     out_track_id = f"{card_template_id}.{time_tag}"
 
     send_interactive_card_headers = dingtalkim__1__0_models.SendInteractiveCardHeaders()
@@ -87,11 +88,11 @@ def dingtalk_test(request):
     card_data = dingtalkim__1__0_models.SendInteractiveCardRequestCardData()
     object_string = {
       "markdown_content": "#### Tiltle\n* 123\n* 456",
-      "approve_count": 5,
-      "reject_count": 1,
+      "approve_count": 10,
+      "reject_count": 3,
       "card_title": "本次发布更新",
       "markdown_title": "本周发布commit汇总",
-      "markdown": "456"
+      "markdown": "4567"
     }.__str__()
     card_data.card_param_map = {"title": "朱小志提交的财务报销", "detailUrl": "https://dingtalk.com", "status": "pending", "sys_full_json_obj": object_string}
     card_data.card_media_id_param_map = {}
@@ -111,13 +112,13 @@ def dingtalk_test(request):
     create_and_deliver_request.open_conversation_id = "cidUQXUpOwFEbiRNp87JyFE3w=="
     create_and_deliver_request.conversation_type = 1
     create_and_deliver_request.open_space_id = "dtv1.card//IM_SINGLE.cidUQXUpOwFEbiRNp87JyFE3w=="
-    # create_and_deliver_request.callback_type = "STEAM"
-    create_and_deliver_request.callback_type = "HTTP"
+    create_and_deliver_request.callback_type = "STREAM"
+    #create_and_deliver_request.callback_type = "HTTP"
 
     im_group_deliver_model = dingtalkcard__1__0_models.CreateAndDeliverRequestImGroupOpenDeliverModel()
     im_group_deliver_model.robot_code = "dingqkoo0gpksjflc7ih"
     im_group_open_space_model = dingtalkcard__1__0_models.CreateCardRequestImGroupOpenSpaceModel()
-    im_group_open_space_model.support_forward = False
+    im_group_open_space_model.support_forward = True
 
     create_and_deliver_request.im_group_open_deliver_model = im_group_deliver_model
     create_and_deliver_request.im_group_open_space_model = im_group_open_space_model
@@ -128,8 +129,18 @@ def dingtalk_test(request):
     im_client = create_imclient()
     card_client = create_card_client()
     try:
-        resp: dingtalkcard__1__0_models.CreateAndDeliverResponse = card_client.create_and_deliver_with_options(create_and_deliver_request, create_and_deliver_headers, util_models.RuntimeOptions())
-        resp: dingtalkim__1__0_models.SendOTOInteractiveCardResponse = im_client.send_interactive_card_with_options(send_interactive_card_request, send_interactive_card_headers, util_models.RuntimeOptions())
+        logger.info("投递卡片")
+        resp: dingtalkcard__1__0_models.CreateAndDeliverResponse = card_client.create_and_deliver_with_options(
+            create_and_deliver_request,
+            create_and_deliver_headers,
+            util_models.RuntimeOptions()
+        )
+
+        resp: dingtalkim__1__0_models.SendInteractiveCardResponse = im_client.send_interactive_card_with_options(
+            send_interactive_card_request,
+            send_interactive_card_headers,
+            util_models.RuntimeOptions()
+        )
     except Exception as err:
         logger.error(err)
 
