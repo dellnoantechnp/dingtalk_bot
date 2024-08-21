@@ -44,6 +44,7 @@ class CustomrobotConfig(AppConfig):
         async def process(self, callback: dingtalk_stream.CallbackMessage):
             ## Docs: https://open.dingtalk.com/document/orgapp/event-callback-card  事件回调的content
             incoming_message = dingtalk_stream.ChatbotMessage.from_dict(callback.data)
+            print(repr(incoming_message))
             text = 'echo received message:\n'
             text += '\n'.join(['> 1. %s' % i for i in incoming_message.text.content.strip().split('\n')])
             # 回复一个 markdown 卡片消息

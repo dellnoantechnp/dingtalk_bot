@@ -129,13 +129,14 @@ def dingtalk_test(request):
     im_client = create_imclient()
     card_client = create_card_client()
     try:
-        logger.info("投递卡片")
+        logger.info("卡片更新和投递")
         resp: dingtalkcard__1__0_models.CreateAndDeliverResponse = card_client.create_and_deliver_with_options(
             create_and_deliver_request,
             create_and_deliver_headers,
             util_models.RuntimeOptions()
         )
 
+        logger.info("卡片消息投递到聊天")
         resp: dingtalkim__1__0_models.SendInteractiveCardResponse = im_client.send_interactive_card_with_options(
             send_interactive_card_request,
             send_interactive_card_headers,
