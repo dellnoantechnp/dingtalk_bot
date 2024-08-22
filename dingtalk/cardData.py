@@ -1,8 +1,9 @@
+from alibabacloud_dingtalk.card_1_0.models import CreateAndDeliverRequest, CreateAndDeliverHeaders
 from alibabacloud_dingtalk.im_1_0.models import InteractiveCardCreateInstanceRequestCardData
 import time
 
 
-class CardData(InteractiveCardCreateInstanceRequestCardData):
+class CardData(CreateAndDeliverRequest, CreateAndDeliverHeaders):
     def __init__(self,
                  access_token: str = None,
                  card_template_id: str = None,
