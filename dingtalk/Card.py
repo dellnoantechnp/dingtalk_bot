@@ -1,18 +1,12 @@
-from alibabacloud_dingtalk.card_1_0.models import CreateAndDeliverRequest, CreateAndDeliverHeaders
-from alibabacloud_dingtalk.im_1_0.models import InteractiveCardCreateInstanceRequestCardData
+from alibabacloud_dingtalk.card_1_0.models import CreateAndDeliverRequest, CreateAndDeliverHeaders, CreateAndDeliverRequestImGroupOpenDeliverModel, CreateCardRequestImGroupOpenSpaceModel
+from alibabacloud_dingtalk.im_1_0.models import InteractiveCardCreateInstanceRequestCardData, SendInteractiveCardRequestCardData
 import time
 
 
-class CardData(CreateAndDeliverRequest, CreateAndDeliverHeaders):
-    def __init__(self,
-                 access_token: str = None,
-                 card_template_id: str = None,
-                 robot_code: str = None,
-                 open_conversation_id: str = None,
-                 conversation_type: int = 1,
-                 open_space_id: str = None,
-                 callback_type: str = "STREAM"
-                 ):
+class Card(CreateAndDeliverRequest, CreateAndDeliverHeaders):
+    def __init__(self, access_token: str = None, card_template_id: str = None, robot_code: str = None,
+                 open_conversation_id: str = None, conversation_type: int = 1,
+                 callback_type: str = "STREAM"):
         """初始化 Card 类相关的所有参数
         OpenSpaceId Docs: https://open.dingtalk.com/document/orgapp/open-interface-card-delivery-instance
 
@@ -24,12 +18,18 @@ class CardData(CreateAndDeliverRequest, CreateAndDeliverHeaders):
         :param open_space_id: 在投放接口中，使用openSpaceId作为统一投放id，openSpaceId采用固定协议且支持版本升级，主要由版本、场域类型、场域id三部分内容组成。
         :param callback_type: 回调模式， HTTP  STREAM
         """
-        self.access_token = access_token
+        super().__init__(callback_type, card_template_id)
+        self.x_acs_dingtalk_access_token = access_token
         self.card_template_id = card_template_id
         self.robot_code = robot_code
         self.open_conversation_id = open_conversation_id
         self.conversation_type = conversation_type
         self.callback_type = callback_type
+        self.out_track_id = self.gen_out_track_id()
+        self.open_space_id = self.gen_open_space_id()
+        self.im_group_open_deliver_model = CreateAndDeliverRequestImGroupOpenDeliverModel()
+        self.im_group_open_space_model = CreateCardRequestImGroupOpenSpaceModel()
+        self.im_group_open_space_model.support_forward = True
 
     def gen_out_track_id(self) -> str:
         """
@@ -38,7 +38,7 @@ class CardData(CreateAndDeliverRequest, CreateAndDeliverHeaders):
         time_tag = int(time.time() * 1000)
         return f"{self.card_template_id}.{time_tag}"
 
-    def get_open_space_id(self) -> str:
+    def gen_open_space_id(self) -> str:
         """
         在将卡片投放到不同的场域时，使用outTrackId唯一标识一张卡片，通过openSpaceId标识需要被投放的场域及其
         场域Id，通过openDeliverModels传入不同的投放场域。
@@ -56,3 +56,9 @@ class CardData(CreateAndDeliverRequest, CreateAndDeliverHeaders):
             return f"dtv1.card//IM_SINGLE.{self.open_conversation_id}"
         else:
             return "None"
+
+    def create_card_data(self, ) -> SendInteractiveCardRequestCardData:
+        pass
+
+    def __str__(self):
+        print(repr(self))
