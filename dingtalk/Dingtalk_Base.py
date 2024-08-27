@@ -18,7 +18,7 @@ class Dingtalk_Base:
         if self.logger:
             self.logger = logging.getLogger(__name__)
 
-    # @staticmethod
+    @staticmethod
     def create_client(self) -> dingtalkoauth2_1_0Client:
         """
         使用 Token 初始化账号Client
@@ -47,7 +47,7 @@ class Dingtalk_Base:
     #             # err 中含有 code 和 message 属性，可帮助开发定位问题
     #             pass
 
-    def getAccessToken(self) -> str:
+    def get_access_token(self) -> str:
         get_access_token_request = dingtalkoauth_2__1__0_models.GetAccessTokenRequest(
             app_key=self.appKey,
             app_secret=self.appSecret

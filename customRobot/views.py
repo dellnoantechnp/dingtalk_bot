@@ -102,7 +102,7 @@ def dingtalk_test(request):
 
     ## Card
     create_and_deliver_headers = dingtalkcard__1__0_models.CreateAndDeliverHeaders()
-    create_and_deliver_headers.x_acs_dingtalk_access_token = dd.getAccessToken()
+    create_and_deliver_headers.x_acs_dingtalk_access_token = dd.get_access_token()
     create_and_deliver_request = dingtalkcard__1__0_models.CreateAndDeliverRequest()
     create_and_deliver_request.card_template_id = card_template_id
     # send_interactive_card_request.card_template_id = "b2a8bb23-0b04-45c7-8686-e3668b082ed8.schema"
