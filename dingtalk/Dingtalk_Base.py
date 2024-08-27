@@ -1,15 +1,22 @@
+import logging
 import sys
 from alibabacloud_dingtalk.oauth2_1_0.client import Client as dingtalkoauth2_1_0Client
 from alibabacloud_tea_openapi import models as open_api_models
 from alibabacloud_dingtalk.oauth2_1_0 import models as dingtalkoauth_2__1__0_models
 from alibabacloud_tea_util.client import Client as UtilClient
+from logging import Logger
 
 
 class Dingtalk_Base:
-    def __init__(self, appKey=None, appSecret=None):
+    def __init__(self, appKey=None, appSecret=None, logger: Logger=None):
         self.appKey = appKey
         self.appSecret = appSecret
         self.client = self.create_client()
+        self.initial_logger(logger=logger)
+
+    def initial_logger(self, logger):
+        if self.logger:
+            self.logger = logging.getLogger(__name__)
 
     # @staticmethod
     def create_client(self) -> dingtalkoauth2_1_0Client:

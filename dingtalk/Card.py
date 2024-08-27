@@ -1,6 +1,10 @@
-from alibabacloud_dingtalk.card_1_0.models import CreateAndDeliverRequest, CreateAndDeliverHeaders, CreateAndDeliverRequestImGroupOpenDeliverModel, CreateCardRequestImGroupOpenSpaceModel
-from alibabacloud_dingtalk.im_1_0.models import InteractiveCardCreateInstanceRequestCardData, SendInteractiveCardRequestCardData
+from alibabacloud_dingtalk.card_1_0.models import (CreateAndDeliverRequest, CreateAndDeliverHeaders,
+                                                   CreateAndDeliverRequestImGroupOpenDeliverModel,
+                                                   CreateCardRequestImGroupOpenSpaceModel)
+from alibabacloud_dingtalk.im_1_0.models import (InteractiveCardCreateInstanceRequestCardData,
+                                                 SendInteractiveCardRequestCardData)
 import time
+from .CardData import CardData
 
 
 class Card(CreateAndDeliverRequest, CreateAndDeliverHeaders):
@@ -57,7 +61,8 @@ class Card(CreateAndDeliverRequest, CreateAndDeliverHeaders):
         else:
             return "None"
 
-    def create_card_data(self, ) -> SendInteractiveCardRequestCardData:
+    def create_card_data(self, card_data: CardData):
+        self.card_data = card_data
         pass
 
     def __str__(self):
