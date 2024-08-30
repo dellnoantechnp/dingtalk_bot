@@ -3,11 +3,12 @@ from alibabacloud_dingtalk.card_1_0.models import (CreateAndDeliverRequest, Crea
                                                    CreateCardRequestImGroupOpenSpaceModel)
 from alibabacloud_dingtalk.im_1_0.models import (InteractiveCardCreateInstanceRequestCardData,
                                                  SendInteractiveCardRequestCardData)
+from dingtalk.Dingtalk_Base import Dingtalk_Base
 import time
 from .CardData import CardData
 
 
-class Card(CreateAndDeliverRequest, CreateAndDeliverHeaders):
+class Card(CreateAndDeliverRequest, CreateAndDeliverHeaders, Dingtalk_Base):
     def __init__(self, access_token: str = None, card_template_id: str = None, robot_code: str = None,
                  open_conversation_id: str = None, conversation_type: int = 1,
                  callback_type: str = "STREAM"):
@@ -64,6 +65,8 @@ class Card(CreateAndDeliverRequest, CreateAndDeliverHeaders):
     def create_card_data(self, card_data: CardData):
         self.card_data = card_data
         pass
+
+    # def gen
 
     def __str__(self):
         print(repr(self))

@@ -15,11 +15,11 @@ class Dingtalk_Base:
         self.initial_logger(logger=logger)
 
     def initial_logger(self, logger):
-        if self.logger:
+        if logger:
             self.logger = logging.getLogger(__name__)
 
     @staticmethod
-    def create_client(self) -> dingtalkoauth2_1_0Client:
+    def create_client() -> dingtalkoauth2_1_0Client:
         """
         使用 Token 初始化账号Client
         @return: Client

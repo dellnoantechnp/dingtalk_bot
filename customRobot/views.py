@@ -3,7 +3,7 @@ from django.shortcuts import render
 from django.http.response import JsonResponse, HttpResponse
 import dingtalk_stream
 from . import EchoMarkdownHandler
-import dingtalk.Dingtalk_Base
+from dingtalk.Dingtalk_Base import Dingtalk_Base
 from django.views.decorators.csrf import csrf_exempt
 import logging
 import time
@@ -61,16 +61,17 @@ def create_card_client() -> dingtalkcard_1_0Client:
     config.protocol = 'https'
     config.region_id = 'central'
     return dingtalkcard_1_0Client(config)
+
 @csrf_exempt
 def dingtalk_test(request):
     logger = setup_logger()
-    logger.info(request.POST.get("appKey") + "_" + request.POST.get("appSecret"))
-    dd = dingtalk.Dingtalk_Base.Dingtalk_Base(request.POST.get("appKey"), request.POST.get("appSecret"))
-    token = dd.getAccessToken()
+    logger.info("appKey:" + request.POST.get("appKey") + " appSecret:" + request.POST.get("appSecret"))
+    dd = Dingtalk_Base(request.POST.get("appKey"), request.POST.get("appSecret"))
+    token = dd.get_access_token()
     logger.info("token: " + token)
     time_tag = int(time.time() * 1000)
-    card_template_id = "bd57beb1-d127-45e5-92d4-81277c59c87b.schema"
-    #card_template_id = "98a61096-31e1-4611-be4e-b1d2f6897225.schema"
+    #card_template_id = "bd57beb1-d127-45e5-92d4-81277c59c87b.schema"
+    card_template_id = "98a61096-31e1-4611-be4e-b1d2f6897225.schema"
     out_track_id = f"{card_template_id}.{time_tag}"
 
     send_interactive_card_headers = dingtalkim__1__0_models.SendInteractiveCardHeaders()
