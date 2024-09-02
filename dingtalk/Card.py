@@ -3,12 +3,15 @@ from alibabacloud_dingtalk.card_1_0.models import (CreateAndDeliverRequest, Crea
                                                    CreateCardRequestImGroupOpenSpaceModel)
 from alibabacloud_dingtalk.im_1_0.models import (InteractiveCardCreateInstanceRequestCardData,
                                                  SendInteractiveCardRequestCardData)
+from alibabacloud_dingtalk.card_1_0.client import Client as dingtalkcard_1_0Client
+from alibabacloud_tea_openapi import models as open_api_models
+from alibabacloud_tea_util import models as util_models
 from dingtalk.Dingtalk_Base import Dingtalk_Base
 import time
 from .CardData import CardData
 
 
-class Card(CreateAndDeliverRequest, CreateAndDeliverHeaders, Dingtalk_Base):
+class Card(CreateAndDeliverRequest, CreateAndDeliverHeaders, open_api_models, Dingtalk_Base):
     def __init__(self, access_token: str = None, card_template_id: str = None, robot_code: str = None,
                  open_conversation_id: str = None, conversation_type: int = 1,
                  callback_type: str = "STREAM"):
@@ -35,6 +38,9 @@ class Card(CreateAndDeliverRequest, CreateAndDeliverHeaders, Dingtalk_Base):
         self.im_group_open_deliver_model = CreateAndDeliverRequestImGroupOpenDeliverModel()
         self.im_group_open_space_model = CreateCardRequestImGroupOpenSpaceModel()
         self.im_group_open_space_model.support_forward = True
+        self.config = open_api_models.Config()
+        self.config.protocol = "https"
+        self.config.region_id = "central"
 
     def gen_out_track_id(self) -> str:
         """
@@ -66,7 +72,14 @@ class Card(CreateAndDeliverRequest, CreateAndDeliverHeaders, Dingtalk_Base):
         self.card_data = card_data
         pass
 
-    # def gen
+    def deliver_card(self):
+        dingtalkcard_1_0Client(self.config).create_and_deliver_with_options(
+            self, self, util_models.RuntimeOptions()
+        )
+
+
+    def send_card(self):
+        pass
 
     def __str__(self):
         print(repr(self))

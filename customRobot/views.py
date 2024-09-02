@@ -4,6 +4,7 @@ from django.http.response import JsonResponse, HttpResponse
 import dingtalk_stream
 from . import EchoMarkdownHandler
 from dingtalk.Dingtalk_Base import Dingtalk_Base
+from dingtalk.Card import Card, CardData
 from django.views.decorators.csrf import csrf_exempt
 import logging
 import time
@@ -148,4 +149,12 @@ def dingtalk_test(request):
 
 
     # return HttpResponse(dd.getAccessToken())
+
+    a = Card(access_token=token,
+             card_template_id=card_template_id,
+             robot_code="dingqkoo0gpksjflc7ih",
+             open_conversation_id="cidUQXUpOwFEbiRNp87JyFE3w==",
+             )
+    a.deliver_card()
+
     return HttpResponse(resp.body)
