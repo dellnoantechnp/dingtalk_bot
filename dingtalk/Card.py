@@ -11,7 +11,7 @@ import time
 from .CardData import CardData
 
 
-class Card(CreateAndDeliverRequest, CreateAndDeliverHeaders, open_api_models, Dingtalk_Base):
+class Card(CreateAndDeliverRequest, CreateAndDeliverHeaders, open_api_models.Config, Dingtalk_Base):
     def __init__(self, access_token: str = None, card_template_id: str = None, robot_code: str = None,
                  open_conversation_id: str = None, conversation_type: int = 1,
                  callback_type: str = "STREAM"):
@@ -27,6 +27,7 @@ class Card(CreateAndDeliverRequest, CreateAndDeliverHeaders, open_api_models, Di
         :param callback_type: 回调模式， HTTP  STREAM
         """
         super().__init__(callback_type, card_template_id)
+        super(CreateAndDeliverHeaders, self).__init__()
         self.x_acs_dingtalk_access_token = access_token
         self.card_template_id = card_template_id
         self.robot_code = robot_code
@@ -73,7 +74,9 @@ class Card(CreateAndDeliverRequest, CreateAndDeliverHeaders, open_api_models, Di
         pass
 
     def deliver_card(self):
-        dingtalkcard_1_0Client(self.config).create_and_deliver_with_options(
+        self.config
+        card_client = dingtalkcard_1_0Client(self.config)
+        card_client.create_and_deliver_with_options(
             self, self, util_models.RuntimeOptions()
         )
 
