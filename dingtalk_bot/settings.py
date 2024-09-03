@@ -164,13 +164,12 @@ LOGGING = {
     'handlers': {
         'log_file': {
             'level': 'INFO',
-            'class': 'logging.handlers.TimedRotatingFileHandler',
+            'class': 'logging.handlers.RotatingFileHandler',
             'filename': os.path.join(LOG_PATH, 'djangoblog.log'),
-            'when': 'D',
-            'formatter': 'verbose',
-            'interval': 1,
-            'delay': True,
+            'maxBytes': 1024*1024*10,   # 日志 100M 轮转
             'backupCount': 5,
+            'formatter': 'verbose',
+            'delay': True,
             'encoding': 'utf-8'
         },
         'console': {
@@ -190,9 +189,9 @@ LOGGING = {
     },
     'loggers': {
         'dingtalk_bot': {
-            'handlers': ['log_file', 'console'],
-            'level': 'INFO',
-            'propagate': True,
+            'handlers': ['console'],
+            'level': 'DEBUG',
+            'propagate': True,  # 是否向上传递日志流
         },
         'django.request': {
             'handlers': ['mail_admins'],

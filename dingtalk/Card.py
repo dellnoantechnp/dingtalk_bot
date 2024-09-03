@@ -1,9 +1,14 @@
+import logging
+
 from alibabacloud_dingtalk.card_1_0.models import (CreateAndDeliverRequest, CreateAndDeliverHeaders,
                                                    CreateAndDeliverRequestImGroupOpenDeliverModel,
                                                    CreateCardRequestImGroupOpenSpaceModel)
-from alibabacloud_dingtalk.im_1_0.models import (InteractiveCardCreateInstanceRequestCardData,
-                                                 SendInteractiveCardRequestCardData)
+from alibabacloud_dingtalk.im_1_0.models import (SendInteractiveCardRequest,
+                                                 SendInteractiveCardHeaders)
 from alibabacloud_dingtalk.card_1_0.client import Client as dingtalkcard_1_0Client
+from alibabacloud_dingtalk.im_1_0.client import Client as dingtalkim_1_0Client
+
+from alibabacloud_dingtalk.im_1_0 import models as dingtalkim__1__0_models
 from alibabacloud_tea_openapi import models as open_api_models
 from alibabacloud_tea_util import models as util_models
 from dingtalk.Dingtalk_Base import Dingtalk_Base
@@ -11,7 +16,8 @@ import time
 from .CardData import CardData
 
 
-class Card(CreateAndDeliverRequest, CreateAndDeliverHeaders, open_api_models.Config, Dingtalk_Base):
+class Card(CreateAndDeliverRequest, CreateAndDeliverHeaders, SendInteractiveCardRequest, SendInteractiveCardHeaders,
+           open_api_models.Config, Dingtalk_Base):
     def __init__(self, access_token: str = None, card_template_id: str = None, robot_code: str = None,
                  open_conversation_id: str = None, conversation_type: int = 1,
                  callback_type: str = "STREAM"):
@@ -28,6 +34,7 @@ class Card(CreateAndDeliverRequest, CreateAndDeliverHeaders, open_api_models.Con
         """
         super().__init__(callback_type, card_template_id)
         super(CreateAndDeliverHeaders, self).__init__()
+        self.logger = logging.getLogger("dingtalk_bot")
         self.x_acs_dingtalk_access_token = access_token
         self.card_template_id = card_template_id
         self.robot_code = robot_code
@@ -37,16 +44,19 @@ class Card(CreateAndDeliverRequest, CreateAndDeliverHeaders, open_api_models.Con
         self.out_track_id = self.gen_out_track_id()
         self.open_space_id = self.gen_open_space_id()
         self.im_group_open_deliver_model = CreateAndDeliverRequestImGroupOpenDeliverModel()
+        self.im_group_open_deliver_model.robot_code = self.robot_code
         self.im_group_open_space_model = CreateCardRequestImGroupOpenSpaceModel()
         self.im_group_open_space_model.support_forward = True
         self.config = open_api_models.Config()
         self.config.protocol = "https"
         self.config.region_id = "central"
+        self.common_headers = None
 
     def gen_out_track_id(self) -> str:
         """
         生成根据模板ID和当前时间戳的 out_track_id, 唯一标示卡片的外部编码
         """
+        self.logger.debug("生成out_track_id")
         time_tag = int(time.time() * 1000)
         return f"{self.card_template_id}.{time_tag}"
 
@@ -70,19 +80,31 @@ class Card(CreateAndDeliverRequest, CreateAndDeliverHeaders, open_api_models.Con
             return "None"
 
     def create_card_data(self, card_data: CardData):
+        """
+        Create CardData object
+
+        :param card_data: 卡片数据对象
+        """
         self.card_data = card_data
-        pass
 
     def deliver_card(self):
-        self.config
+        """
+        生成和投递新的卡片
+        """
         card_client = dingtalkcard_1_0Client(self.config)
         card_client.create_and_deliver_with_options(
             self, self, util_models.RuntimeOptions()
         )
 
-
-    def send_card(self):
-        pass
+    def send_interactive_card(self):
+        """
+        发送卡片到对应 IM 消息中
+        """
+        self.deliver_card()
+        im_client = dingtalkim_1_0Client(self.config)
+        im_client.send_interactive_card_with_options(
+            self, self, util_models.RuntimeOptions()
+        )
 
     def __str__(self):
         print(repr(self))

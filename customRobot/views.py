@@ -65,7 +65,7 @@ def create_card_client() -> dingtalkcard_1_0Client:
 
 @csrf_exempt
 def dingtalk_test(request):
-    logger = setup_logger()
+    logger = logging.getLogger("dingtalk_bot")
     logger.info("appKey:" + request.POST.get("appKey") + " appSecret:" + request.POST.get("appSecret"))
     dd = Dingtalk_Base(request.POST.get("appKey"), request.POST.get("appSecret"))
     token = dd.get_access_token()
@@ -126,7 +126,7 @@ def dingtalk_test(request):
     create_and_deliver_request.im_group_open_space_model = im_group_open_space_model
     create_and_deliver_request.card_data = card_data
 
-    # logger.warn(send_interactive_card_request.from_map())
+    logger.warn(send_interactive_card_request.from_map())
 
     im_client = create_imclient()
     card_client = create_card_client()
@@ -155,6 +155,17 @@ def dingtalk_test(request):
              robot_code="dingqkoo0gpksjflc7ih",
              open_conversation_id="cidUQXUpOwFEbiRNp87JyFE3w==",
              )
+    card_vars = {
+      "markdown_content": "#### Tiltle\n* 123\n* 4567777",
+      "approve_count": 10,
+      "reject_count": 3,
+      "card_title": "本次发布更新",
+      "markdown_title": "本周发布commit汇总",
+      "markdown": "4567121231231"
+    }
+    b = CardData(card_vars)
+    a.create_card_data(b)
     a.deliver_card()
+    a.send_interactive_card()
 
     return HttpResponse(resp.body)

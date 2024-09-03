@@ -17,7 +17,7 @@ class CardData(SendInteractiveCardRequestCardData):
         super().__init__(card_param_map={},
                          card_media_id_param_map={})
 
-        #self.sys_full_json_obj = sys_full_json_obj
+        # self.sys_full_json_obj = sys_full_json_obj
         self.card_param_map["sys_full_json_obj"] = sys_full_json_obj.__str__()
 
     def get_card_content(self):
