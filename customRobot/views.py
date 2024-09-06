@@ -150,22 +150,32 @@ def dingtalk_test(request):
 
     # return HttpResponse(dd.getAccessToken())
 
+    return HttpResponse(resp.body)
+
+
+@csrf_exempt
+def interactive_card_test(request):
+    logger = logging.getLogger("dingtalk_bot")
+    logger.info("appKey:" + request.POST.get("appKey") + " appSecret:" + request.POST.get("appSecret"))
+    dd = Dingtalk_Base(request.POST.get("appKey"), request.POST.get("appSecret"))
+    token = dd.get_access_token()
+    logger.info("token: " + token)
+
     a = Card(access_token=token,
-             card_template_id=card_template_id,
+             card_template_id="98a61096-31e1-4611-be4e-b1d2f6897225.schema",
              robot_code="dingqkoo0gpksjflc7ih",
              open_conversation_id="cidUQXUpOwFEbiRNp87JyFE3w==",
              )
     card_vars = {
-      "markdown_content": "#### Tiltle\n* 123\n* 4567777",
-      "approve_count": 10,
-      "reject_count": 3,
-      "card_title": "本次发布更新",
-      "markdown_title": "本周发布commit汇总",
-      "markdown": "4567121231231"
+        "markdown_content": "#### Tiltle\n* 123\n* 4567777",
+        "approve_count": 10,
+        "reject_count": 3,
+        "card_title": "本次发布更新",
+        "markdown_title": "本周发布commit汇总",
+        "markdown": "4567121231231"
     }
     b = CardData(card_vars)
     a.create_card_data(b)
     a.deliver_card()
     a.send_interactive_card()
-
-    return HttpResponse(resp.body)
+    return HttpResponse("OK")
