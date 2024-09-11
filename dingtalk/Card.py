@@ -5,6 +5,12 @@ from alibabacloud_dingtalk.card_1_0.models import (CreateAndDeliverRequest, Crea
                                                    CreateCardRequestImGroupOpenSpaceModel)
 from alibabacloud_dingtalk.im_1_0.models import (SendInteractiveCardRequest,
                                                  SendInteractiveCardHeaders)
+
+from alibabacloud_dingtalk.card_1_0.models import (UpdateCardRequest,
+                                                   UpdateCardHeaders)
+from alibabacloud_dingtalk.im_1_0.models import (UpdateInteractiveCardRequest,
+                                                 UpdateInteractiveCardHeaders)
+
 from alibabacloud_dingtalk.card_1_0.client import Client as dingtalkcard_1_0Client
 from alibabacloud_dingtalk.im_1_0.client import Client as dingtalkim_1_0Client
 
@@ -12,11 +18,13 @@ from alibabacloud_dingtalk.im_1_0 import models as dingtalkim__1__0_models
 from alibabacloud_tea_openapi import models as open_api_models
 from alibabacloud_tea_util import models as util_models
 from dingtalk.Dingtalk_Base import Dingtalk_Base
+import redis
 import time
 from .CardData import CardData
 
 
 class Card(CreateAndDeliverRequest, CreateAndDeliverHeaders, SendInteractiveCardRequest, SendInteractiveCardHeaders,
+           UpdateCardRequest, UpdateCardHeaders, UpdateInteractiveCardHeaders, UpdateInteractiveCardRequest,
            open_api_models.Config, Dingtalk_Base):
     def __init__(self, access_token: str = None, card_template_id: str = None, robot_code: str = None,
                  open_conversation_id: str = None, conversation_type: int = 1,
@@ -79,7 +87,7 @@ class Card(CreateAndDeliverRequest, CreateAndDeliverHeaders, SendInteractiveCard
         else:
             return "None"
 
-    def create_card_data(self, card_data: CardData):
+    def create_and_update_card_data(self, card_data: CardData):
         """
         Create CardData object
 
@@ -87,7 +95,7 @@ class Card(CreateAndDeliverRequest, CreateAndDeliverHeaders, SendInteractiveCard
         """
         self.card_data = card_data
 
-    def deliver_card(self):
+    def __deliver_card(self):
         """
         生成和投递新的卡片
         """
@@ -96,13 +104,35 @@ class Card(CreateAndDeliverRequest, CreateAndDeliverHeaders, SendInteractiveCard
             self, self, util_models.RuntimeOptions()
         )
 
+    def __update_card(self):
+        """
+        更新卡片
+        """
+        self.card_update_options = None
+        card_client = dingtalkcard_1_0Client(self.config)
+        resp = card_client.update_card_with_options(
+            self, self, util_models.RuntimeOptions()
+        )
+        return resp.body
+
     def send_interactive_card(self):
         """
         发送卡片到对应 IM 消息中
         """
-        self.deliver_card()
+        self.__deliver_card()
         im_client = dingtalkim_1_0Client(self.config)
         im_client.send_interactive_card_with_options(
+            self, self, util_models.RuntimeOptions()
+        )
+
+    def update_interactive_card(self):
+        """
+        更新卡片
+        """
+        self.__update_card()
+        self.out_track_id = self.out_track_id + "update"
+        im_client = dingtalkim_1_0Client(self.config)
+        im_client.update_interactive_card_with_options(
             self, self, util_models.RuntimeOptions()
         )
 

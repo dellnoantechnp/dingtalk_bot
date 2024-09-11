@@ -147,6 +147,55 @@ def dingtalk_test(request):
     except Exception as err:
         logger.error(err)
 
+    try:
+        time.sleep(5)
+        update_card_data = dingtalkim__1__0_models.SendInteractiveCardRequestCardData()
+        object_string = {
+            "markdown_content": "#### Tiltle\n* 123\n* 456556",
+            "approve_count": 10,
+            "reject_count": 3,
+            "card_title": "本次发布更新",
+            "markdown_title": "本周发布commit汇总",
+            "markdown": "4567888888888"
+        }.__str__()
+        update_card_data.card_param_map = {"title": "朱小志提交的财务报销", "detailUrl": "https://dingtalk.com",
+                                    "status": "pending", "sys_full_json_obj": object_string}
+        update_card_data.card_media_id_param_map = {}
+
+        logger.info("卡片更新")
+        update_card_request = dingtalkcard__1__0_models.UpdateCardRequest()
+        update_card_request.out_track_id = out_track_id
+        update_card_request.card_data = update_card_data
+
+        update_card_header = dingtalkcard__1__0_models.UpdateCardHeaders()
+        update_card_header.x_acs_dingtalk_access_token = token
+        resp: dingtalkcard__1__0_models.UpdateCardResponse = card_client.update_card_with_options(
+            update_card_request,
+            update_card_header,
+            util_models.RuntimeOptions()
+        )
+
+        update_interactive_card_request = dingtalkim__1__0_models.UpdateInteractiveCardRequest()
+        update_interactive_card_request.card_template_id = card_template_id
+        # send_interactive_card_request.card_template_id = "b2a8bb23-0b04-45c7-8686-e3668b082ed8.schema"
+        # send_interactive_card_request.out_track_id = "b2a8bb23-0b04-45c7-8686-e3668b082ed8.schema.1715069378009"
+        update_interactive_card_request.out_track_id = out_track_id + ".update"
+        update_interactive_card_request.robot_code = "dingqkoo0gpksjflc7ih"
+        update_interactive_card_request.open_conversation_id = "cidUQXUpOwFEbiRNp87JyFE3w=="
+        update_interactive_card_request.conversation_type = 1
+        update_interactive_card_request.card_data = update_card_data
+
+        update_interactive_card_headers = dingtalkim__1__0_models.UpdateInteractiveCardHeaders()
+        update_interactive_card_headers.x_acs_dingtalk_access_token = token
+
+        logger.info("卡片更新投递到聊天")
+        resp: dingtalkim__1__0_models.UpdateInteractiveCardResponse = im_client.update_interactive_card_with_options(
+            update_interactive_card_request,
+            update_interactive_card_headers,
+            util_models.RuntimeOptions()
+        )
+    except Exception as err:
+        pass
 
     # return HttpResponse(dd.getAccessToken())
 
@@ -167,7 +216,7 @@ def interactive_card_test(request):
              open_conversation_id="cidUQXUpOwFEbiRNp87JyFE3w==",
              )
     card_vars = {
-        "markdown_content": "#### Tiltle\n* 123\n* 4567777",
+        "markdown_content": "#### Tiltle\n* 123\n* 456",
         "approve_count": 10,
         "reject_count": 3,
         "card_title": "本次发布更新",
@@ -175,7 +224,13 @@ def interactive_card_test(request):
         "markdown": "4567121231231"
     }
     b = CardData(card_vars)
-    a.create_card_data(b)
-    a.deliver_card()
+    a.create_and_update_card_data(b)
     a.send_interactive_card()
+
+    time.sleep(3)
+    card_vars["markdown_content"] = card_vars["markdown_content"] + "789"
+    b = CardData(card_vars)
+    a.create_and_update_card_data(b)
+    logger.info(11111111)
+    a.update_interactive_card()
     return HttpResponse("OK")
