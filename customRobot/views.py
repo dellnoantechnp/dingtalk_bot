@@ -66,7 +66,7 @@ def create_card_client() -> dingtalkcard_1_0Client:
 @csrf_exempt
 def dingtalk_test(request):
     logger = logging.getLogger("dingtalk_bot")
-    logger.info("appKey:" + request.POST.get("appKey") + " appSecret:" + request.POST.get("appSecret"))
+    logger.debug("appKey:" + request.POST.get("appKey") + " appSecret:" + request.POST.get("appSecret"))
     dd = Dingtalk_Base(request.POST.get("appKey"), request.POST.get("appSecret"))
     token = dd.get_access_token()
     logger.info("token: " + token)
@@ -126,12 +126,12 @@ def dingtalk_test(request):
     create_and_deliver_request.im_group_open_space_model = im_group_open_space_model
     create_and_deliver_request.card_data = card_data
 
-    logger.warn(send_interactive_card_request.from_map())
+    logger.warning(send_interactive_card_request.from_map())
 
     im_client = create_imclient()
     card_client = create_card_client()
     try:
-        logger.info("卡片更新和投递")
+        logger.info("卡片创建和投递")
         resp: dingtalkcard__1__0_models.CreateAndDeliverResponse = card_client.create_and_deliver_with_options(
             create_and_deliver_request,
             create_and_deliver_headers,
@@ -179,7 +179,7 @@ def dingtalk_test(request):
         update_interactive_card_request.card_template_id = card_template_id
         # send_interactive_card_request.card_template_id = "b2a8bb23-0b04-45c7-8686-e3668b082ed8.schema"
         # send_interactive_card_request.out_track_id = "b2a8bb23-0b04-45c7-8686-e3668b082ed8.schema.1715069378009"
-        update_interactive_card_request.out_track_id = out_track_id + ".update"
+        #update_interactive_card_request.out_track_id = out_track_id + ".update"
         update_interactive_card_request.robot_code = "dingqkoo0gpksjflc7ih"
         update_interactive_card_request.open_conversation_id = "cidUQXUpOwFEbiRNp87JyFE3w=="
         update_interactive_card_request.conversation_type = 1
@@ -205,7 +205,7 @@ def dingtalk_test(request):
 @csrf_exempt
 def interactive_card_test(request):
     logger = logging.getLogger("dingtalk_bot")
-    logger.info("appKey:" + request.POST.get("appKey") + " appSecret:" + request.POST.get("appSecret"))
+    logger.debug("appKey:" + request.POST.get("appKey") + " appSecret:" + request.POST.get("appSecret"))
     dd = Dingtalk_Base(request.POST.get("appKey"), request.POST.get("appSecret"))
     token = dd.get_access_token()
     logger.info("token: " + token)
@@ -228,8 +228,9 @@ def interactive_card_test(request):
     a.send_interactive_card()
 
     time.sleep(3)
-    card_vars["markdown_content"] = card_vars["markdown_content"] + "789"
+    card_vars["markdown_content"] = card_vars["markdown_content"] + "7890"
     b = CardData(card_vars)
+    logger.info(f"Card param map: {b.get_card_content()}")
     a.create_and_update_card_data(b)
     logger.info(11111111)
     a.update_interactive_card()

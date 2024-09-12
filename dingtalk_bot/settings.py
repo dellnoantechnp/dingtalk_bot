@@ -146,7 +146,7 @@ LOGGING = {
     'disable_existing_loggers': False,
     'root': {
         'level': 'INFO',
-        'handlers': ['console', 'log_file'],
+        'handlers': ['console'],
     },
     'formatters': {
         'verbose': {
@@ -190,11 +190,11 @@ LOGGING = {
     'loggers': {
         'dingtalk_bot': {
             'handlers': ['console'],
-            'level': 'DEBUG',
-            'propagate': True,  # 是否向上传递日志流
+            'level': 'INFO',
+            'propagate': False,  # 是否向上传递日志流
         },
         'django.request': {
-            'handlers': ['mail_admins'],
+            'handlers': ['console'],
             'level': 'ERROR',
             'propagate': False,
         }

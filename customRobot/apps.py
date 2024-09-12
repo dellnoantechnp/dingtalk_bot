@@ -1,6 +1,7 @@
 import asyncio
 import os
 
+import requests
 from django.apps import AppConfig
 import dingtalk_stream
 from dingtalk_stream import AckMessage
@@ -22,7 +23,7 @@ class CustomrobotConfig(AppConfig):
         client_secret = os.environ.get("DINGTALK_CLIENT_SECRET")
         credential = dingtalk_stream.Credential(client_id=client_id, client_secret=client_secret)
         client = dingtalk_stream.DingTalkStreamClient(credential)
-        logger = logging.getLogger()
+        logger = logging.getLogger("dingtalk_bot")
         logger.setLevel("DEBUG")
         #client.register_callback_handler(dingtalk_stream.chatbot.ChatbotMessage.TOPIC, self.EchoMarkdownHandler(logger=logger))
         ## 注册回调事件的 TOPIC
@@ -46,9 +47,10 @@ class CustomrobotConfig(AppConfig):
             incoming_message = dingtalk_stream.ChatbotMessage.from_dict(callback.data)
             print(incoming_message.extensions["content"])
             text = 'echo received message:\n'
-            text += '\n'.join(['> 1. %s' % i for i in incoming_message.text.content.strip().split('\n')])
+            #text += '\n'.join(['> 1. %s' % i for i in incoming_message.text.content.strip().split('\n')])
             # 回复一个 markdown 卡片消息
-            self.reply_markdown('dingtalk-tutorial-python', text, incoming_message)
+            #self.reply_markdown('dingtalk-tutorial-python', text, incoming_message)
             # 回复一个普通文本消息
             #self.reply_text(text=text, incoming_message=incoming_message)
+            #return AckMessage.STATUS_OK, 'OK'
             return AckMessage.STATUS_OK, 'OK'

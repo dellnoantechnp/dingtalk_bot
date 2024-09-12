@@ -21,7 +21,7 @@ class CardData(SendInteractiveCardRequestCardData):
         self.card_param_map["sys_full_json_obj"] = sys_full_json_obj.__str__()
 
     def get_card_content(self):
-        return json.dumps(self.card_param_map, indent=4, ensure_ascii=True)
+        return json.dumps(self.card_param_map, ensure_ascii=True)
 
 
 if __name__ == "__main__":

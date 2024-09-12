@@ -7,7 +7,8 @@ from alibabacloud_dingtalk.im_1_0.models import (SendInteractiveCardRequest,
                                                  SendInteractiveCardHeaders)
 
 from alibabacloud_dingtalk.card_1_0.models import (UpdateCardRequest,
-                                                   UpdateCardHeaders)
+                                                   UpdateCardHeaders,
+                                                   UpdateCardResponseBody)
 from alibabacloud_dingtalk.im_1_0.models import (UpdateInteractiveCardRequest,
                                                  UpdateInteractiveCardHeaders)
 
@@ -104,7 +105,7 @@ class Card(CreateAndDeliverRequest, CreateAndDeliverHeaders, SendInteractiveCard
             self, self, util_models.RuntimeOptions()
         )
 
-    def __update_card(self):
+    def __update_card(self) -> UpdateCardResponseBody:
         """
         更新卡片
         """
@@ -129,8 +130,14 @@ class Card(CreateAndDeliverRequest, CreateAndDeliverHeaders, SendInteractiveCard
         """
         更新卡片
         """
-        self.__update_card()
-        self.out_track_id = self.out_track_id + "update"
+
+        update_card_response = self.__update_card()
+        if update_card_response.success:
+            self.logger.info(f"交互式卡片更新成功: {update_card_response.result}")
+        else:
+            self.logger.warning(f"交互式卡片更新失败: {update_card_response.result}")
+
+        #self.out_track_id = self.out_track_id + "update"
         im_client = dingtalkim_1_0Client(self.config)
         im_client.update_interactive_card_with_options(
             self, self, util_models.RuntimeOptions()
