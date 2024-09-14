@@ -200,3 +200,20 @@ LOGGING = {
         }
     }
 }
+
+CACHES = {
+    "default": {
+        "BACKEND": "django_redis.cache.RedisCache",
+        "LOCATION": "redis://172.16.2.4:16379/1",
+        "OPTIONS": {
+            "CLIENT_CLASS": "django_redis.client.DefaultClient",
+            "SOCKET_CONNECT_TIMEOUT": 5,
+            "SOCKET_TIMEOUT": 10,
+            "CONNECTION_POOL_KWARGS": {
+                "max_connections": 10
+            },
+            "PASSWORD": "123456"
+        },
+        "KEY_PREFIX": "dingtalk_bot"
+    }
+}

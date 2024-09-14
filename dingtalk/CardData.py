@@ -23,6 +23,9 @@ class CardData(SendInteractiveCardRequestCardData):
     def get_card_content(self):
         return json.dumps(self.card_param_map, ensure_ascii=True)
 
+    def __str__(self):
+        return json.dumps(self.card_param_map["sys_full_json_obj"])
+
 
 if __name__ == "__main__":
     a = CardData(sys_full_json_obj=dict(abc=4, bcd="中文🧡"))

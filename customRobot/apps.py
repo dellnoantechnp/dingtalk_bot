@@ -7,6 +7,8 @@ import dingtalk_stream
 from dingtalk_stream import AckMessage
 import logging
 import threading
+from django.core.cache import cache
+from django.conf import settings
 
 
 class CustomrobotConfig(AppConfig):
@@ -16,7 +18,6 @@ class CustomrobotConfig(AppConfig):
     def ready(self):
         self.run_dingtalk_stream()
 
-
     def run_dingtalk_stream(self):
         threads = []
         client_id = os.environ.get("DINGTALK_CLIENT_ID")
@@ -25,9 +26,11 @@ class CustomrobotConfig(AppConfig):
         client = dingtalk_stream.DingTalkStreamClient(credential)
         logger = logging.getLogger("dingtalk_bot")
         logger.setLevel("DEBUG")
-        #client.register_callback_handler(dingtalk_stream.chatbot.ChatbotMessage.TOPIC, self.EchoMarkdownHandler(logger=logger))
+        # client.register_callback_handler(dingtalk_stream.chatbot.ChatbotMessage.TOPIC,
+        # self.EchoMarkdownHandler(logger=logger))
         ## 注册回调事件的 TOPIC
-        client.register_callback_handler(dingtalk_stream.chatbot.ChatbotHandler.TOPIC_CARD_CALLBACK, self.EchoMarkdownHandler(logger=logger))
+        client.register_callback_handler(dingtalk_stream.chatbot.ChatbotHandler.TOPIC_CARD_CALLBACK,
+                                         self.EchoMarkdownHandler(logger=logger))
         t = threading.Thread(target=client.start_forever, name="dingtalk_stream")
         t.daemon = True
         threads.append(t)
@@ -35,22 +38,35 @@ class CustomrobotConfig(AppConfig):
         # loop = asyncio.get_event_loop()
         # result = loop.run_until_complete(client.start())
         # loop.close()
+        self.__ready_redis_pool()
+
+    def __ready_redis_pool(self):
+        """
+        准备Redis连接池
+        """
+        abc = settings.DEBUG
+        # conn = get_redis_connection("default")
+        cache.set("abbb", "b", timeout=60)
+        print(cache.get("abbb"))
 
     class EchoMarkdownHandler(dingtalk_stream.ChatbotHandler):
+
         def __init__(self, logger: logging.Logger = None):
-            super(dingtalk_stream.ChatbotHandler, self).__init__()
+            super().__init__()
             if logger:
                 self.logger = logger
 
         async def process(self, callback: dingtalk_stream.CallbackMessage):
-            ## Docs: https://open.dingtalk.com/document/orgapp/event-callback-card  事件回调的content
+            """
+            Docs: https://open.dingtalk.com/document/orgapp/event-callback-card  事件回调的content
+            """
             incoming_message = dingtalk_stream.ChatbotMessage.from_dict(callback.data)
             print(incoming_message.extensions["content"])
             text = 'echo received message:\n'
-            #text += '\n'.join(['> 1. %s' % i for i in incoming_message.text.content.strip().split('\n')])
+            # text += '\n'.join(['> 1. %s' % i for i in incoming_message.text.content.strip().split('\n')])
             # 回复一个 markdown 卡片消息
-            #self.reply_markdown('dingtalk-tutorial-python', text, incoming_message)
+            # self.reply_markdown('dingtalk-tutorial-python', text, incoming_message)
             # 回复一个普通文本消息
-            #self.reply_text(text=text, incoming_message=incoming_message)
-            #return AckMessage.STATUS_OK, 'OK'
+            # self.reply_text(text=text, incoming_message=incoming_message)
+            # return AckMessage.STATUS_OK, 'OK'
             return AckMessage.STATUS_OK, 'OK'

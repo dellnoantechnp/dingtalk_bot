@@ -147,6 +147,7 @@ def dingtalk_test(request):
     except Exception as err:
         logger.error(err)
 
+    # 更新卡片内容
     try:
         time.sleep(5)
         update_card_data = dingtalkim__1__0_models.SendInteractiveCardRequestCardData()
@@ -230,8 +231,10 @@ def interactive_card_test(request):
     time.sleep(3)
     card_vars["markdown_content"] = card_vars["markdown_content"] + "7890"
     b = CardData(card_vars)
-    logger.info(f"Card param map: {b.get_card_content()}")
+    #logger.info(f"Card param map: {b.get_card_content()}")
     a.create_and_update_card_data(b)
-    logger.info(11111111)
+    #a.__persistent_card()
+
+    logger.info(f"开始更新卡片")
     a.update_interactive_card()
     return HttpResponse("OK")
