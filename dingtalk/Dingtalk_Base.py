@@ -5,17 +5,21 @@ from alibabacloud_tea_openapi import models as open_api_models
 from alibabacloud_dingtalk.oauth2_1_0 import models as dingtalkoauth_2__1__0_models
 from alibabacloud_tea_util.client import Client as UtilClient
 from logging import Logger
+from typing import Union, Optional
 
 
 class Dingtalk_Base:
-    def __init__(self, appKey=None, appSecret=None, logger: Logger=None):
-        self.appKey = appKey
-        self.appSecret = appSecret
+    def __init__(self, app_key: Union[str] = "", app_secret: Union[str] = "", logger_name: Optional[str] = None):
+        self.logger = None
+        self.appKey = app_key
+        self.appSecret = app_secret
         self.client = self.create_client()
-        self.initial_logger(logger=logger)
+        self.initial_logger(logger=logger_name)
 
     def initial_logger(self, logger):
         if logger:
+            self.logger = logging.getLogger(logger)
+        else:
             self.logger = logging.getLogger(__name__)
 
     @staticmethod
@@ -54,6 +58,7 @@ class Dingtalk_Base:
         )
         try:
             token_resp = self.client.get_access_token(get_access_token_request)
+            self.logger.info(f"token: {token_resp.body.access_token}")
             return token_resp.body.access_token
         except Exception as err:
             if not UtilClient.empty(err.code) and not UtilClient.empty(err.message):

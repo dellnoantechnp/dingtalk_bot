@@ -8,6 +8,7 @@ from dingtalk.Card import Card, CardData
 from django.views.decorators.csrf import csrf_exempt
 import logging
 import time
+import os
 
 from alibabacloud_dingtalk.im_1_0 import models as dingtalkim__1__0_models
 from alibabacloud_tea_openapi import models as open_api_models
@@ -18,6 +19,7 @@ from alibabacloud_tea_util import models as util_models
 from alibabacloud_dingtalk.card_1_0 import models as dingtalkcard__1__0_models
 
 from alibabacloud_tea_util.client import Client as UtilClient
+from .interface_views.receive_stream_request import receive_stream_request
 
 def index(request):
     return JsonResponse({"foo": "bar"})
@@ -208,6 +210,43 @@ def interactive_card_test(request):
     logger = logging.getLogger("dingtalk_bot")
     logger.debug("appKey:" + request.POST.get("appKey") + " appSecret:" + request.POST.get("appSecret"))
     dd = Dingtalk_Base(request.POST.get("appKey"), request.POST.get("appSecret"))
+    token = dd.get_access_token()
+    logger.info("token: " + token)
+
+    a = Card(access_token=token,
+             card_template_id="98a61096-31e1-4611-be4e-b1d2f6897225.schema",
+             robot_code="dingqkoo0gpksjflc7ih",
+             open_conversation_id="cidUQXUpOwFEbiRNp87JyFE3w==",
+             )
+    card_vars = {
+        "markdown_content": "#### Tiltle\n* 123\n* 456",
+        "approve_count": 10,
+        "reject_count": 3,
+        "card_title": "本次发布更新",
+        "markdown_title": "本周发布commit汇总",
+        "markdown": "4567121231231"
+    }
+    b = CardData(card_vars)
+    a.create_and_update_card_data(b)
+    a.send_interactive_card()
+
+    time.sleep(3)
+    card_vars["markdown_content"] = card_vars["markdown_content"] + "7890"
+    b = CardData(card_vars)
+    #logger.info(f"Card param map: {b.get_card_content()}")
+    a.create_and_update_card_data(b)
+    #a.__persistent_card()
+
+    logger.info(f"开始更新卡片")
+    a.update_interactive_card()
+    return HttpResponse("OK")
+
+
+@csrf_exempt
+def interactive_card_test2(request):
+    logger = logging.getLogger("dingtalk_bot")
+    logger.debug(f"appKey: {os.environ.get('DINGTALK_CLIENT_ID')} appSecret: {os.environ.get('DINGTALK_CLIENT_SECRET')}")
+    dd = Dingtalk_Base(os.environ.get("DINGTALK_CLIENT_ID"), os.environ.get("DINGTALK_CLIENT_SECRET"), "dingtalk_bot")
     token = dd.get_access_token()
     logger.info("token: " + token)
 

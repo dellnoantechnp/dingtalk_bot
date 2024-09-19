@@ -62,11 +62,13 @@ class CustomrobotConfig(AppConfig):
             """
             incoming_message = dingtalk_stream.ChatbotMessage.from_dict(callback.data)
             print(incoming_message.extensions["content"])
-            text = 'echo received message:\n'
+            # text = 'echo received message:\n'
             # text += '\n'.join(['> 1. %s' % i for i in incoming_message.text.content.strip().split('\n')])
             # 回复一个 markdown 卡片消息
             # self.reply_markdown('dingtalk-tutorial-python', text, incoming_message)
             # 回复一个普通文本消息
             # self.reply_text(text=text, incoming_message=incoming_message)
             # return AckMessage.STATUS_OK, 'OK'
+            post_data = incoming_message.to_dict()
+            requests.post("http://localhost:8000/customRobot/test5", data=post_data)
             return AckMessage.STATUS_OK, 'OK'
