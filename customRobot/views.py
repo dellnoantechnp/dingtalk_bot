@@ -19,7 +19,6 @@ from alibabacloud_tea_util import models as util_models
 from alibabacloud_dingtalk.card_1_0 import models as dingtalkcard__1__0_models
 
 from alibabacloud_tea_util.client import Client as UtilClient
-from .interface_views.receive_stream_request import receive_stream_request
 
 def index(request):
     return JsonResponse({"foo": "bar"})

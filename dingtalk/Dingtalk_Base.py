@@ -40,8 +40,8 @@ class Dingtalk_Base:
     # ) -> None:
     #     client = Sample.create_client()
     #     get_access_token_request = dingtalkoauth_2__1__0_models.GetAccessTokenRequest(
-    #         app_key='dingqkoo0gpksjflc7ih',
-    #         app_secret='utI4JAsz0bZonfiIybwghmE_jf9i3a6dpyQQVsB9qlirIq9h_Sw50qkOzvuMVdPj'
+    #         app_key='',
+    #         app_secret=''
     #     )
     #     try:
     #         token_resp = client.get_access_token(get_access_token_request)

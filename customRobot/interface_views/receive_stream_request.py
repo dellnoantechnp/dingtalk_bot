@@ -31,6 +31,8 @@ def receive_stream_request(request):
              robot_code=privious_card.get(b"robot_code").decode(),
              open_conversation_id=privious_card.get("open_conversation_id").decode(),
              )
+
+    # TODO 完成卡片字段值增删功能
     update_card_vars = json.loads(privious_card.get(b"card_param_map_string").decode())
     update_card_item = json.loads(request.POST.get("value"))
     for i in update_card_item:

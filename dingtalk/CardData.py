@@ -8,14 +8,16 @@ class CardData(SendInteractiveCardRequestCardData):
     """
     docs: https://open.dingtalk.com/document/orgapp/send-interactive-dynamic-cards-1#h2-vnz-jdj-vrc
     """
+    card_media_id_param_map = dict()
+    card_param_map = dict()
 
     def __init__(self, sys_full_json_obj: Dict[str, str]):
         """初始化 CardData 类相关的数据
 
         :param sys_full_json_obj: 自定义卡片模板变量结构
         """
-        super().__init__(card_param_map={},
-                         card_media_id_param_map={})
+        super().__init__(card_param_map=self.card_param_map,
+                         card_media_id_param_map=self.card_media_id_param_map)
 
         # self.sys_full_json_obj = sys_full_json_obj
         self.card_param_map["sys_full_json_obj"] = sys_full_json_obj.__str__()

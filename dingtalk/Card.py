@@ -29,6 +29,11 @@ from .CardData import CardData
 class Card(CreateAndDeliverRequest, CreateAndDeliverHeaders, SendInteractiveCardRequest, SendInteractiveCardHeaders,
            UpdateCardRequest, UpdateCardHeaders, UpdateInteractiveCardHeaders, UpdateInteractiveCardRequest,
            open_api_models.Config, Dingtalk_Base):
+
+    config = open_api_models.Config()
+    config.protocol = "https"
+    config.region_id = "central"
+
     def __init__(self, access_token: Union[str] = None,
                  card_template_id: Union[str] = None,
                  robot_code: Union[str] = None,
@@ -44,7 +49,7 @@ class Card(CreateAndDeliverRequest, CreateAndDeliverHeaders, SendInteractiveCard
         :param robot_code: 机器人code
         :param open_conversation_id: 群ID
         :param conversation_type: 会话类型，0 单聊   1 群聊, 单聊不用填写open_conversation_id
-        :param open_space_id: 在投放接口中，使用openSpaceId作为统一投放id，openSpaceId采用固定协议且支持版本升级，主要由版本、场域类型、场域id三部分内容组成
+        :#param open_space_id: 在投放接口中，使用openSpaceId作为统一投放id，openSpaceId采用固定协议且支持版本升级，主要由版本、场域类型、场域id三部分内容组成
         :param callback_type: 回调模式， HTTP  STREAM
         :param out_track_id: 回调请求时，需传入 out_track_id，新创建卡片不用传入 out_track_id
         """
@@ -63,9 +68,6 @@ class Card(CreateAndDeliverRequest, CreateAndDeliverHeaders, SendInteractiveCard
         self.im_group_open_deliver_model.robot_code = self.robot_code
         self.im_group_open_space_model = CreateCardRequestImGroupOpenSpaceModel()
         self.im_group_open_space_model.support_forward = True
-        self.config = open_api_models.Config()
-        self.config.protocol = "https"
-        self.config.region_id = "central"
         self.common_headers = None
 
     def gen_out_track_id(self) -> str:
