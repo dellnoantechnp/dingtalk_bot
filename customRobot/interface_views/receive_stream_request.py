@@ -23,22 +23,23 @@ def receive_stream_request(request):
 
     redis_cache = caches["default"]
     redis_client = redis_cache.client.get_client()
-    privious_card = redis_client.hgetall(receive_out_track_id)
+    previous_card = redis_client.hgetall(receive_out_track_id)
 
     # logger.info(request.POST.get("TOPIC"))
     a = Card(access_token=token,
-             card_template_id=privious_card.get(b"card_template_id").decode(),
-             robot_code=privious_card.get(b"robot_code").decode(),
-             open_conversation_id=privious_card.get("open_conversation_id").decode(),
+             card_template_id=previous_card.get(b"card_template_id").decode(),
+             robot_code=previous_card.get(b"robot_code").decode(),
+             open_conversation_id=previous_card.get(b"open_conversation_id").decode(),
              )
 
     # TODO 完成卡片字段值增删功能
-    update_card_vars = json.loads(privious_card.get(b"card_param_map_string").decode())
+    update_card_vars = json.loads(previous_card.get(b"card_param_map_string").decode())
     update_card_item = json.loads(request.POST.get("value"))
-    for i in update_card_item:
-        if i == "cardPrivateData":
-            for var in update_card_vars[i]:
-                var["params"]
+    update_card_vars["approve"] = update_card_vars["approve"] + 1
+    # for i in update_card_item:
+    #     if i == "cardPrivateData":
+    #         for var in update_card_vars[i]:
+    #             var["params"]
 
 
 

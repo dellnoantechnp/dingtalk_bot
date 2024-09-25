@@ -212,6 +212,8 @@ CACHES = {
             "CONNECTION_POOL_KWARGS": {
                 "max_connections": 10
             },
+            "SERIALIZER": "django_redis.serializers.json.JSONSerializer",
+            'REDIS_CLIENT_KWARGS': {"decode_responses": True},
             "PASSWORD": "123456"
         },
         "KEY_PREFIX": "dingtalk_bot"

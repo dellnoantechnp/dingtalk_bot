@@ -219,11 +219,13 @@ def interactive_card_test(request):
              )
     card_vars = {
         "markdown_content": "#### Tiltle\n* 123\n* 456",
-        "approve_count": 10,
-        "reject_count": 3,
+        "approve": 10,
+        "reject": 3,
         "card_title": "本次发布更新",
         "markdown_title": "本周发布commit汇总",
-        "markdown": "4567121231231"
+        "markdown": "4567121231231",
+        "approve_max": 10,
+        "reject_max": 2,
     }
     b = CardData(card_vars)
     a.create_and_update_card_data(b)
@@ -256,11 +258,13 @@ def interactive_card_test2(request):
              )
     card_vars = {
         "markdown_content": "#### Tiltle\n* 123\n* 456",
-        "approve_count": 10,
-        "reject_count": 3,
+        "approve": 10,
+        "reject": 3,
         "card_title": "本次发布更新",
         "markdown_title": "本周发布commit汇总",
-        "markdown": "4567121231231"
+        "markdown": "4567121231231",
+        "approve_max": 10,
+        "reject_max": 2,
     }
     b = CardData(card_vars)
     a.create_and_update_card_data(b)
