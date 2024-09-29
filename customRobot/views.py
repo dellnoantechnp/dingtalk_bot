@@ -219,13 +219,64 @@ def interactive_card_test(request):
              )
     card_vars = {
         "markdown_content": "#### Tiltle\n* 123\n* 456",
-        "approve": 10,
-        "reject": 3,
+        "approve": 0,
+        "reject": 0,
         "card_title": "本次发布更新",
         "markdown_title": "本周发布commit汇总",
         "markdown": "4567121231231",
         "approve_max": 10,
         "reject_max": 2,
+        "card_ref_link": "https://workflows.poc.jagat.io/workflows/workflows?&limit=50",
+        "repository": "utown-biz",
+        "project_id": "2165698",
+        "author": "任贵生",
+        "branch": "master",
+        "commit_sha": "e8c15b9aa5debe96dd9f6441ba682f4edd064b30",
+        "environment": "poc",
+        "chart_data": {
+            "type": "pieChart",
+            "config": {
+                "pieChartStyle": "percentage",
+                "xAxisConfig": {},
+                "padding": [
+                    0,
+                    5,
+                    0,
+                    0
+                ],
+                "yAxisConfig": {},
+                "color": [
+                    "#329FFE",
+                    "#1AC681",
+                    "#FD9E5E",
+                    "#C766EC",
+                    "#98D333",
+                    "#5A88FE",
+                    "#FE7A66",
+                    "#ED63AD",
+                    "#A564ED",
+                    "#F7BE4D"
+                ]
+            },
+            "data": [
+                {
+                    "x": "江西省",
+                    "y": 1
+                },
+                {
+                    "x": "西藏自治区",
+                    "y": 1
+                },
+                {
+                    "x": "北京",
+                    "y": 1
+                },
+                {
+                    "x": "山西省",
+                    "y": 1
+                }
+            ]
+        }
     }
     b = CardData(card_vars)
     a.create_and_update_card_data(b)
@@ -258,13 +309,13 @@ def interactive_card_test2(request):
              )
     card_vars = {
         "markdown_content": "#### Tiltle\n* 123\n* 456",
-        "approve": 10,
+        "approve": 7,
         "reject": 3,
         "card_title": "本次发布更新",
         "markdown_title": "本周发布commit汇总",
         "markdown": "4567121231231",
         "approve_max": 10,
-        "reject_max": 2,
+        "reject_max": 5,
     }
     b = CardData(card_vars)
     a.create_and_update_card_data(b)

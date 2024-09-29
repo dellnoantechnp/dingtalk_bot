@@ -38,16 +38,6 @@ class CustomrobotConfig(AppConfig):
         # loop = asyncio.get_event_loop()
         # result = loop.run_until_complete(client.start())
         # loop.close()
-        self.__ready_redis_pool()
-
-    def __ready_redis_pool(self):
-        """
-        准备Redis连接池
-        """
-        abc = settings.DEBUG
-        # conn = get_redis_connection("default")
-        cache.set("abbb", "b", timeout=60)
-        print(cache.get("abbb"))
 
     class EchoMarkdownHandler(dingtalk_stream.ChatbotHandler):
 
@@ -61,7 +51,7 @@ class CustomrobotConfig(AppConfig):
             Docs: https://open.dingtalk.com/document/orgapp/event-callback-card  事件回调的content
             """
             incoming_message = dingtalk_stream.ChatbotMessage.from_dict(callback.data)
-            print(incoming_message.extensions["content"])
+            # print(incoming_message.extensions["content"])
             # text = 'echo received message:\n'
             # text += '\n'.join(['> 1. %s' % i for i in incoming_message.text.content.strip().split('\n')])
             # 回复一个 markdown 卡片消息

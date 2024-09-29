@@ -2,6 +2,7 @@ import argparse
 import redis
 import sys
 import time
+from humanfriendly import format_timespan
 from typing import Union
 
 from redis.exceptions import RedisClusterException
@@ -37,18 +38,22 @@ def get_connect(host, port, password) -> redis.client.Redis:
 
 def check_scan_result(connect, match=None):
     for i in connect.scan_iter(match=match, count=COUNT):
-        if not has_ttl(connect=connect, key=i):
+        if has_ttl(connect=connect, key=i):
             try:
                 if args.key_pattern:
                     key = i.decode()
-                    parts = key.split(":")
-                    if parts[2].isdigit():
-                        timestamp = int(parts[1])
-                        if timestamp < two_days_ago:
-                            # print(f"Deleted key: {key}")
-                            connect.delete(key)
-                        else:
-                            print(f"Within two days: {key}")
+                    # parts = key.split(":")
+                    # if parts[2].isdigit():
+                    #     timestamp = int(parts[1])
+                    #     if timestamp < two_days_ago:
+                    #         # print(f"Deleted key: {key}")
+                    #         connect.delete(key)
+                    #     else:
+                    #         print(f"Within two days: {key}")
+                    ## 获取 key_pattern 中所有 key 的 ttl 时间
+                    ttl = connect.ttl(key)
+                    human_ttl = format_timespan(ttl)
+                    print(f"{key}  current_time_ts: {current_time}     expire_time: {human_ttl}")
                 else:
                     print(i.decode())
 
@@ -95,7 +100,8 @@ try:
     if __name__ == "__main__":
         r = get_connect(host=args.address, port=args.port, password=args.password)
         if args.rm_zset_item:
-            check_scan_and_del_zset(r, args.key_pattern)
+            check_scan_result(r, args.key_pattern)
+            # check_scan_and_del_zset(r, args.key_pattern)
         else:
             check_scan_result(r, args.key_pattern)
 except (Exception, KeyboardInterrupt):
