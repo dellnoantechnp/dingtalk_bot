@@ -35,9 +35,11 @@ def receive_stream_request(request):
     update_card_item = json.loads(request.POST.get("value"))
 
     if "approve" in update_card_item["cardPrivateData"]["params"].keys():
+        a.update_card_vars["approve_action"] = True
         if a.update_card_vars["approve"] < a.update_card_vars["approve_max"]:
             a.update_card_vars["approve"] += 1
     else:
+        a.update_card_vars["reject_action"] = True
         if a.update_card_vars["reject"] < a.update_card_vars["reject_max"]:
             a.update_card_vars["reject"] += 1
     # for i in update_card_item:

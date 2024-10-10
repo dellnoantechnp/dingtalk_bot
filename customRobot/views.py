@@ -276,7 +276,9 @@ def interactive_card_test(request):
                     "y": 1
                 }
             ]
-        }
+        },
+        "approve_action": False,
+        "reject_action": False
     }
     b = CardData(card_vars)
     a.create_and_update_card_data(b)
