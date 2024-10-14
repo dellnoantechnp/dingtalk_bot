@@ -126,6 +126,7 @@ def dingtalk_test(request):
     create_and_deliver_request.im_group_open_deliver_model = im_group_deliver_model
     create_and_deliver_request.im_group_open_space_model = im_group_open_space_model
     create_and_deliver_request.card_data = card_data
+    create_and_deliver_request.private_data
 
     logger.warning(send_interactive_card_request.from_map())
 

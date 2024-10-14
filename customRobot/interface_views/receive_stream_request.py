@@ -33,15 +33,19 @@ def receive_stream_request(request):
     # TODO 完成卡片字段值增删功能
     #update_card_vars = json.loads(previous_card.get(b"card_param_map_string").decode())
     update_card_item = json.loads(request.POST.get("value"))
+    user_id = request.POST.get("userId")
+    private_data = {user_id: {}}
 
     if "approve" in update_card_item["cardPrivateData"]["params"].keys():
         a.update_card_vars["approve_action"] = True
         if a.update_card_vars["approve"] < a.update_card_vars["approve_max"]:
             a.update_card_vars["approve"] += 1
+        private_data = {user_id: {"approve_action": True}}
     else:
         a.update_card_vars["reject_action"] = True
         if a.update_card_vars["reject"] < a.update_card_vars["reject_max"]:
             a.update_card_vars["reject"] += 1
+        private_data = {user_id: {"reject_action": True}}
     # for i in update_card_item:
     #     if i == "cardPrivateData":
     #         for var in update_card_vars[i]:
@@ -61,5 +65,5 @@ def receive_stream_request(request):
     #a.__persistent_card()
 
     logger.info(f"开始更新卡片")
-    a.update_interactive_card()
+    a.update_interactive_card(private_data=private_data)
     return HttpResponse("OK")

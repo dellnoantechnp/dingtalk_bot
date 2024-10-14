@@ -149,7 +149,7 @@ class Card(CreateAndDeliverRequest, CreateAndDeliverHeaders, SendInteractiveCard
         )
         self.__persistent_card()
 
-    def update_interactive_card(self):
+    def update_interactive_card(self, private_data: Optional[dict] = None):
         """
         更新卡片历史卡片
         """
@@ -160,6 +160,10 @@ class Card(CreateAndDeliverRequest, CreateAndDeliverHeaders, SendInteractiveCard
             self.logger.warning(f"交互式卡片更新失败: {update_card_response.result}")
 
         im_client = dingtalkim_1_0Client(self.config)
+
+        # if private_data:
+        #     self.private_data = json.dumps(private_data)
+
         im_client.update_interactive_card_with_options(
             self, self, util_models.RuntimeOptions()
         )
