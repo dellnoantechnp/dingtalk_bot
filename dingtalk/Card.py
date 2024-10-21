@@ -26,6 +26,7 @@ from django.core.cache import caches
 import time
 from typing import Optional, Union
 from .CardData import CardData
+from .PrivateCardData import PrivateCardData
 import json
 
 
@@ -116,6 +117,7 @@ class Card(CreateAndDeliverRequest, CreateAndDeliverHeaders, SendInteractiveCard
         """
         self.logger.info(f"Card param map: {card_data.get_card_content()}")
         self.card_data = card_data
+        #self.private_data = card_data
 
     def __deliver_card(self) -> CreateAndDeliverResponseBody:
         """
@@ -127,15 +129,19 @@ class Card(CreateAndDeliverRequest, CreateAndDeliverHeaders, SendInteractiveCard
         )
         return resp.body
 
-    def __update_card(self) -> UpdateCardResponseBody:
+    def __update_card(self, user_id: Optional[str] = None, private_data: PrivateCardData = None) -> UpdateCardResponseBody:
         """
         更新卡片
         """
         self.card_update_options = None
+        #if user_id and private_data:
+        #    self.private_data = {user_id: private_data}
         card_client = dingtalkcard_1_0Client(self.config)
         resp = card_client.update_card_with_options(
             self, self, util_models.RuntimeOptions()
         )
+        if user_id and private_data:
+            self.private_data = {user_id: private_data}
         return resp.body
 
     def send_interactive_card(self):
@@ -149,11 +155,16 @@ class Card(CreateAndDeliverRequest, CreateAndDeliverHeaders, SendInteractiveCard
         )
         self.__persistent_card()
 
-    def update_interactive_card(self, private_data: Optional[dict] = None):
+    def update_interactive_card(self, user_id: Optional[str] = None, private_data: Optional[PrivateCardData] = None):
         """
         更新卡片历史卡片
         """
-        update_card_response = self.__update_card()
+        if user_id and private_data:
+            self.logger.debug(f"开始更新卡片私有变量内容: 用户ID {user_id}")
+            update_card_response = self.__update_card(user_id=user_id, private_data=private_data)
+        else:
+            self.logger.debug(f"开始更新卡片变量内容")
+            update_card_response = self.__update_card()
         if update_card_response.success:
             self.logger.info(f"交互式卡片更新成功: {update_card_response.result}")
         else:
@@ -182,7 +193,15 @@ class Card(CreateAndDeliverRequest, CreateAndDeliverHeaders, SendInteractiveCard
         mapping["robot_code"] = self.robot_code
         mapping["open_conversation_id"] = self.open_conversation_id
         mapping["conversation_type"] = self.conversation_type
-        self.logger.debug(f"persistent card data on out_track_id is {key_name}")
+        self.logger.debug(f"persistent card public data on out_track_id is {key_name}")
+
+        temp_private_data = {}
+        if self.private_data:
+            for user in self.private_data:
+                temp_private_data[user] = str(self.private_data.get(user))
+        mapping["private_data"] = json.dumps(temp_private_data)
+        self.logger.debug(f"persistent card private data on out_track_id is {key_name}")
+
 
         redis_cache = caches["default"]
         redis_client = redis_cache.client.get_client()
@@ -209,7 +228,16 @@ class Card(CreateAndDeliverRequest, CreateAndDeliverHeaders, SendInteractiveCard
             self.card_template_id = previous_card.get(b"card_template_id").decode()
             self.robot_code = previous_card.get(b"robot_code").decode()
             self.open_conversation_id = previous_card.get(b"open_conversation_id").decode()
+            self.conversation_type = previous_card.get(b"conversation_type").decode()
+
+            # public data
             self.update_card_vars = json.loads(previous_card.get(b"card_param_map_string").decode())
+            # private data
+            # load_private_data = json.loads(previous_card.get(b"private_data").decode())
+            # if load_private_data:
+            #     for user in load_private_data:
+            #         self.private_data = {user: PrivateCardData(json.loads(load_private_data.get(user)))}
+            # pass
         else:
             raise LoadPersistentDataError(f"Load persistent data error, key name is [{out_track_id}]", 10001)
 

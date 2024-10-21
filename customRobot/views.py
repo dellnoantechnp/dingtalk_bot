@@ -126,7 +126,6 @@ def dingtalk_test(request):
     create_and_deliver_request.im_group_open_deliver_model = im_group_deliver_model
     create_and_deliver_request.im_group_open_space_model = im_group_open_space_model
     create_and_deliver_request.card_data = card_data
-    create_and_deliver_request.private_data
 
     logger.warning(send_interactive_card_request.from_map())
 
@@ -154,12 +153,67 @@ def dingtalk_test(request):
         time.sleep(5)
         update_card_data = dingtalkim__1__0_models.SendInteractiveCardRequestCardData()
         object_string = {
-            "markdown_content": "#### Tiltle\n* 123\n* 456556",
-            "approve_count": 10,
-            "reject_count": 3,
+            "markdown_content": "#### Tiltle\n* 123\n* 456",
+            "approve": 0,
+            "reject": 0,
             "card_title": "本次发布更新",
             "markdown_title": "本周发布commit汇总",
-            "markdown": "4567888888888"
+            "markdown": "4567121231231",
+            "approve_max": 10,
+            "reject_max": 2,
+            "card_ref_link": "https://workflows.poc.jagat.io/workflows/workflows?&limit=50",
+            "repository": "utown-biz",
+            "project_id": "2165698",
+            "author": "任贵生",
+            "branch": "master",
+            "commit_sha": "e8c15b9aa5debe96dd9f6441ba682f4edd064b30",
+            "environment": "poc",
+            "chart_data": {
+                "type": "pieChart",
+                "config": {
+                    "pieChartStyle": "percentage",
+                    "xAxisConfig": {},
+                    "padding": [
+                        0,
+                        5,
+                        0,
+                        0
+                    ],
+                    "yAxisConfig": {},
+                    "color": [
+                        "#329FFE",
+                        "#1AC681",
+                        "#FD9E5E",
+                        "#C766EC",
+                        "#98D333",
+                        "#5A88FE",
+                        "#FE7A66",
+                        "#ED63AD",
+                        "#A564ED",
+                        "#F7BE4D"
+                    ]
+                },
+                "data": [
+                    {
+                        "x": "江西省",
+                        "y": 1
+                    },
+                    {
+                        "x": "西藏自治区",
+                        "y": 1
+                    },
+                    {
+                        "x": "北京",
+                        "y": 1
+                    },
+                    {
+                        "x": "山西省",
+                        "y": 1
+                    }
+                ]
+            },
+            "approve_action": False,
+            "reject_action": False
         }.__str__()
         update_card_data.card_param_map = {"title": "朱小志提交的财务报销", "detailUrl": "https://dingtalk.com",
                                     "status": "pending", "sys_full_json_obj": object_string}
@@ -169,6 +223,11 @@ def dingtalk_test(request):
         update_card_request = dingtalkcard__1__0_models.UpdateCardRequest()
         update_card_request.out_track_id = out_track_id
         update_card_request.card_data = update_card_data
+
+        ## Private data
+        ccc = dingtalkim__1__0_models.PrivateDataValue()
+
+        update_card_request.private_data = {'052605600220581061': ccc}
 
         update_card_header = dingtalkcard__1__0_models.UpdateCardHeaders()
         update_card_header.x_acs_dingtalk_access_token = token

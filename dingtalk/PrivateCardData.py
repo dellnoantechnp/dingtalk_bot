@@ -5,7 +5,7 @@ from typing import Dict
 import json
 
 
-class CardData(SendInteractiveCardRequestCardData):
+class PrivateCardData(PrivateDataValue):
     """
     docs: https://open.dingtalk.com/document/orgapp/send-interactive-dynamic-cards-1#h2-vnz-jdj-vrc
     """
@@ -20,8 +20,7 @@ class CardData(SendInteractiveCardRequestCardData):
         super().__init__(card_param_map=self.card_param_map,
                          card_media_id_param_map=self.card_media_id_param_map)
 
-        # self.sys_full_json_obj = sys_full_json_obj
-        self.card_param_map["sys_full_json_obj"] = json.dumps(sys_full_json_obj)
+        self.card_param_map["sys_full_json_obj"] = json.dumps(list(sys_full_json_obj.values())[0])
 
     def get_card_content(self):
         return json.dumps(self.card_param_map, ensure_ascii=True)
@@ -31,5 +30,6 @@ class CardData(SendInteractiveCardRequestCardData):
 
 
 if __name__ == "__main__":
-    a = CardData(sys_full_json_obj=dict(abc=4, bcd="中文🧡"))
+    a = PrivateCardData(sys_full_json_obj=dict(abc=4, bcd="中文🧡"))
+    a.validate()
     print(a.get_card_content())

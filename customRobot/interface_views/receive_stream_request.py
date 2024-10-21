@@ -1,6 +1,8 @@
 from dingtalk.Dingtalk_Base import Dingtalk_Base
 from django.views.decorators.csrf import csrf_exempt
-from dingtalk.Card import Card, CardData
+from dingtalk.Card import Card
+from dingtalk.CardData import CardData
+from dingtalk.PrivateCardData import PrivateCardData
 import logging
 import time
 import os
@@ -37,12 +39,12 @@ def receive_stream_request(request):
     private_data = {user_id: {}}
 
     if "approve" in update_card_item["cardPrivateData"]["params"].keys():
-        a.update_card_vars["approve_action"] = True
+        #a.update_card_vars["approve_action"] = False
         if a.update_card_vars["approve"] < a.update_card_vars["approve_max"]:
             a.update_card_vars["approve"] += 1
         private_data = {user_id: {"approve_action": True}}
     else:
-        a.update_card_vars["reject_action"] = True
+        #a.update_card_vars["reject_action"] = False
         if a.update_card_vars["reject"] < a.update_card_vars["reject_max"]:
             a.update_card_vars["reject"] += 1
         private_data = {user_id: {"reject_action": True}}
@@ -60,10 +62,11 @@ def receive_stream_request(request):
     # time.sleep(3)
     a.update_card_vars["markdown_content"] = a.update_card_vars["markdown_content"] + "7890"
     b = CardData(a.update_card_vars)
+    private_card_data = PrivateCardData(private_data)
     #logger.info(f"Card param map: {b.get_card_content()}")
     a.create_and_update_card_data(b)
     #a.__persistent_card()
 
     logger.info(f"开始更新卡片")
-    a.update_interactive_card(private_data=private_data)
+    a.update_interactive_card(user_id=user_id, private_data=private_card_data)
     return HttpResponse("OK")
