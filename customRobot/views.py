@@ -277,8 +277,14 @@ def interactive_card_test(request):
              robot_code="dingqkoo0gpksjflc7ih",
              open_conversation_id="cidUQXUpOwFEbiRNp87JyFE3w==",
              )
+
+    if "markdown_content" in request.POST.keys():
+        markdown_content = request.POST.get("markdown_content")
+    else:
+        markdown_content = "#### Tiltle\n* 123\n* 456"
+
     card_vars = {
-        "markdown_content": "#### Tiltle\n* 123\n* 456",
+        "markdown_content": markdown_content,
         "approve": 0,
         "reject": 0,
         "card_title": "本次发布更新",
