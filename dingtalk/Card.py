@@ -26,14 +26,12 @@ from django.core.cache import caches
 import time
 from typing import Optional, Union
 from .CardData import CardData
-from .PrivateCardData import PrivateCardData
 import json
 
 
 class Card(CreateAndDeliverRequest, CreateAndDeliverHeaders, SendInteractiveCardRequest, SendInteractiveCardHeaders,
            UpdateCardRequest, UpdateCardHeaders, UpdateInteractiveCardHeaders, UpdateInteractiveCardRequest,
            open_api_models.Config, Dingtalk_Base):
-
     config = open_api_models.Config()
     config.protocol = "https"
     config.region_id = "central"
@@ -66,7 +64,8 @@ class Card(CreateAndDeliverRequest, CreateAndDeliverHeaders, SendInteractiveCard
             self.__load_data_from_persistent_store(out_track_id=out_track_id)
         else:
             # 新创建卡片逻辑,需要传入初始参数
-            self.logger.debug(f"create new card, card_template_id={card_template_id} robot_code={robot_code} open_conversation_id={open_conversation_id}")
+            self.logger.debug(
+                f"create new card, card_template_id={card_template_id} robot_code={robot_code} open_conversation_id={open_conversation_id}")
             self.card_template_id = card_template_id
             self.robot_code = robot_code
             self.open_conversation_id = open_conversation_id
@@ -117,7 +116,7 @@ class Card(CreateAndDeliverRequest, CreateAndDeliverHeaders, SendInteractiveCard
         """
         self.logger.info(f"Card param map: {card_data.get_card_content()}")
         self.card_data = card_data
-        #self.private_data = card_data
+        # self.private_data = card_data
 
     def __deliver_card(self) -> CreateAndDeliverResponseBody:
         """
@@ -129,12 +128,13 @@ class Card(CreateAndDeliverRequest, CreateAndDeliverHeaders, SendInteractiveCard
         )
         return resp.body
 
-    def __update_card(self, user_id: Optional[str] = None, private_data: PrivateCardData = None) -> UpdateCardResponseBody:
+    def __update_card(self, user_id: Optional[str] = None,
+                      private_data: CardData = None) -> UpdateCardResponseBody:
         """
         更新卡片
         """
         self.card_update_options = None
-        #if user_id and private_data:
+        # if user_id and private_data:
         #    self.private_data = {user_id: private_data}
         card_client = dingtalkcard_1_0Client(self.config)
         resp = card_client.update_card_with_options(
@@ -155,7 +155,7 @@ class Card(CreateAndDeliverRequest, CreateAndDeliverHeaders, SendInteractiveCard
         )
         self.__persistent_card()
 
-    def update_interactive_card(self, user_id: Optional[str] = None, private_data: Optional[PrivateCardData] = None):
+    def update_interactive_card(self, user_id: Optional[str] = None, private_data: Optional[CardData] = None):
         """
         更新卡片历史卡片
         """
@@ -195,13 +195,14 @@ class Card(CreateAndDeliverRequest, CreateAndDeliverHeaders, SendInteractiveCard
         mapping["conversation_type"] = self.conversation_type
         self.logger.debug(f"persistent card public data on out_track_id is {key_name}")
 
+        # 持久化私有变量
         temp_private_data = {}
         if self.private_data:
+            temp_private_data = json.loads(self.__load_data_from_persistent_store(self.out_track_id, "private_data"))
             for user in self.private_data:
                 temp_private_data[user] = str(self.private_data.get(user))
         mapping["private_data"] = json.dumps(temp_private_data)
         self.logger.debug(f"persistent card private data on out_track_id is {key_name}")
-
 
         redis_cache = caches["default"]
         redis_client = redis_cache.client.get_client()
@@ -215,29 +216,33 @@ class Card(CreateAndDeliverRequest, CreateAndDeliverHeaders, SendInteractiveCard
         else:
             raise PersistentDataError(f"persistent card data [{key_name}] failed.", 10001)
 
-    def __load_data_from_persistent_store(self, out_track_id: Union[str]):
+    def __load_data_from_persistent_store(self, out_track_id: Union[str], key_name: Optional[str] = None):
         """
         卡片更新逻辑，从历史数据中 load 关键参数
 
         :param out_track_id: 回调请求时，需传入 out_track_id，新创建卡片不用传入 out_track_id
+        :param key_name: 仅返回指定 key_name 的持久化数据
         """
         redis_cache = caches["default"]
         redis_client = redis_cache.client.get_client()
         previous_card = redis_client.hgetall(out_track_id)
         if previous_card:
-            self.card_template_id = previous_card.get(b"card_template_id").decode()
-            self.robot_code = previous_card.get(b"robot_code").decode()
-            self.open_conversation_id = previous_card.get(b"open_conversation_id").decode()
-            self.conversation_type = previous_card.get(b"conversation_type").decode()
+            if key_name:
+                return previous_card.get(key_name.encode()).decode()
+            else:
+                self.card_template_id = previous_card.get(b"card_template_id").decode()
+                self.robot_code = previous_card.get(b"robot_code").decode()
+                self.open_conversation_id = previous_card.get(b"open_conversation_id").decode()
+                self.conversation_type = previous_card.get(b"conversation_type").decode()
 
-            # public data
-            self.update_card_vars = json.loads(previous_card.get(b"card_param_map_string").decode())
-            # private data
-            # load_private_data = json.loads(previous_card.get(b"private_data").decode())
-            # if load_private_data:
-            #     for user in load_private_data:
-            #         self.private_data = {user: PrivateCardData(json.loads(load_private_data.get(user)))}
-            # pass
+                # public data
+                self.update_card_vars = json.loads(previous_card.get(b"card_param_map_string").decode())
+                # private data
+                self.load_private_data = json.loads(previous_card.get(b"private_data").decode())
+                # if self.load_private_data:
+                #     for user in self.load_private_data:
+                #         self.private_data = {user: PrivateCardData(json.loads(load_private_data.get(user)))}
+                # pass
         else:
             raise LoadPersistentDataError(f"Load persistent data error, key name is [{out_track_id}]", 10001)
 

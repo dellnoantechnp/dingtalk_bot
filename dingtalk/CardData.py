@@ -5,22 +5,21 @@ from typing import Dict
 import json
 
 
-class CardData(SendInteractiveCardRequestCardData):
+class CardData(SendInteractiveCardRequestCardData, PrivateDataValue):
     """
     docs: https://open.dingtalk.com/document/orgapp/send-interactive-dynamic-cards-1#h2-vnz-jdj-vrc
     """
-    card_media_id_param_map = dict()
-    card_param_map = dict()
 
-    def __init__(self, sys_full_json_obj: Dict[str, str]):
+    def __init__(self, sys_full_json_obj: Dict[str, str | bool]):
         """初始化 CardData 类相关的数据
 
         :param sys_full_json_obj: 自定义卡片模板变量结构
         """
+        self.card_media_id_param_map = dict()
+        self.card_param_map = dict()
         super().__init__(card_param_map=self.card_param_map,
                          card_media_id_param_map=self.card_media_id_param_map)
 
-        # self.sys_full_json_obj = sys_full_json_obj
         self.card_param_map["sys_full_json_obj"] = json.dumps(sys_full_json_obj)
 
     def get_card_content(self):

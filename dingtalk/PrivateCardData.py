@@ -5,6 +5,7 @@ from typing import Dict
 import json
 
 
+# Deprecated
 class PrivateCardData(PrivateDataValue):
     """
     docs: https://open.dingtalk.com/document/orgapp/send-interactive-dynamic-cards-1#h2-vnz-jdj-vrc
