@@ -8,7 +8,7 @@ from dingtalk.Card import Card, CardData
 from django.views.decorators.csrf import csrf_exempt
 import logging
 import time
-import os
+import os, re
 
 from alibabacloud_dingtalk.im_1_0 import models as dingtalkim__1__0_models
 from alibabacloud_tea_openapi import models as open_api_models
@@ -280,6 +280,12 @@ def interactive_card_test(request):
 
     if "markdown_content" in request.POST.keys():
         markdown_content = request.POST.get("markdown_content")
+        ## 格式化 markdown 消息格式
+        logger.debug(f"origin markdown_content: {markdown_content}")
+        regex = re.compile('\n')
+        markdown_content = regex.sub("<br>\n", markdown_content)
+        regex = re.compile("\n\s{6}")
+        markdown_content = regex.sub("\n> ", markdown_content)
     else:
         markdown_content = "#### Tiltle\n* 123\n* 456"
 
