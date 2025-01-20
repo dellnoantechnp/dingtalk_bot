@@ -18,6 +18,9 @@ def env_to_bool(env, default):
     str_val = os.environ.get(env)
     return default if str_val is None else str_val == 'True'
 
+REDIS_ADDR = os.environ.get("REDIS_ADDR", "127.0.0.1:6379")
+
+REDIS_DATABASE_NUM = os.environ.get("REDIS_DATABASE_NUM", "0")
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -204,7 +207,7 @@ LOGGING = {
 CACHES = {
     "default": {
         "BACKEND": "django_redis.cache.RedisCache",
-        "LOCATION": "redis://172.16.2.4:16379/1",
+        "LOCATION": f"redis://{REDIS_ADDR}/{REDIS_DATABASE_NUM}",
         "OPTIONS": {
             "CLIENT_CLASS": "django_redis.client.DefaultClient",
             "SOCKET_CONNECT_TIMEOUT": 5,
