@@ -22,6 +22,8 @@ REDIS_ADDR = os.environ.get("REDIS_ADDR", "127.0.0.1:6379")
 
 REDIS_DATABASE_NUM = os.environ.get("REDIS_DATABASE_NUM", "0")
 
+REDIS_PASSWORD = os.environ.get("REDIS_PASSWORD", "")
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -217,7 +219,7 @@ CACHES = {
             },
             "SERIALIZER": "django_redis.serializers.json.JSONSerializer",
             'REDIS_CLIENT_KWARGS': {"decode_responses": True},
-            "PASSWORD": "123456"
+            "PASSWORD": f"{REDIS_PASSWORD}"
         },
         "KEY_PREFIX": "dingtalk_bot"
     }
