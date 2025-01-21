@@ -299,12 +299,12 @@ def interactive_card_test(request):
         "approve_max": 10,
         "reject_max": 2,
         "card_ref_link": request.POST.get("card_ref_link", "https://workflows.poc.jagat.io/workflows/workflows?&limit=50"),
-        "repository": "utown-biz",
-        "project_id": "2165698",
-        "author": "任贵生",
-        "branch": "master",
+        "repository": request.POST.get("repository", "undefined"),
+        "project_id": request.POST.get("project_id", "100000"),
+        "author": request.POST.get("author", "Unknown"),
+        "branch": request.POST.get("branch", "Unknown"),
         "commit_sha": request.POST.get("commit_sha", "e8c15b9aa5debe96dd9f6441ba682f4edd064b30"),
-        "environment": "poc",
+        "environment": request.POST.get("environment", "undefined"),
         "chart_data": {
             "type": "pieChart",
             "config": {
