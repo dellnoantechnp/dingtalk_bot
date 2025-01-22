@@ -60,7 +60,8 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'customRobot',
-    "background_task"
+    # "background_task"
+    'django_q'
 ]
 
 MIDDLEWARE = [
@@ -230,4 +231,23 @@ CACHES = {
         },
         "KEY_PREFIX": "dingtalk_bot"
     }
+}
+
+Q_CLUSTER = {
+    'name': 'project',
+    'workers': 4,
+    # 'recycle': 500,
+    'timeout': 60,
+    # 'compress': True,
+    # 'cpu_affinity': 1,
+    # 'save_limit': 250,
+    # 'queue_limit': 500,
+    # 'label': 'DjangoQ',
+    "django_redis": "default"
+    # "redis": {
+    #     "host": "172.16.2.4",
+    #     "port": 16379,
+    #     "db": 1,
+    #     "password": "123456"
+    # }
 }

@@ -19,7 +19,11 @@ from dingtalk.Card import Card, CardData
 from dingtalk.Dingtalk_Base import Dingtalk_Base
 from . import EchoMarkdownHandler
 from dingtalk.WatchJobStatus import gen_chart_data, get_task_job_from_workflows_api, settings
-from background_task import background
+# from background_task import background
+from django_q.tasks import async_task, result
+from django_q.models import Schedule
+from django.utils import timezone
+from datetime import timedelta
 
 
 def index(request):
@@ -429,13 +433,22 @@ def interactive_card_test2(request):
 def task_test(request):
     logger = logging.getLogger("dingtalk_bot")
     logger.info("add schedule job")
-    task_test_job(repeat=10)
-    return HttpResponse("OK111")
+    # schedule("my_task", schedule_type=Schedule.ONCE, next_run=timezone.now() + timedelta(minutes=1))
+    # task_test_job(repeat=10)
+    task_id = async_task("customRobot.views.my_task", hook="customRobot.views.print_result")
+    task_result = result(task_id)
+    return HttpResponse(f"OK111 {task_id} result: {task_result}")
 
+def my_task():
+    # 任务逻辑
+    print("定时任务执行了！！")
+    return 2
+# @background(schedule=10, remove_existing_tasks=True)
+# def task_test_job():
+#     logger = logging.getLogger("dingtalk_bot")
+#     logger.info("task running ...")
+#     print(datetime.datetime.now())
+#     logger.info("task completed.")
 
-@background(schedule=10, remove_existing_tasks=True)
-def task_test_job():
-    logger = logging.getLogger("dingtalk_bot")
-    logger.info("task running ...")
-    print(datetime.datetime.now())
-    logger.info("task completed.")
+def print_result(task):
+    print(task.result)
