@@ -1,24 +1,24 @@
-import alibabacloud_dingtalk.im_1_0.models
-from django.shortcuts import render
-from django.http.response import JsonResponse, HttpResponse
-import dingtalk_stream
-from . import EchoMarkdownHandler
-from dingtalk.Dingtalk_Base import Dingtalk_Base
-from dingtalk.Card import Card, CardData
-from django.views.decorators.csrf import csrf_exempt
+import json
 import logging
+import os
+import re
 import time
-import os, re
 
-from alibabacloud_dingtalk.im_1_0 import models as dingtalkim__1__0_models
-from alibabacloud_tea_openapi import models as open_api_models
-from alibabacloud_dingtalk.im_1_0.client import Client as dingtalkim_1_0Client
-from alibabacloud_dingtalk.card_1_0.client import Client as dingtalkcard_1_0Client
-from alibabacloud_tea_util import models as util_models
-
+import dingtalk_stream
 from alibabacloud_dingtalk.card_1_0 import models as dingtalkcard__1__0_models
+from alibabacloud_dingtalk.card_1_0.client import Client as dingtalkcard_1_0Client
+from alibabacloud_dingtalk.im_1_0 import models as dingtalkim__1__0_models
+from alibabacloud_dingtalk.im_1_0.client import Client as dingtalkim_1_0Client
+from alibabacloud_tea_openapi import models as open_api_models
+from alibabacloud_tea_util import models as util_models
+from django.http.response import JsonResponse, HttpResponse
+from django.views.decorators.csrf import csrf_exempt
 
-from alibabacloud_tea_util.client import Client as UtilClient
+from dingtalk.Card import Card, CardData
+from dingtalk.Dingtalk_Base import Dingtalk_Base
+from . import EchoMarkdownHandler
+from dingtalk.WatchJobStatus import gen_chart_data, get_task_job_from_workflows_api, settings
+
 
 def index(request):
     return JsonResponse({"foo": "bar"})
@@ -333,6 +333,8 @@ def interactive_card_test(request):
                 }
             ]
         }
+    task_info = get_task_job_from_workflows_api(token=settings.ARGO_WORKFLOWS_TOKEN, api_domain="https://workflows.poc.jagat.io", namespace="workflows", task_name=request.POST.get("task_name", "Unknown_task_name"))
+    default_chart_data["data"] = gen_chart_data(task_info)
 
     card_vars = {
         "markdown_content": markdown_content,
@@ -350,7 +352,7 @@ def interactive_card_test(request):
         "branch": request.POST.get("branch", "Unknown"),
         "commit_sha": request.POST.get("commit_sha", "e8c15b9aa5debe96dd9f6441ba682f4edd064b30"),
         "environment": request.POST.get("environment", "undefined"),
-        "chart_data": request.POST.get("chart_data", default_chart_data),
+        "chart_data": json.loads(request.POST.get("chart_data", json.dumps(default_chart_data))),
         "approve_action": False,
         "reject_action": False
     }

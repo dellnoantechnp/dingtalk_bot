@@ -2,3 +2,8 @@ Django~=5.1
 alibabacloud-dingtalk==2.0.99
 dingtalk-stream==0.18.1
 django-redis~=5.4
+requests~=2.31.0
+redis~=5.0.8
+humanfriendly~=10.0
+httpx~=1.0.0b0
+httpx[http2]
