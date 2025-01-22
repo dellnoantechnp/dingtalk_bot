@@ -282,12 +282,12 @@ def interactive_card_test(request):
         markdown_content = request.POST.get("markdown_content")
         ## 格式化 markdown 消息格式
         logger.debug(f"origin markdown_content: {markdown_content}")
-        regex = re.compile('\n')
-        markdown_content = regex.sub("<br>\n", markdown_content)
-        regex = re.compile("\n\s{6}")
-        markdown_content = regex.sub("\n> ", markdown_content)
+        regex = re.compile('\\n')
+        markdown_content = regex.sub("<br>\\n", markdown_content)
+        regex = re.compile('\\n\\s{6}')
+        markdown_content = regex.sub("\\n> ", markdown_content)
     else:
-        markdown_content = "#### Tiltle\n* 123\n* 456"
+        markdown_content = "#### Test tiltle\n* 123\n* 456"
 
     card_vars = {
         "markdown_content": markdown_content,
