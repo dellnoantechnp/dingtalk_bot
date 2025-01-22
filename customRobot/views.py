@@ -1,3 +1,4 @@
+import datetime
 import json
 import logging
 import os
@@ -18,6 +19,7 @@ from dingtalk.Card import Card, CardData
 from dingtalk.Dingtalk_Base import Dingtalk_Base
 from . import EchoMarkdownHandler
 from dingtalk.WatchJobStatus import gen_chart_data, get_task_job_from_workflows_api, settings
+from background_task import background
 
 
 def index(request):
@@ -33,14 +35,17 @@ def setup_logger():
     logger.setLevel(logging.INFO)
     return logger
 
+
 ## 示例：https://github.com/open-dingtalk/dingtalk-tutorial-python
 def dingtalk_stream1(request):
     logger = setup_logger()
 
     credential = dingtalk_stream.Credential("dino0gpks7ih", "utI4JqkOzvuj")
     client = dingtalk_stream.DingTalkStreamClient(credential)
-    client.register_callback_handler(dingtalk_stream.chatbot.ChatbotMessage.TOPIC, EchoMarkdownHandler.EchoMarkdownHandler(logger))
+    client.register_callback_handler(dingtalk_stream.chatbot.ChatbotMessage.TOPIC,
+                                     EchoMarkdownHandler.EchoMarkdownHandler(logger))
     client.start_forever()
+
 
 def create_imclient() -> dingtalkim_1_0Client:
     """
@@ -53,6 +58,7 @@ def create_imclient() -> dingtalkim_1_0Client:
     config.region_id = 'central'
     return dingtalkim_1_0Client(config)
 
+
 def create_card_client() -> dingtalkcard_1_0Client:
     """
     使用 Token 初始化账号Client
@@ -64,6 +70,7 @@ def create_card_client() -> dingtalkcard_1_0Client:
     config.region_id = 'central'
     return dingtalkcard_1_0Client(config)
 
+
 @csrf_exempt
 def dingtalk_test(request):
     logger = logging.getLogger("dingtalk_bot")
@@ -72,7 +79,7 @@ def dingtalk_test(request):
     token = dd.get_access_token()
     logger.info("token: " + token)
     time_tag = int(time.time() * 1000)
-    #card_template_id = "bd57beb1-d127-45e5-92d4-81277c59c87b.schema"
+    # card_template_id = "bd57beb1-d127-45e5-92d4-81277c59c87b.schema"
     card_template_id = "98a61096-31e1-4611-be4e-b1d2f6897225.schema"
     out_track_id = f"{card_template_id}.{time_tag}"
 
@@ -90,14 +97,15 @@ def dingtalk_test(request):
 
     card_data = dingtalkim__1__0_models.SendInteractiveCardRequestCardData()
     object_string = {
-      "markdown_content": "#### Tiltle\n* 123\n* 456",
-      "approve_count": 10,
-      "reject_count": 3,
-      "card_title": "本次发布更新",
-      "markdown_title": "本周发布commit汇总",
-      "markdown": "4567"
+        "markdown_content": "#### Tiltle\n* 123\n* 456",
+        "approve_count": 10,
+        "reject_count": 3,
+        "card_title": "本次发布更新",
+        "markdown_title": "本周发布commit汇总",
+        "markdown": "4567"
     }.__str__()
-    card_data.card_param_map = {"title": "朱小志提交的财务报销", "detailUrl": "https://dingtalk.com", "status": "pending", "sys_full_json_obj": object_string}
+    card_data.card_param_map = {"title": "朱小志提交的财务报销", "detailUrl": "https://dingtalk.com",
+                                "status": "pending", "sys_full_json_obj": object_string}
     card_data.card_media_id_param_map = {}
     # send_interactive_card_request.card_data = dingtalkim__1__0_models.InteractiveCardCreateInstanceRequestCardData({"title": "123", "detailUrl": "https://dingtalk.com", "status": "pending", "sys_ful_json_obj": "{}"})
     # send_interactive_card_request.card_data = {"cardParamMap": {"title": "朱小志提交的财务报销", "detailUrl": "https://dingtalk.com", "status": "pending", "sys_full_json_obj": "{}"}}
@@ -116,7 +124,7 @@ def dingtalk_test(request):
     create_and_deliver_request.conversation_type = 1
     create_and_deliver_request.open_space_id = "dtv1.card//IM_SINGLE.cidUQXUpOwFEbiRNp87JyFE3w=="
     create_and_deliver_request.callback_type = "STREAM"
-    #create_and_deliver_request.callback_type = "HTTP"
+    # create_and_deliver_request.callback_type = "HTTP"
 
     im_group_deliver_model = dingtalkcard__1__0_models.CreateAndDeliverRequestImGroupOpenDeliverModel()
     im_group_deliver_model.robot_code = "dingqkoo0gpksjflc7ih"
@@ -216,7 +224,7 @@ def dingtalk_test(request):
             "reject_action": False
         }.__str__()
         update_card_data.card_param_map = {"title": "朱小志提交的财务报销", "detailUrl": "https://dingtalk.com",
-                                    "status": "pending", "sys_full_json_obj": object_string}
+                                           "status": "pending", "sys_full_json_obj": object_string}
         update_card_data.card_media_id_param_map = {}
 
         logger.info("卡片更新")
@@ -241,7 +249,7 @@ def dingtalk_test(request):
         update_interactive_card_request.card_template_id = card_template_id
         # send_interactive_card_request.card_template_id = "b2a8bb23-0b04-45c7-8686-e3668b082ed8.schema"
         # send_interactive_card_request.out_track_id = "b2a8bb23-0b04-45c7-8686-e3668b082ed8.schema.1715069378009"
-        #update_interactive_card_request.out_track_id = out_track_id + ".update"
+        # update_interactive_card_request.out_track_id = out_track_id + ".update"
         update_interactive_card_request.robot_code = "dingqkoo0gpksjflc7ih"
         update_interactive_card_request.open_conversation_id = "cidUQXUpOwFEbiRNp87JyFE3w=="
         update_interactive_card_request.conversation_type = 1
@@ -290,49 +298,49 @@ def interactive_card_test(request):
         markdown_content = "#### Test tiltle\n* 123\n* 456"
 
     default_chart_data = {
-            "type": "pieChart",
-            "config": {
-                "pieChartStyle": "percentage",
-                "xAxisConfig": {},
-                "padding": [
-                    0,
-                    5,
-                    0,
-                    0
-                ],
-                "yAxisConfig": {},
-                "color": [
-                    "#329FFE",
-                    "#1AC681",
-                    "#FD9E5E",
-                    "#C766EC",
-                    "#98D333",
-                    "#5A88FE",
-                    "#FE7A66",
-                    "#ED63AD",
-                    "#A564ED",
-                    "#F7BE4D"
-                ]
-            },
-            "data": [
-                {
-                    "x": "江西省",
-                    "y": 1
-                },
-                {
-                    "x": "西藏自治区",
-                    "y": 1
-                },
-                {
-                    "x": "北京",
-                    "y": 1
-                },
-                {
-                    "x": "山西省",
-                    "y": 1
-                }
+        "type": "pieChart",
+        "config": {
+            "pieChartStyle": "percentage",
+            "xAxisConfig": {},
+            "padding": [
+                0,
+                5,
+                0,
+                0
+            ],
+            "yAxisConfig": {},
+            "color": [
+                "#329FFE",
+                "#1AC681",
+                "#FD9E5E",
+                "#C766EC",
+                "#98D333",
+                "#5A88FE",
+                "#FE7A66",
+                "#ED63AD",
+                "#A564ED",
+                "#F7BE4D"
             ]
-        }
+        },
+        "data": [
+            {
+                "x": "江西省",
+                "y": 1
+            },
+            {
+                "x": "西藏自治区",
+                "y": 1
+            },
+            {
+                "x": "北京",
+                "y": 1
+            },
+            {
+                "x": "山西省",
+                "y": 1
+            }
+        ]
+    }
     task_info = get_task_job_from_workflows_api(token=settings.ARGO_WORKFLOWS_TOKEN,
                                                 api_domain=settings.ARGO_WORKFLOWS_DOMAIN,
                                                 namespace=settings.ARGO_WORKFLOWS_WORKER_NAMESPACE,
@@ -349,7 +357,8 @@ def interactive_card_test(request):
         "markdown": "4567121231231",
         "approve_max": 10,
         "reject_max": 2,
-        "card_ref_link": request.POST.get("card_ref_link", "https://workflows.poc.jagat.io/workflows/workflows?&limit=50"),
+        "card_ref_link": request.POST.get("card_ref_link",
+                                          "https://workflows.poc.jagat.io/workflows/workflows?&limit=50"),
         "repository": request.POST.get("repository", "undefined"),
         "project_id": request.POST.get("project_id", "100000"),
         "author": request.POST.get("author", "Unknown"),
@@ -367,9 +376,9 @@ def interactive_card_test(request):
     time.sleep(3)
     card_vars["markdown_content"] = card_vars["markdown_content"] + "7890"
     b = CardData(card_vars)
-    #logger.info(f"Card param map: {b.get_card_content()}")
+    # logger.info(f"Card param map: {b.get_card_content()}")
     a.create_and_update_card_data(b)
-    #a.__persistent_card()
+    # a.__persistent_card()
 
     logger.info(f"开始更新卡片")
     a.update_interactive_card()
@@ -379,7 +388,8 @@ def interactive_card_test(request):
 @csrf_exempt
 def interactive_card_test2(request):
     logger = logging.getLogger("dingtalk_bot")
-    logger.debug(f"appKey: {os.environ.get('DINGTALK_CLIENT_ID')} appSecret: {os.environ.get('DINGTALK_CLIENT_SECRET')}")
+    logger.debug(
+        f"appKey: {os.environ.get('DINGTALK_CLIENT_ID')} appSecret: {os.environ.get('DINGTALK_CLIENT_SECRET')}")
     dd = Dingtalk_Base(os.environ.get("DINGTALK_CLIENT_ID"), os.environ.get("DINGTALK_CLIENT_SECRET"), "dingtalk_bot")
     token = dd.get_access_token()
     logger.info("token: " + token)
@@ -406,10 +416,26 @@ def interactive_card_test2(request):
     time.sleep(3)
     card_vars["markdown_content"] = card_vars["markdown_content"] + "7890"
     b = CardData(card_vars)
-    #logger.info(f"Card param map: {b.get_card_content()}")
+    # logger.info(f"Card param map: {b.get_card_content()}")
     a.create_and_update_card_data(b)
-    #a.__persistent_card()
+    # a.__persistent_card()
 
     logger.info(f"开始更新卡片")
     a.update_interactive_card()
     return HttpResponse("OK")
+
+
+@csrf_exempt
+def task_test(request):
+    logger = logging.getLogger("dingtalk_bot")
+    logger.info("add schedule job")
+    task_test_job(repeat=10)
+    return HttpResponse("OK111")
+
+
+@background(schedule=10, remove_existing_tasks=True)
+def task_test_job():
+    logger = logging.getLogger("dingtalk_bot")
+    logger.info("task running ...")
+    print(datetime.datetime.now())
+    logger.info("task completed.")
