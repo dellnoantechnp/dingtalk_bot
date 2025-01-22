@@ -289,23 +289,7 @@ def interactive_card_test(request):
     else:
         markdown_content = "#### Test tiltle\n* 123\n* 456"
 
-    card_vars = {
-        "markdown_content": markdown_content,
-        "approve": 0,
-        "reject": 0,
-        "card_title": "本次发布更新",
-        "markdown_title": "本次发布 CHANGELOG 汇总",
-        "markdown": "4567121231231",
-        "approve_max": 10,
-        "reject_max": 2,
-        "card_ref_link": request.POST.get("card_ref_link", "https://workflows.poc.jagat.io/workflows/workflows?&limit=50"),
-        "repository": request.POST.get("repository", "undefined"),
-        "project_id": request.POST.get("project_id", "100000"),
-        "author": request.POST.get("author", "Unknown"),
-        "branch": request.POST.get("branch", "Unknown"),
-        "commit_sha": request.POST.get("commit_sha", "e8c15b9aa5debe96dd9f6441ba682f4edd064b30"),
-        "environment": request.POST.get("environment", "undefined"),
-        "chart_data": {
+    default_chart_data = {
             "type": "pieChart",
             "config": {
                 "pieChartStyle": "percentage",
@@ -348,7 +332,25 @@ def interactive_card_test(request):
                     "y": 1
                 }
             ]
-        },
+        }
+
+    card_vars = {
+        "markdown_content": markdown_content,
+        "approve": 0,
+        "reject": 0,
+        "card_title": "本次发布更新",
+        "markdown_title": "本次发布 CHANGELOG 汇总",
+        "markdown": "4567121231231",
+        "approve_max": 10,
+        "reject_max": 2,
+        "card_ref_link": request.POST.get("card_ref_link", "https://workflows.poc.jagat.io/workflows/workflows?&limit=50"),
+        "repository": request.POST.get("repository", "undefined"),
+        "project_id": request.POST.get("project_id", "100000"),
+        "author": request.POST.get("author", "Unknown"),
+        "branch": request.POST.get("branch", "Unknown"),
+        "commit_sha": request.POST.get("commit_sha", "e8c15b9aa5debe96dd9f6441ba682f4edd064b30"),
+        "environment": request.POST.get("environment", "undefined"),
+        "chart_data": request.POST.get("chart_data", default_chart_data),
         "approve_action": False,
         "reject_action": False
     }
