@@ -24,7 +24,11 @@ REDIS_DATABASE_NUM = os.environ.get("REDIS_DATABASE_NUM", "0")
 
 REDIS_PASSWORD = os.environ.get("REDIS_PASSWORD", "")
 
+ARGO_WORKFLOWS_DOMAIN = os.environ.get("ARGO_WORKFLOWS_DOMAIN", "https://workflows.example.com")
+
 ARGO_WORKFLOWS_TOKEN = os.environ.get("ARGO_WORKFLOWS_TOKEN", "undefined")
+
+ARGO_WORKFLOWS_WORKER_NAMESPACE = os.environ.get("ARGO_WORKFLOWS_WORKER_NAMESPACE", "workflows")
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent

@@ -333,7 +333,11 @@ def interactive_card_test(request):
                 }
             ]
         }
-    task_info = get_task_job_from_workflows_api(token=settings.ARGO_WORKFLOWS_TOKEN, api_domain="https://workflows.poc.jagat.io", namespace="workflows", task_name=request.POST.get("task_name", "Unknown_task_name"))
+    task_info = get_task_job_from_workflows_api(token=settings.ARGO_WORKFLOWS_TOKEN,
+                                                api_domain=settings.ARGO_WORKFLOWS_DOMAIN,
+                                                namespace=settings.ARGO_WORKFLOWS_WORKER_NAMESPACE,
+                                                task_name=request.POST.get("task_name", "Unknown_task_name")
+                                                )
     default_chart_data["data"] = gen_chart_data(task_info)
 
     card_vars = {
