@@ -20,10 +20,11 @@ from dingtalk.Dingtalk_Base import Dingtalk_Base
 from . import EchoMarkdownHandler
 from dingtalk.WatchJobStatus import gen_chart_data, get_task_job_from_workflows_api, settings
 # from background_task import background
-from django_q.tasks import async_task, result
-from django_q.models import Schedule
+from django_q.tasks import async_task, result, schedule
+from django_q.models import Schedule, Task
 from django.utils import timezone
 from datetime import timedelta
+from dingtalk.tasks.TaskStatusOfWorkflowsJob import add_schedule_job
 
 
 def index(request):
@@ -345,12 +346,13 @@ def interactive_card_test(request):
             }
         ]
     }
-    task_info = get_task_job_from_workflows_api(token=settings.ARGO_WORKFLOWS_TOKEN,
-                                                api_domain=settings.ARGO_WORKFLOWS_DOMAIN,
-                                                namespace=settings.ARGO_WORKFLOWS_WORKER_NAMESPACE,
-                                                task_name=request.POST.get("task_name", "Unknown_task_name")
-                                                )
-    default_chart_data["data"] = gen_chart_data(task_info)
+    # task_info = get_task_job_from_workflows_api(token=settings.ARGO_WORKFLOWS_TOKEN,
+    #                                             api_domain=settings.ARGO_WORKFLOWS_DOMAIN,
+    #                                             namespace=settings.ARGO_WORKFLOWS_WORKER_NAMESPACE,
+    #                                             task_name=request.POST.get("task_name", "Unknown_task_name")
+    #                                             )
+    # default_chart_data["data"] = gen_chart_data(task_info)
+    add_schedule_job(request.POST.get("task_name", "none"))
 
     card_vars = {
         "markdown_content": markdown_content,
@@ -371,7 +373,8 @@ def interactive_card_test(request):
         "environment": request.POST.get("environment", "undefined"),
         "chart_data": json.loads(request.POST.get("chart_data", json.dumps(default_chart_data))),
         "approve_action": False,
-        "reject_action": False
+        "reject_action": False,
+        "cicd_status": request.POST.get("cicd_status", "正在更新中...")
     }
     b = CardData(card_vars)
     a.create_and_update_card_data(b)
@@ -435,13 +438,33 @@ def task_test(request):
     logger.info("add schedule job")
     # schedule("my_task", schedule_type=Schedule.ONCE, next_run=timezone.now() + timedelta(minutes=1))
     # task_test_job(repeat=10)
-    task_id = async_task("customRobot.views.my_task", hook="customRobot.views.print_result")
-    task_result = result(task_id)
-    return HttpResponse(f"OK111 {task_id} result: {task_result}")
+    #task_id = async_task("customRobot.views.my_task", hook="customRobot.views.print_result")
+    task_id = schedule("customRobot.views.my_task", args=("abcd",), schedule_type=Schedule.MINUTES, minutes=0.5, repeats=-1)
+    #task_result = result(task_id)
+    #return HttpResponse(f"OK111 {task_id} result: {task_result}")
+    return HttpResponse(f"OK111")
 
-def my_task():
+
+def stop_task(request):
+    logger = logging.getLogger("dingtalk_bot")
+    logger.info("stop schedule job")
+    recent_tasks = Task.objects.all()
+    filter_schedule = Schedule.objects.filter(args="('abc1',)")
+    print(filter_schedule)
+
+    scheduled_tasks = Schedule.objects.all()
+    for task in scheduled_tasks:
+        print(f"Task Name: {task.name}, Func: {task.func}, Cron: {task.task}, IsSuccess: {task.success()} was deleted.")
+        #task.delete()
+    return HttpResponse("OK")
+
+
+def my_task(args):
     # 任务逻辑
-    print("定时任务执行了！！")
+    logger = logging.getLogger("dingtalk_bot")
+    logger.info(f"task {args} running ...")
+    print(f"定时任务执行了！！ {args} {datetime.datetime.now()}")
+    logger.info("task completed.")
     return 2
 # @background(schedule=10, remove_existing_tasks=True)
 # def task_test_job():
@@ -449,6 +472,7 @@ def my_task():
 #     logger.info("task running ...")
 #     print(datetime.datetime.now())
 #     logger.info("task completed.")
+
 
 def print_result(task):
     print(task.result)

@@ -219,7 +219,9 @@ CACHES = {
         "BACKEND": "django_redis.cache.RedisCache",
         "LOCATION": f"redis://{REDIS_ADDR}/{REDIS_DATABASE_NUM}",
         "OPTIONS": {
+            #"REDIS_CLIENT_CLASS": "rediscluster.RedisCluster",
             "CLIENT_CLASS": "django_redis.client.DefaultClient",
+            #"CONNECTION_POOL_CLASS": "rediscluster.connection.ClusterConnectionPool",
             "SOCKET_CONNECT_TIMEOUT": 5,
             "SOCKET_TIMEOUT": 10,
             "CONNECTION_POOL_KWARGS": {
