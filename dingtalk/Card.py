@@ -37,6 +37,7 @@ class Card(CreateAndDeliverRequest, CreateAndDeliverHeaders, SendInteractiveCard
     config.region_id = "central"
 
     def __init__(self, access_token: Union[str] = None,
+                 task_name: Union[str] = "",
                  card_template_id: Optional[str] = None,
                  robot_code: Optional[str] = None,
                  open_conversation_id: Optional[str] = None,
@@ -47,6 +48,7 @@ class Card(CreateAndDeliverRequest, CreateAndDeliverHeaders, SendInteractiveCard
         OpenSpaceId Docs: https://open.dingtalk.com/document/orgapp/open-interface-card-delivery-instance
 
         :param access_token: token
+        :param task_name: 任务名称
         :param card_template_id: 卡片模板ID
         :param robot_code: 机器人code
         :param open_conversation_id: 群ID
@@ -58,10 +60,10 @@ class Card(CreateAndDeliverRequest, CreateAndDeliverHeaders, SendInteractiveCard
         self.logger = logging.getLogger("dingtalk_bot")
         super().__init__(callback_type, card_template_id)
         super(CreateAndDeliverHeaders, self).__init__()
-        if out_track_id and card_template_id is None:
+        if task_name and card_template_id is None:
             # 更新卡片逻辑,从历史数据中加载相关参数
-            self.logger.info(f"load card parameters from redis, out_track_id={out_track_id}")
-            self.__load_data_from_persistent_store(out_track_id=out_track_id)
+            self.logger.info(f"load card parameters from redis, task_name={task_name}")
+            self.__load_data_from_persistent_store(task_name=task_name)
         else:
             # 新创建卡片逻辑,需要传入初始参数
             self.logger.debug(
@@ -80,6 +82,7 @@ class Card(CreateAndDeliverRequest, CreateAndDeliverHeaders, SendInteractiveCard
         self.im_group_open_space_model = CreateCardRequestImGroupOpenSpaceModel()
         self.im_group_open_space_model.support_forward = True
         self.common_headers = None
+        self.task_name = task_name
 
     def gen_out_track_id(self) -> str:
         """
@@ -185,7 +188,8 @@ class Card(CreateAndDeliverRequest, CreateAndDeliverHeaders, SendInteractiveCard
         持久化卡片数据
         :param timeout: 可选的超时时间，默认值7day
         """
-        key_name = self.out_track_id
+        #key_name = self.out_track_id
+        key_name = self.task_name
         mapping = dict()
         mapping["card_param_map_string"] = str(self.card_data)
         mapping["card_template_id"] = self.card_template_id
@@ -193,16 +197,16 @@ class Card(CreateAndDeliverRequest, CreateAndDeliverHeaders, SendInteractiveCard
         mapping["robot_code"] = self.robot_code
         mapping["open_conversation_id"] = self.open_conversation_id
         mapping["conversation_type"] = self.conversation_type
-        self.logger.debug(f"persistent card public data on out_track_id is {key_name}")
+        self.logger.debug(f"persistent card public data on task_name is {key_name}")
 
         # 持久化私有变量
         temp_private_data = {}
         if self.private_data:
-            temp_private_data = json.loads(self.__load_data_from_persistent_store(self.out_track_id, "private_data"))
+            temp_private_data = json.loads(self.__load_data_from_persistent_store(self.task_name, "private_data"))
             for user in self.private_data:
                 temp_private_data[user] = str(self.private_data.get(user))
         mapping["private_data"] = json.dumps(temp_private_data)
-        self.logger.debug(f"persistent card private data on out_track_id is {key_name}")
+        self.logger.debug(f"persistent card private data on task_name is {key_name}")
 
         redis_cache = caches["default"]
         redis_client = redis_cache.client.get_client()
@@ -216,16 +220,16 @@ class Card(CreateAndDeliverRequest, CreateAndDeliverHeaders, SendInteractiveCard
         else:
             raise PersistentDataError(f"persistent card data [{key_name}] failed.", 10001)
 
-    def __load_data_from_persistent_store(self, out_track_id: Union[str], key_name: Optional[str] = None):
+    def __load_data_from_persistent_store(self, task_name: Union[str], key_name: Optional[str] = None):
         """
         卡片更新逻辑，从历史数据中 load 关键参数
 
-        :param out_track_id: 回调请求时，需传入 out_track_id，新创建卡片不用传入 out_track_id
+        :param task_name: 回调请求时，需传入 task_name，新创建卡片不用传入 task_name
         :param key_name: 仅返回指定 key_name 的持久化数据
         """
         redis_cache = caches["default"]
         redis_client = redis_cache.client.get_client()
-        previous_card = redis_client.hgetall(out_track_id)
+        previous_card = redis_client.hgetall(task_name)
         if previous_card:
             if key_name:
                 return previous_card.get(key_name.encode()).decode()
@@ -234,6 +238,7 @@ class Card(CreateAndDeliverRequest, CreateAndDeliverHeaders, SendInteractiveCard
                 self.robot_code = previous_card.get(b"robot_code").decode()
                 self.open_conversation_id = previous_card.get(b"open_conversation_id").decode()
                 self.conversation_type = previous_card.get(b"conversation_type").decode()
+                self.out_track_id = previous_card.get(b"out_track_id").decode()
 
                 # public data
                 self.update_card_vars = json.loads(previous_card.get(b"card_param_map_string").decode())
@@ -244,7 +249,7 @@ class Card(CreateAndDeliverRequest, CreateAndDeliverHeaders, SendInteractiveCard
                 #         self.private_data = {user: PrivateCardData(json.loads(load_private_data.get(user)))}
                 # pass
         else:
-            raise LoadPersistentDataError(f"Load persistent data error, key name is [{out_track_id}]", 10001)
+            raise LoadPersistentDataError(f"Load persistent data error, key name is [{task_name}]", 10001)
 
     def __str__(self):
         print(repr(self))

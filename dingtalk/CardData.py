@@ -1,11 +1,11 @@
 from alibabacloud_dingtalk.im_1_0.models import (InteractiveCardCreateInstanceRequestCardData,
                                                  SendInteractiveCardRequestCardData,
-                                                 PrivateDataValue)
+                                                 PrivateDataValue, UpdateInteractiveCardRequestCardData)
 from typing import Dict
 import json
 
 
-class CardData(SendInteractiveCardRequestCardData, PrivateDataValue):
+class CardData(SendInteractiveCardRequestCardData, PrivateDataValue, UpdateInteractiveCardRequestCardData):
     """
     docs: https://open.dingtalk.com/document/orgapp/send-interactive-dynamic-cards-1#h2-vnz-jdj-vrc
     """

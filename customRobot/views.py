@@ -232,49 +232,70 @@ def dingtalk_test(request):
                                            "status": "pending", "sys_full_json_obj": object_string}
         update_card_data.card_media_id_param_map = {}
 
+        # -------------------------------------------------------------------------------------------------------------
         logger.info("卡片更新")
-        update_card_request = dingtalkcard__1__0_models.UpdateCardRequest()
-        update_card_request.out_track_id = out_track_id
-        update_card_request.card_data = update_card_data
+        # update_card_request = dingtalkcard__1__0_models.UpdateCardRequest()
+        # update_card_request.out_track_id = out_track_id
+        # update_card_request.card_data = update_card_data
+        #
+        # ## Private data
+        # ccc = dingtalkim__1__0_models.PrivateDataValue()
+        #
+        # update_card_request.private_data = {'052605600220581061': ccc}
+        #
+        # update_card_header = dingtalkcard__1__0_models.UpdateCardHeaders()
+        # update_card_header.x_acs_dingtalk_access_token = token
+        # resp: dingtalkcard__1__0_models.UpdateCardResponse = card_client.update_card_with_options(
+        #     update_card_request,
+        #     update_card_header,
+        #     util_models.RuntimeOptions()
+        # )
 
-        ## Private data
-        ccc = dingtalkim__1__0_models.PrivateDataValue()
-
-        update_card_request.private_data = {'052605600220581061': ccc}
-
-        update_card_header = dingtalkcard__1__0_models.UpdateCardHeaders()
-        update_card_header.x_acs_dingtalk_access_token = token
-        resp: dingtalkcard__1__0_models.UpdateCardResponse = card_client.update_card_with_options(
-            update_card_request,
-            update_card_header,
-            util_models.RuntimeOptions()
+        # card_data = dingtalkim__1__0_models.UpdateInteractiveCardRequestCardData(
+        #     card_param_map={"title": "朱小志提交的财务报销", "detailUrl": "https://dingtalk.com",
+        #                                    "status": "pending", "sys_full_json_obj": object_string},
+        #     card_media_id_param_map={}
+        # )
+        card_data = dingtalkim__1__0_models.UpdateInteractiveCardRequestCardData(
+            card_param_map={"key": "测试"},
+            card_media_id_param_map={"key": "测试"}
         )
 
         update_interactive_card_request = dingtalkim__1__0_models.UpdateInteractiveCardRequest()
-        update_interactive_card_request.card_template_id = card_template_id
+        #update_interactive_card_request.card_template_id = card_template_id
         # send_interactive_card_request.card_template_id = "b2a8bb23-0b04-45c7-8686-e3668b082ed8.schema"
         # send_interactive_card_request.out_track_id = "b2a8bb23-0b04-45c7-8686-e3668b082ed8.schema.1715069378009"
         # update_interactive_card_request.out_track_id = out_track_id + ".update"
-        update_interactive_card_request.robot_code = "dingqkoo0gpksjflc7ih"
-        update_interactive_card_request.open_conversation_id = "cidUQXUpOwFEbiRNp87JyFE3w=="
-        update_interactive_card_request.conversation_type = 1
-        update_interactive_card_request.card_data = update_card_data
+        #update_interactive_card_request.robot_code = "dingqkoo0gpksjflc7ih"
+        #update_interactive_card_request.open_conversation_id = "cidUQXUpOwFEbiRNp87JyFE3w=="
+        #update_interactive_card_request.conversation_type = 1
+        update_interactive_card_request.card_data = card_data
+        update_interactive_card_request.out_track_id = out_track_id
+        print(update_interactive_card_request.out_track_id)
+        # card_options = dingtalkim__1__0_models.UpdateInteractiveCardRequestCardOptions(
+        #     update_card_data_by_key=False,
+        #     update_private_data_by_key=False
+        # )
+        # update_interactive_card_request.card_options = card_options
+        # update_interactive_card_request.user_id_type = 1
+        update_interactive_card_request.private_data = {"privateDataValueKey": card_data}
 
         update_interactive_card_headers = dingtalkim__1__0_models.UpdateInteractiveCardHeaders()
         update_interactive_card_headers.x_acs_dingtalk_access_token = token
 
         logger.info("卡片更新投递到聊天")
-        resp: dingtalkim__1__0_models.UpdateInteractiveCardResponse = im_client.update_interactive_card_with_options(
+        update_resp: dingtalkim__1__0_models.UpdateInteractiveCardResponse = im_client.update_interactive_card_with_options(
             update_interactive_card_request,
             update_interactive_card_headers,
             util_models.RuntimeOptions()
         )
     except Exception as err:
+        print(f"ERROR: ... {err.args}")
         pass
 
     # return HttpResponse(dd.getAccessToken())
 
-    return HttpResponse(resp.body)
+    return HttpResponse(update_resp.body)
 
 
 @csrf_exempt
@@ -285,10 +306,13 @@ def interactive_card_test(request):
     token = dd.get_access_token()
     logger.info("token: " + token)
 
+    task_name = request.POST.get("task_name", "undefined")
+
     a = Card(access_token=token,
              card_template_id="98a61096-31e1-4611-be4e-b1d2f6897225.schema",
              robot_code="dingqkoo0gpksjflc7ih",
              open_conversation_id="cidUQXUpOwFEbiRNp87JyFE3w==",
+             task_name=task_name,
              )
 
     if "markdown_content" in request.POST.keys():
@@ -379,16 +403,26 @@ def interactive_card_test(request):
     b = CardData(card_vars)
     a.create_and_update_card_data(b)
     a.send_interactive_card()
+    print(a.out_track_id)
 
     time.sleep(3)
+    a2 = Card(access_token=token, task_name=task_name)
     card_vars["markdown_content"] = card_vars["markdown_content"] + "7890"
-    b = CardData(card_vars)
+    b2 = CardData(card_vars)
     # logger.info(f"Card param map: {b.get_card_content()}")
-    a.create_and_update_card_data(b)
+    a2.create_and_update_card_data(b2)
     # a.__persistent_card()
+    a2.private_data = {"privateDataValueKey": {}}
+    # a2.open_conversation_id = None
+    # a2.card_template_id = None
+    # a2.open_space_id = None
+    # a2.robot_code = None
+    a2.user_id_type = None
 
     logger.info(f"开始更新卡片")
-    a.update_interactive_card()
+    a2.out_track_id = a.out_track_id
+    print(a2.out_track_id)
+    a2.update_interactive_card()
     return HttpResponse("OK")
 
 
@@ -401,11 +435,15 @@ def interactive_card_test2(request):
     token = dd.get_access_token()
     logger.info("token: " + token)
 
-    a = Card(access_token=token,
+    updateCard = Card(access_token=token,
              card_template_id="98a61096-31e1-4611-be4e-b1d2f6897225.schema",
              robot_code="dingqkoo0gpksjflc7ih",
              open_conversation_id="cidUQXUpOwFEbiRNp87JyFE3w==",
              )
+
+
+
+
     card_vars = {
         "markdown_content": "#### Tiltle\n* 123\n* 456",
         "approve": 7,
@@ -417,18 +455,18 @@ def interactive_card_test2(request):
         "reject_max": 5,
     }
     b = CardData(card_vars)
-    a.create_and_update_card_data(b)
-    a.send_interactive_card()
+    updateCard.create_and_update_card_data(b)
+    updateCard.send_interactive_card()
 
     time.sleep(3)
     card_vars["markdown_content"] = card_vars["markdown_content"] + "7890"
     b = CardData(card_vars)
     # logger.info(f"Card param map: {b.get_card_content()}")
-    a.create_and_update_card_data(b)
+    updateCard.create_and_update_card_data(b)
     # a.__persistent_card()
 
     logger.info(f"开始更新卡片")
-    a.update_interactive_card()
+    updateCard.update_interactive_card()
     return HttpResponse("OK")
 
 
