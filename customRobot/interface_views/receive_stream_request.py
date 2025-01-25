@@ -22,7 +22,7 @@ def receive_stream_request(request):
     token = dd.get_access_token()
     logger.info("token: " + token)
     receive_out_track_id = request.POST.get("outTrackId")
-    logger.info(f"request parma outTrackId: {receive_out_track_id}")
+    logger.info(f"request parma outTrackId: {receive_out_track_id} from CorpId: {request.POST.get('corpId')}")
 
     # redis_cache = caches["default"]
     # redis_client = redis_cache.client.get_client()

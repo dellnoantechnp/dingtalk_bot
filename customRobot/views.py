@@ -409,10 +409,14 @@ def interactive_card_test(request):
     a2 = Card(access_token=token, task_name=task_name)
     card_vars["markdown_content"] = card_vars["markdown_content"] + "7890"
     b2 = CardData(card_vars)
+    # b2 = dingtalkim__1__0_models.UpdateInteractiveCardRequestCardData(
+    #     card_param_map=card_vars,
+    #     card_media_id_param_map=card_vars
+    # )
     # logger.info(f"Card param map: {b.get_card_content()}")
     a2.create_and_update_card_data(b2)
     # a.__persistent_card()
-    a2.private_data = {"privateDataValueKey": {}}
+    a2.private_data = {"privateDataValueKey": b2}
     # a2.open_conversation_id = None
     # a2.card_template_id = None
     # a2.open_space_id = None

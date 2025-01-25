@@ -5,7 +5,7 @@ from typing import Dict
 import json
 
 
-class CardData(SendInteractiveCardRequestCardData, PrivateDataValue, UpdateInteractiveCardRequestCardData):
+class CardData(SendInteractiveCardRequestCardData, PrivateDataValue):
     """
     docs: https://open.dingtalk.com/document/orgapp/send-interactive-dynamic-cards-1#h2-vnz-jdj-vrc
     """

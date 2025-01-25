@@ -23,10 +23,12 @@ from dingtalk.Dingtalk_Base import Dingtalk_Base
 from dingtalk.CardException import (PersistentDataError,
                                     LoadPersistentDataError)
 from django.core.cache import caches
+from django.core.cache.backends.redis import RedisCacheClient
 import time
 from typing import Optional, Union
 from .CardData import CardData
 import json
+import copy
 
 
 class Card(CreateAndDeliverRequest, CreateAndDeliverHeaders, SendInteractiveCardRequest, SendInteractiveCardHeaders,
@@ -37,7 +39,7 @@ class Card(CreateAndDeliverRequest, CreateAndDeliverHeaders, SendInteractiveCard
     config.region_id = "central"
 
     def __init__(self, access_token: Union[str] = None,
-                 task_name: Union[str] = "",
+                 task_name: Optional[str] = "",
                  card_template_id: Optional[str] = None,
                  robot_code: Optional[str] = None,
                  open_conversation_id: Optional[str] = None,
@@ -60,8 +62,10 @@ class Card(CreateAndDeliverRequest, CreateAndDeliverHeaders, SendInteractiveCard
         self.logger = logging.getLogger("dingtalk_bot")
         super().__init__(callback_type, card_template_id)
         super(CreateAndDeliverHeaders, self).__init__()
-        if task_name and card_template_id is None:
+        self.task_track_mapping_key_name = "cicd_task_name_mapping_out_track_id"
+        if out_track_id and card_template_id is None:
             # 更新卡片逻辑,从历史数据中加载相关参数
+            task_name = self.get_record_task_name_by_out_track_id(out_track_id=out_track_id)
             self.logger.info(f"load card parameters from redis, task_name={task_name}")
             self.__load_data_from_persistent_store(task_name=task_name)
         else:
@@ -157,21 +161,22 @@ class Card(CreateAndDeliverRequest, CreateAndDeliverHeaders, SendInteractiveCard
             self, self, util_models.RuntimeOptions()
         )
         self.__persistent_card()
+        self.set_record_task_name_by_out_track_id(out_track_id=self.out_track_id, task_name=self.task_name)
 
     def update_interactive_card(self, user_id: Optional[str] = None, private_data: Optional[CardData] = None):
         """
         更新卡片历史卡片
         """
-        if user_id and private_data:
-            self.logger.debug(f"开始更新卡片私有变量内容: 用户ID {user_id}")
-            update_card_response = self.__update_card(user_id=user_id, private_data=private_data)
-        else:
-            self.logger.debug(f"开始更新卡片变量内容")
-            update_card_response = self.__update_card()
-        if update_card_response.success:
-            self.logger.info(f"交互式卡片更新成功: {update_card_response.result}")
-        else:
-            self.logger.warning(f"交互式卡片更新失败: {update_card_response.result}")
+        # if user_id and private_data:
+        #     self.logger.debug(f"开始更新卡片私有变量内容: 用户ID {user_id}")
+        #     update_card_response = self.__update_card(user_id=user_id, private_data=private_data)
+        # else:
+        #     self.logger.debug(f"开始更新卡片变量内容")
+        #     update_card_response = self.__update_card()
+        # if update_card_response.success:
+        #     self.logger.info(f"交互式卡片更新成功: {update_card_response.result}")
+        # else:
+        #     self.logger.warning(f"交互式卡片更新失败: {update_card_response.result}")
 
         im_client = dingtalkim_1_0Client(self.config)
 
@@ -188,7 +193,7 @@ class Card(CreateAndDeliverRequest, CreateAndDeliverHeaders, SendInteractiveCard
         持久化卡片数据
         :param timeout: 可选的超时时间，默认值7day
         """
-        #key_name = self.out_track_id
+        # key_name = self.out_track_id
         key_name = self.task_name
         mapping = dict()
         mapping["card_param_map_string"] = str(self.card_data)
@@ -206,17 +211,16 @@ class Card(CreateAndDeliverRequest, CreateAndDeliverHeaders, SendInteractiveCard
             for user in self.private_data:
                 temp_private_data[user] = str(self.private_data.get(user))
         mapping["private_data"] = json.dumps(temp_private_data)
+        mapping = Card.Clear_mapping_value_is_none(mapping)
         self.logger.debug(f"persistent card private data on task_name is {key_name}")
 
-        redis_cache = caches["default"]
-        redis_client = redis_cache.client.get_client()
-        if redis_client.hset(name=key_name,
-                             mapping=mapping) >= 0:
+        if self.__get_redis_client().hset(name=key_name,
+                                          mapping=mapping) >= 0:
             # redis_client.hset ret 0: update exists item
             # redis_client.hset ret 1: update or create a key, add 1 item
             # redis_client.hset ret more than 1: update or create a key, add more item
             self.logger.debug(f"persistent card param {key_name} to redis done, ttl is {timeout}")
-            redis_client.execute_command("expire", key_name, timeout)
+            self.redis_client.execute_command("expire", key_name, timeout)
         else:
             raise PersistentDataError(f"persistent card data [{key_name}] failed.", 10001)
 
@@ -227,9 +231,7 @@ class Card(CreateAndDeliverRequest, CreateAndDeliverHeaders, SendInteractiveCard
         :param task_name: 回调请求时，需传入 task_name，新创建卡片不用传入 task_name
         :param key_name: 仅返回指定 key_name 的持久化数据
         """
-        redis_cache = caches["default"]
-        redis_client = redis_cache.client.get_client()
-        previous_card = redis_client.hgetall(task_name)
+        previous_card = self.__get_redis_client().hgetall(task_name)
         if previous_card:
             if key_name:
                 return previous_card.get(key_name.encode()).decode()
@@ -250,6 +252,65 @@ class Card(CreateAndDeliverRequest, CreateAndDeliverHeaders, SendInteractiveCard
                 # pass
         else:
             raise LoadPersistentDataError(f"Load persistent data error, key name is [{task_name}]", 10001)
+
+    def __get_redis_client(self) -> RedisCacheClient:
+        """
+        返回 redis_client
+
+        :return: redis_client
+        """
+        if not hasattr(self, "redis_client"):
+            redis_cache = caches["default"]
+            redis_client = redis_cache.client.get_client()
+            self.redis_client = redis_client
+        return self.redis_client
+
+    def set_record_task_name_by_out_track_id(self, out_track_id: Union[str] = None,
+                                             task_name: Union[str] = None,
+                                             timeout: Optional[int] = 604800):
+        """
+        记录 task_name 和 out_track_id 映射键，如需更改 key 名，需要设置 object.task_track_mapping_key_name 值。
+
+        :param out_track_id: outTrackId
+        :param task_name: 任务名称
+        :param timeout: redis key TTL timeout
+        :return: void
+        """
+        __temp_map = {out_track_id: task_name}
+        if self.__get_redis_client().hset(name=self.task_track_mapping_key_name,
+                                          mapping=__temp_map) >= 0:
+            # redis_client.hset ret 0: update exists item
+            # redis_client.hset ret 1: update or create a key, add 1 item
+            # redis_client.hset ret more than 1: update or create a key, add more item
+            self.logger.debug(f"store out_track_id mapping success.")
+            self.redis_client.execute_command("expire", self.task_track_mapping_key_name, timeout)
+        else:
+            raise PersistentDataError(f"store {self.task_track_mapping_key_name} failed.", 10002)
+
+    def get_record_task_name_by_out_track_id(self, out_track_id: Union[str] = None) -> (str, None):
+        """
+        返回根据 out_track_id 查询得到 task_name.
+
+        :param out_track_id: outTrackId
+        :return: 返回 task_name 名称
+        """
+        try:
+            result = self.__get_redis_client().hget(self.task_track_mapping_key_name, key=out_track_id)
+            if len(result) > 0:
+                return result.decode()
+        except Exception as err:
+            self.logger.error(
+                f"error get task_name failed from {out_track_id} of redis key {self.task_track_mapping_key_name}")
+            return
+
+    @staticmethod
+    def Clear_mapping_value_is_none(input_dict: Union[dict]) -> dict:
+        __temp_dict = copy.deepcopy(input_dict)
+        for key in input_dict:
+            if not input_dict.get(key):
+                __temp_dict.pop(key)
+        return __temp_dict
+
 
     def __str__(self):
         print(repr(self))
