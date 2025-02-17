@@ -2,11 +2,11 @@ FROM python:3.13
 
 WORKDIR /dingtalk_bot
 
-COPY server_config/supervisord.conf /etc/supervisord.conf
-
 RUN pip config set global.index-url https://mirrors.tuna.tsinghua.edu.cn/pypi/web/simple
 
 ADD requirements.txt /dingtalk_bot/requirements.txt
+
+COPY server_config/supervisord.conf /etc/supervisord.conf
 
 RUN pip install -r requirements.txt
 
