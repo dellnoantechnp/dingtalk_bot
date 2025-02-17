@@ -2,7 +2,7 @@ FROM python:3.13
 
 WORKDIR /dingtalk_bot
 
-COPY supervisord.conf /etc/supervisord.conf
+COPY server_config/supervisord.conf /etc/supervisord.conf
 
 RUN pip config set global.index-url https://mirrors.tuna.tsinghua.edu.cn/pypi/web/simple
 
