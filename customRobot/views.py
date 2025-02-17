@@ -311,7 +311,8 @@ def interactive_card_test(request):
     a = Card(access_token=token,
              card_template_id="98a61096-31e1-4611-be4e-b1d2f6897225.schema",
              robot_code="dingqkoo0gpksjflc7ih",
-             open_conversation_id="cidUQXUpOwFEbiRNp87JyFE3w==",
+             #open_conversation_id="cidUQXUpOwFEbiRNp87JyFE3w==",
+             open_conversation_id="cid0/nKIm6WJnR07Zc95I4Ucg==",
              task_name=task_name,
              )
 
@@ -370,12 +371,17 @@ def interactive_card_test(request):
             }
         ]
     }
-    # task_info = get_task_job_from_workflows_api(token=settings.ARGO_WORKFLOWS_TOKEN,
-    #                                             api_domain=settings.ARGO_WORKFLOWS_DOMAIN,
-    #                                             namespace=settings.ARGO_WORKFLOWS_WORKER_NAMESPACE,
-    #                                             task_name=request.POST.get("task_name", "Unknown_task_name")
-    #                                             )
-    # default_chart_data["data"] = gen_chart_data(task_info)
+
+    # 获取 workflows task 任务状态
+    task_info = get_task_job_from_workflows_api(token=settings.ARGO_WORKFLOWS_TOKEN,
+                                                api_domain=settings.ARGO_WORKFLOWS_DOMAIN,
+                                                namespace=settings.ARGO_WORKFLOWS_WORKER_NAMESPACE,
+                                                task_name=request.POST.get("task_name", "Unknown_task_name")
+                                                )
+    # 根据 task_info 来更新 card chart data 数据字段
+    default_chart_data["data"] = gen_chart_data(task_info)
+
+    # 增加定时调度任务
     add_schedule_job(request.POST.get("task_name", "none"))
 
     card_vars = {
