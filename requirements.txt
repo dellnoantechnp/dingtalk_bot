@@ -1,6 +1,7 @@
 Django~=5.1
 alibabacloud-dingtalk==2.0.99
 dingtalk-stream==0.18.1
+supervisor~=4.2
 django-redis~=5.4
 requests~=2.32.0
 redis~=5.0.8
