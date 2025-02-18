@@ -1,0 +1,2 @@
+class ViewCardContent(object):
+    pass

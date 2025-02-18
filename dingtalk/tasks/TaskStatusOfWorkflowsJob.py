@@ -4,7 +4,8 @@ from typing import Union, Optional
 from django_q.tasks import async_task, result, schedule
 from django_q.models import Schedule, Task
 from django.utils import timezone
-from datetime import timedelta
+from datetime import timedelta, datetime
+from humanfriendly import format_timespan
 
 
 def add_schedule_job(args,
@@ -35,10 +36,10 @@ def worker(task_name: Union[str] = "") -> list:
     """
     logger = logging.getLogger("dingtalk_bot")
     wf_api_result = get_task_job_from_workflows_api(token=settings.ARGO_WORKFLOWS_TOKEN,
-                                                api_domain=settings.ARGO_WORKFLOWS_DOMAIN,
-                                                namespace=settings.ARGO_WORKFLOWS_WORKER_NAMESPACE,
-                                                task_name=task_name
-                                                )
+                                                    api_domain=settings.ARGO_WORKFLOWS_DOMAIN,
+                                                    namespace=settings.ARGO_WORKFLOWS_WORKER_NAMESPACE,
+                                                    task_name=task_name
+                                                    )
     if 400 <= wf_api_result.status_code <= 499:
         logger.warning(f"Get workflows api warning, workflows api status code [{wf_api_result.status_code}]"
                        f", remove this task.")
@@ -57,7 +58,18 @@ def worker(task_name: Union[str] = "") -> list:
 
 
 def print_result(task):
-    print("worker result is:", task.result)
+    print("start print result.")
+    print(repr(dir(task)))
+    result = (f"id={task.id} "
+              f"group_id={task.group} "
+              f"args={task.args[0]} "
+              f"name={task.name} "
+              f"""duration="{format_timespan(task.stopped - task.started)}" """
+              f"success={task.success} "
+              f"task_result={task.result}")
+    #result = "12345"
+
+    print(f"{datetime.now()} worker result is:", result)
 
 
 def remove_task(task_name):
