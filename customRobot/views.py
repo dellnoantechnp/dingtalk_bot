@@ -26,6 +26,8 @@ from django.utils import timezone
 from datetime import timedelta
 from dingtalk.tasks.TaskStatusOfWorkflowsJob import add_schedule_job
 
+from dingtalk.CardDataStore import CardDataStore
+
 
 def index(request):
     return JsonResponse({"foo": "bar"})
@@ -301,8 +303,8 @@ def dingtalk_test(request):
 @csrf_exempt
 def interactive_card_test(request):
     logger = logging.getLogger("dingtalk_bot")
-    logger.debug("appKey:" + request.POST.get("appKey") + " appSecret:" + request.POST.get("appSecret"))
-    dd = Dingtalk_Base(request.POST.get("appKey"), request.POST.get("appSecret"))
+    logger.debug("appKey:" + settings.DINGTALK_CLIENT_ID + " appSecret:" + settings.DINGTALK_CLIENT_SECRET)
+    dd = Dingtalk_Base(settings.DINGTALK_CLIENT_ID, settings.DINGTALK_CLIENT_SECRET)
     token = dd.get_access_token()
     logger.info("token: " + token)
 
@@ -409,7 +411,6 @@ def interactive_card_test(request):
     b = CardData(card_vars)
     a.create_and_update_card_data(b)
     a.send_interactive_card()
-    print(a.out_track_id)
 
     time.sleep(3)
     a2 = Card(access_token=token, task_name=task_name)
@@ -431,7 +432,6 @@ def interactive_card_test(request):
 
     logger.info(f"开始更新卡片")
     a2.out_track_id = a.out_track_id
-    print(a2.out_track_id)
     a2.update_interactive_card()
     return HttpResponse("OK")
 

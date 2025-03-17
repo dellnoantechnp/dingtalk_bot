@@ -18,6 +18,10 @@ def env_to_bool(env, default):
     str_val = os.environ.get(env)
     return default if str_val is None else str_val == 'True'
 
+DINGTALK_CLIENT_ID = os.environ.get("DINGTALK_CLIENT_ID")
+
+DINGTALK_CLIENT_SECRET= os.environ.get("DINGTALK_CLIENT_SECRET")
+
 REDIS_ADDR = os.environ.get("REDIS_ADDR", "127.0.0.1:6379")
 
 REDIS_DATABASE_NUM = os.environ.get("REDIS_DATABASE_NUM", "0")
@@ -210,7 +214,12 @@ LOGGING = {
             'handlers': ['console'],
             'level': 'ERROR',
             'propagate': False,
-        }
+        },
+        'django-q': {
+            'handlers': ['console'],
+            'level': 'DEBUG',
+            'propagate': False,  # 是否向上传递日志流
+        },
     }
 }
 

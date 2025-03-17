@@ -28,6 +28,13 @@ class CardData(SendInteractiveCardRequestCardData, PrivateDataValue):
     def __str__(self):
         return self.card_param_map["sys_full_json_obj"]
 
+    def get_card_public_data(self, task_name) -> json:
+        """
+        :param task_name: 唯一任务名称
+        :return: string
+        """
+        
+
 
 if __name__ == "__main__":
     a = CardData(sys_full_json_obj=dict(abc=4, bcd="中文🧡"))

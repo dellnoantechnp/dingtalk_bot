@@ -27,13 +27,14 @@ from django.core.cache.backends.redis import RedisCacheClient
 import time
 from typing import Optional, Union
 from dingtalk.CardData import CardData
+from dingtalk.CardDataStore import CardDataStore
 import json
 import copy
 
 
-class Card(CreateAndDeliverRequest, CreateAndDeliverHeaders, SendInteractiveCardRequest, SendInteractiveCardHeaders,
-           UpdateCardRequest, UpdateCardHeaders, UpdateInteractiveCardHeaders, UpdateInteractiveCardRequest,
-           open_api_models.Config, Dingtalk_Base):
+class Card2(CreateAndDeliverRequest, CreateAndDeliverHeaders, SendInteractiveCardRequest, SendInteractiveCardHeaders,
+            UpdateCardRequest, UpdateCardHeaders, UpdateInteractiveCardHeaders, UpdateInteractiveCardRequest,
+            open_api_models.Config, Dingtalk_Base):
     config = open_api_models.Config()
     config.protocol = "https"
     config.region_id = "central"
@@ -87,6 +88,15 @@ class Card(CreateAndDeliverRequest, CreateAndDeliverHeaders, SendInteractiveCard
         self.im_group_open_space_model.support_forward = True
         self.common_headers = None
         self.task_name = task_name
+        test = CardDataStore()
+
+        test.set_out_track_id(task_name, self.out_track_id)
+        test.set_access_token(task_name, self.x_acs_dingtalk_access_token)
+        test.set_conversation_type(task_name, self.conversation_type)
+        test.set_callback_type(task_name, self.callback_type)
+        test.set_out_track_id(task_name, self.out_track_id)
+        test.set_open
+        # TODO: abc
 
     def gen_out_track_id(self) -> str:
         """
@@ -212,7 +222,7 @@ class Card(CreateAndDeliverRequest, CreateAndDeliverHeaders, SendInteractiveCard
             for user in self.private_data:
                 temp_private_data[user] = str(self.private_data.get(user))
         mapping["private_data"] = json.dumps(temp_private_data)
-        mapping = Card.Clear_mapping_value_is_none(mapping)
+        mapping = Card2.Clear_mapping_value_is_none(mapping)
         self.logger.debug(f"persistent card private data on task_name is {key_name}")
 
         # 写入新数据
