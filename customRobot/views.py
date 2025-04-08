@@ -311,10 +311,10 @@ def interactive_card_test(request):
     task_name = request.POST.get("task_name", "undefined")
 
     a = Card(access_token=token,
-             card_template_id="98a61096-31e1-4611-be4e-b1d2f6897225.schema",
-             robot_code="dingqkoo0gpksjflc7ih",
+             card_template_id="d42325af-b4e9-4857-b4be-3b917e0a9388.schema",
+             robot_code="dingq3iknsdg9ula9suf",
              #open_conversation_id="cidUQXUpOwFEbiRNp87JyFE3w==",
-             open_conversation_id="cid0/nKIm6WJnR07Zc95I4Ucg==",
+             open_conversation_id="cidXyTRHG7fjdQSMOK7O5RE0w==",
              task_name=task_name,
              )
 

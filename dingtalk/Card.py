@@ -1,5 +1,6 @@
 import logging
 
+import Tea.exceptions
 from alibabacloud_dingtalk.card_1_0.models import (CreateAndDeliverRequest, CreateAndDeliverHeaders,
                                                    CreateAndDeliverRequestImGroupOpenDeliverModel,
                                                    CreateCardRequestImGroupOpenSpaceModel,
@@ -21,7 +22,8 @@ from alibabacloud_tea_openapi import models as open_api_models
 from alibabacloud_tea_util import models as util_models
 from dingtalk.Dingtalk_Base import Dingtalk_Base
 from dingtalk.CardException import (PersistentDataError,
-                                    LoadPersistentDataError)
+                                    LoadPersistentDataError,
+                                    SendCardRobotNotFoundException)
 from django.core.cache import caches
 from django.core.cache.backends.redis import RedisCacheClient
 import time
@@ -157,9 +159,14 @@ class Card(CreateAndDeliverRequest, CreateAndDeliverHeaders, SendInteractiveCard
         """
         self.__deliver_card()
         im_client = dingtalkim_1_0Client(self.config)
-        im_client.send_interactive_card_with_options(
-            self, self, util_models.RuntimeOptions()
-        )
+        try:
+            im_client.send_interactive_card_with_options(
+                self, self, util_models.RuntimeOptions()
+            )
+        except Tea.exceptions.TeaException as err:
+            if err.statusCode == 400 and err.code == "chatbot.notFound":
+                raise SendCardRobotNotFoundException(origin_message=err.message, status=err.statusCode)
+
         self.__persistent_card()
         self.set_record_task_name_by_out_track_id(out_track_id=self.out_track_id, task_name=self.task_name)
 
