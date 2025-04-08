@@ -18,6 +18,8 @@ def env_to_bool(env, default):
     str_val = os.environ.get(env)
     return default if str_val is None else str_val == 'True'
 
+DINGTALK_ROBOT_CODE = os.environ.get("DINGTALK_ROBOT_CODE", None)
+
 DINGTALK_CLIENT_ID = os.environ.get("DINGTALK_CLIENT_ID")
 
 DINGTALK_CLIENT_SECRET= os.environ.get("DINGTALK_CLIENT_SECRET")
