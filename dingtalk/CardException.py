@@ -11,6 +11,7 @@ class LoadPersistentDataError(Exception):
         self.message = message
         self.status = status
 
+
 class SendCardRobotNotFoundException(Exception):
     def __init__(self, origin_message, status):
         self.origin_message = origin_message

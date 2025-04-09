@@ -390,9 +390,8 @@ def interactive_card_test(request):
         "markdown_content": markdown_content,
         "approve": 0,
         "reject": 0,
-        "card_title": "本次发布更新",
-        "markdown_title": "本次发布 CHANGELOG 汇总",
-        "markdown": "4567121231231",
+        "card_title": request.POST.get("card_title", "本次发布更新"),
+        "markdown_title": request.POST.get("markdown_title", "本次发布 CHANGELOG 汇总"),
         "approve_max": 10,
         "reject_max": 2,
         "card_ref_link": request.POST.get("card_ref_link",
@@ -414,7 +413,7 @@ def interactive_card_test(request):
 
     time.sleep(3)
     a2 = Card(access_token=token, task_name=task_name)
-    card_vars["markdown_content"] = card_vars["markdown_content"] + "7890"
+    card_vars["markdown_content"] = card_vars["markdown_content"] + "."
     b2 = CardData(card_vars)
     # b2 = dingtalkim__1__0_models.UpdateInteractiveCardRequestCardData(
     #     card_param_map=card_vars,
