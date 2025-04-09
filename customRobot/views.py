@@ -391,7 +391,10 @@ def interactive_card_test(request):
         "approve": 0,
         "reject": 0,
         "card_title": request.POST.get("card_title", "本次发布更新"),
-        "markdown_title": request.POST.get("markdown_title", "本次发布 CHANGELOG 汇总"),
+        "markdown_title": "<font sizeToken=common_footnote_text_style__font_size "
+                          "colorTokenV2=common_level3_base_color>*" + request.POST.get("markdown_title",
+                                                                                       "本次发布 CHANGELOG 汇总") +
+                          "*</font>",
         "approve_max": 10,
         "reject_max": 2,
         "card_ref_link": request.POST.get("card_ref_link",
@@ -405,7 +408,8 @@ def interactive_card_test(request):
         "chart_data": json.loads(request.POST.get("chart_data", json.dumps(default_chart_data))),
         "approve_action": False,
         "reject_action": False,
-        "cicd_status": request.POST.get("cicd_status", "正在更新中...")
+        "cicd_status": request.POST.get("cicd_status", "正在更新中..."),  # 三个值，failure / success / 更新中...
+        "config": {"autoLayout": "True" == request.POST.get("config.autoLayout")}  # 是否宽屏显示
     }
     b = CardData(card_vars)
     a.create_and_update_card_data(b)
