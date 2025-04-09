@@ -1,4 +1,4 @@
-FROM python:3.13
+FROM --platform=$TARGETPLATFORM python:3.13
 
 WORKDIR /dingtalk_bot
 
