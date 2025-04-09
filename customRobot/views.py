@@ -311,10 +311,10 @@ def interactive_card_test(request):
     task_name = request.POST.get("task_name", "undefined")
 
     a = Card(access_token=token,
-             card_template_id="d42325af-b4e9-4857-b4be-3b917e0a9388.schema",
+             card_template_id=request.POST.get("card_template_id", "d42325af-b4e9-4857-b4be-3b917e0a9388.schema"),
              robot_code=settings.DINGTALK_ROBOT_CODE,
              #open_conversation_id="cidUQXUpOwFEbiRNp87JyFE3w==",
-             open_conversation_id="cidXyTRHG7fjdQSMOK7O5RE0w==",
+             open_conversation_id=request.POST.get("open_conversation_id", "cidXyTRHG7fjdQSMOK7O5RE0w=="),
              task_name=task_name,
              )
 
