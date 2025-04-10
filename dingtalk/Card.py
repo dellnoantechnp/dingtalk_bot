@@ -24,7 +24,7 @@ from dingtalk.Dingtalk_Base import Dingtalk_Base
 from dingtalk.CardException import (PersistentDataError,
                                     LoadPersistentDataError,
                                     SendCardRobotNotFoundException)
-from django.core.cache import caches
+from django.core.cache import caches, cache
 from django.core.cache.backends.redis import RedisCacheClient
 import time
 from typing import Optional, Union
