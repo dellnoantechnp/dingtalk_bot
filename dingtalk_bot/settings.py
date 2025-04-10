@@ -227,12 +227,12 @@ LOGGING = {
 
 CACHES = {
     "default": {
-        "BACKEND": "django_redis.cache.RedisCache",
-        "LOCATION": f"redis://{REDIS_ADDR}/{REDIS_DATABASE_NUM}",
+        "BACKEND": "django.core.cache.backends.redis.RedisCache",
+        "LOCATION": f"redis://:{REDIS_PASSWORD}@{REDIS_ADDR}/{REDIS_DATABASE_NUM}",
         "OPTIONS": {
-            #"REDIS_CLIENT_CLASS": "rediscluster.RedisCluster",
+            "REDIS_CLIENT_CLASS": "rediscluster.RedisCluster",  # 连接类
             "CLIENT_CLASS": "django_redis.client.DefaultClient",
-            #"CONNECTION_POOL_CLASS": "rediscluster.connection.ClusterConnectionPool",
+            "CONNECTION_POOL_CLASS": "rediscluster.connection.ClusterConnectionPool",  # 连接池类
             "SOCKET_CONNECT_TIMEOUT": 5,
             "SOCKET_TIMEOUT": 10,
             "CONNECTION_POOL_KWARGS": {

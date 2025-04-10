@@ -4,8 +4,7 @@ dingtalk-stream==0.18.1
 supervisor~=4.2
 django-redis~=5.4
 requests~=2.32.0
-redis~=5.0.8
+redis[hiredis]~=5.0.8
 humanfriendly~=10.0
-httpx~=0.28.1
-httpx[http2]
+httpx[http2]~=0.28.1
 django-q2==1.7.6
