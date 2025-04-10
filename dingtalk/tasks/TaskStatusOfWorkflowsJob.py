@@ -6,7 +6,8 @@ from django_q.models import Schedule, Task
 from django.utils import timezone
 from datetime import timedelta, datetime
 from humanfriendly import format_timespan
-from dingtalk import Card, CardData
+from dingtalk.Card import Card
+from dingtalk.CardData import CardData
 from django.conf import settings
 
 
@@ -71,7 +72,6 @@ def print_result(task):
               f"""duration="{format_timespan(task.stopped - task.started)}" """
               f"success={task.success} "
               f"task_result={task.result}")
-    #result = "12345"
     a2 = Card(access_token=settings.DINGTALK_CLIENT_ID, task_name=settings.DINGTALK_CLIENT_SECRET)
     # a2.update_card_vars = none
     # b2 = CardData(card_vars)

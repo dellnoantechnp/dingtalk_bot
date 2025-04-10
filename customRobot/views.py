@@ -409,13 +409,14 @@ def interactive_card_test(request):
         "approve_action": False,
         "reject_action": False,
         "cicd_status": request.POST.get("cicd_status", "正在更新中..."),  # 三个值，failure / success / 更新中...
-        "config": {"autoLayout": "True" == request.POST.get("config.autoLayout")}  # 是否宽屏显示
+        "config": {"autoLayout": "True" == request.POST.get("config.autoLayout")},  # 是否宽屏显示
+        "cicd_elapse": request.POST.get("cicd_elapse", "_")   # 最新的耗时时长
     }
     b = CardData(card_vars)
     a.create_and_update_card_data(b)
     a.send_interactive_card()
 
-    time.sleep(3)
+    time.sleep(5)
     a2 = Card(access_token=token, task_name=task_name)
     card_vars["markdown_content"] = card_vars["markdown_content"] + "."
     b2 = CardData(card_vars)

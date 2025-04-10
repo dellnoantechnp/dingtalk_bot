@@ -64,6 +64,7 @@ INSTALLED_APPS = [
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
+    "daphne",
     'django.contrib.staticfiles',
     'customRobot',
     # "background_task"
@@ -102,6 +103,8 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'dingtalk_bot.wsgi.application'
+
+ASGI_APPLICATION = "dingtalk_bot.asgi.application"
 
 
 # Database
@@ -256,11 +259,11 @@ Q_CLUSTER = {
     # 'save_limit': 250,
     # 'queue_limit': 500,
     # 'label': 'DjangoQ',
-    "django_redis": "default"
-    # "redis": {
-    #     "host": "172.16.2.4",
-    #     "port": 16379,
-    #     "db": 1,
-    #     "password": "123456"
-    # }
+    # "django_redis": "default"
+    "redis": {
+        "host": REDIS_ADDR.split(":")[0],
+        "port": REDIS_ADDR.split(":")[1],
+        "db": REDIS_DATABASE_NUM,
+        "password": REDIS_PASSWORD
+    }
 }
