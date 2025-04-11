@@ -1,4 +1,4 @@
-from dingtalk.Dingtalk_Base import Dingtalk_Base
+from dingtalk.DingtalkBase import DingtalkBase
 from django.views.decorators.csrf import csrf_exempt
 from dingtalk.Card import Card
 from dingtalk.CardData import CardData
@@ -18,7 +18,7 @@ def receive_stream_request(request):
     logger = logging.getLogger(logger_name)
     logger.debug(
         f"appKey: {os.environ.get('DINGTALK_CLIENT_ID')} appSecret: {os.environ.get('DINGTALK_CLIENT_SECRET')}")
-    dd = Dingtalk_Base(os.environ.get("DINGTALK_CLIENT_ID"), os.environ.get("DINGTALK_CLIENT_SECRET"), logger_name)
+    dd = DingtalkBase(os.environ.get("DINGTALK_CLIENT_ID"), os.environ.get("DINGTALK_CLIENT_SECRET"), logger_name)
     token = dd.get_access_token()
     logger.info("token: " + token)
     receive_out_track_id = request.POST.get("outTrackId")

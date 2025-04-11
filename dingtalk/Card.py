@@ -20,7 +20,7 @@ from alibabacloud_dingtalk.im_1_0.client import Client as dingtalkim_1_0Client
 # from alibabacloud_dingtalk.im_1_0 import models as dingtalkim__1__0_models
 from alibabacloud_tea_openapi import models as open_api_models
 from alibabacloud_tea_util import models as util_models
-from dingtalk.Dingtalk_Base import Dingtalk_Base
+from dingtalk.DingtalkBase import DingtalkBase
 from dingtalk.CardException import (PersistentDataError,
                                     LoadPersistentDataError,
                                     SendCardRobotNotFoundException)
@@ -35,12 +35,12 @@ import copy
 
 class Card(CreateAndDeliverRequest, CreateAndDeliverHeaders, SendInteractiveCardRequest, SendInteractiveCardHeaders,
            UpdateCardRequest, UpdateCardHeaders, UpdateInteractiveCardHeaders, UpdateInteractiveCardRequest,
-           open_api_models.Config, Dingtalk_Base):
+           open_api_models.Config, DingtalkBase):
     config = open_api_models.Config()
     config.protocol = "https"
     config.region_id = "central"
 
-    def __init__(self, access_token: Union[str] = None,
+    def __init__(self, access_token: str = None,
                  task_name: Optional[str] = "",
                  card_template_id: Optional[str] = None,
                  robot_code: Optional[str] = None,
@@ -228,7 +228,7 @@ class Card(CreateAndDeliverRequest, CreateAndDeliverHeaders, SendInteractiveCard
             # redis_client.hset ret 0: update exists item
             # redis_client.hset ret 1: update or create a key, add 1 item
             # redis_client.hset ret more than 1: update or create a key, add more item
-            self.logger.debug(f"persistent card param {key_name} to redis done, ttl is {timeout}")
+            self.logger.debug(f"persistent card param on key [{key_name}] to redis done, ttl is {timeout}")
             self.redis_client.execute_command("expire", key_name, timeout)
         else:
             raise PersistentDataError(f"persistent card data [{key_name}] failed.", 10001)

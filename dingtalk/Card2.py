@@ -19,7 +19,7 @@ from alibabacloud_dingtalk.im_1_0.client import Client as dingtalkim_1_0Client
 # from alibabacloud_dingtalk.im_1_0 import models as dingtalkim__1__0_models
 from alibabacloud_tea_openapi import models as open_api_models
 from alibabacloud_tea_util import models as util_models
-from dingtalk.Dingtalk_Base import Dingtalk_Base
+from dingtalk.DingtalkBase import DingtalkBase
 from dingtalk.CardException import (PersistentDataError,
                                     LoadPersistentDataError)
 from django.core.cache import caches
@@ -34,7 +34,7 @@ import copy
 
 class Card2(CreateAndDeliverRequest, CreateAndDeliverHeaders, SendInteractiveCardRequest, SendInteractiveCardHeaders,
             UpdateCardRequest, UpdateCardHeaders, UpdateInteractiveCardHeaders, UpdateInteractiveCardRequest,
-            open_api_models.Config, Dingtalk_Base):
+            open_api_models.Config, DingtalkBase):
     config = open_api_models.Config()
     config.protocol = "https"
     config.region_id = "central"

@@ -16,7 +16,7 @@ from django.http.response import JsonResponse, HttpResponse
 from django.views.decorators.csrf import csrf_exempt
 
 from dingtalk.Card import Card, CardData
-from dingtalk.Dingtalk_Base import Dingtalk_Base
+from dingtalk.DingtalkBase import DingtalkBase
 from . import EchoMarkdownHandler
 from dingtalk.WatchJobStatus import gen_chart_data, get_task_job_from_workflows_api, settings
 # from background_task import background
@@ -82,7 +82,7 @@ def create_card_client() -> dingtalkcard_1_0Client:
 def dingtalk_test(request):
     logger = logging.getLogger("dingtalk_bot")
     logger.debug("appKey:" + request.POST.get("appKey") + " appSecret:" + request.POST.get("appSecret"))
-    dd = Dingtalk_Base(request.POST.get("appKey"), request.POST.get("appSecret"))
+    dd = DingtalkBase(request.POST.get("appKey"), request.POST.get("appSecret"))
     token = dd.get_access_token()
     logger.info("token: " + token)
     time_tag = int(time.time() * 1000)
@@ -304,9 +304,8 @@ def dingtalk_test(request):
 def interactive_card_test(request):
     logger = logging.getLogger("dingtalk_bot")
     logger.debug("appKey:" + settings.DINGTALK_CLIENT_ID + " appSecret:" + settings.DINGTALK_CLIENT_SECRET)
-    dd = Dingtalk_Base(settings.DINGTALK_CLIENT_ID, settings.DINGTALK_CLIENT_SECRET)
+    dd = DingtalkBase(settings.DINGTALK_CLIENT_ID, settings.DINGTALK_CLIENT_SECRET)
     token = dd.get_access_token()
-    logger.info("token: " + token)
 
     task_name = request.POST.get("task_name", "undefined")
 
@@ -321,7 +320,7 @@ def interactive_card_test(request):
     if "markdown_content" in request.POST.keys():
         markdown_content = request.POST.get("markdown_content")
         ## 格式化 markdown 消息格式
-        logger.debug(f"origin markdown_content: {markdown_content}")
+        logger.debug(f"origin markdown_content: {markdown_content.encode('unicode_escape')}")
         regex = re.compile('\\n')
         markdown_content = regex.sub("<br>\\n", markdown_content)
         regex = re.compile('\\n\\s{6}')
@@ -441,11 +440,20 @@ def interactive_card_test(request):
 
 
 @csrf_exempt
+def update_card(request):
+    logger = logging.getLogger("dingtalk_bot")
+    logger.debug("appKey:" + settings.DINGTALK_CLIENT_ID + " appSecret:" + settings.DINGTALK_CLIENT_SECRET)
+    base = DingtalkBase(settings.DINGTALK_CLIENT_ID, settings.DINGTALK_CLIENT_SECRET)
+    token = base.get_access_token()
+    logger.info("token: " + token)
+
+
+@csrf_exempt
 def interactive_card_test2(request):
     logger = logging.getLogger("dingtalk_bot")
     logger.debug(
         f"appKey: {os.environ.get('DINGTALK_CLIENT_ID')} appSecret: {os.environ.get('DINGTALK_CLIENT_SECRET')}")
-    dd = Dingtalk_Base(os.environ.get("DINGTALK_CLIENT_ID"), os.environ.get("DINGTALK_CLIENT_SECRET"), "dingtalk_bot")
+    dd = DingtalkBase(os.environ.get("DINGTALK_CLIENT_ID"), os.environ.get("DINGTALK_CLIENT_SECRET"), "dingtalk_bot")
     token = dd.get_access_token()
     logger.info("token: " + token)
 

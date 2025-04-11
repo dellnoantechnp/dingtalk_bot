@@ -212,7 +212,7 @@ LOGGING = {
     'loggers': {
         'dingtalk_bot': {
             'handlers': ['console'],
-            'level': 'INFO',
+            'level': 'DEBUG',
             'propagate': False,  # 是否向上传递日志流
         },
         'django.request': {
