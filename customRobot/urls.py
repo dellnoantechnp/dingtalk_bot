@@ -10,6 +10,7 @@ urlpatterns = [
     path("test3", views.dingtalk_test),
     path("test4", views.interactive_card_test),
     path("test5", receive_stream_request.receive_stream_request),
+    path("update_card", views.update_card),
     path("task", views.task_test),
     path("list", views.stop_task)
 ]

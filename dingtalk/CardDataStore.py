@@ -13,7 +13,9 @@ class CardDataStore:
         'robot_code': '机器人code',
         'open_conversation_id': 'IM群ID',
         'out_track_id': '消息跟踪ID',
-        'callback_type': '回调模式'  # 可选值: HTTP, STREAM
+        'conversation_type': '会话类型',  # 可选值：0 单聊  1 群聊
+        'callback_type': '回调模式',  # 可选值: HTTP, STREAM
+        'open_space_id': '投放ID',
     }
 
     def __init__(self):
@@ -119,13 +121,21 @@ class CardDataStore:
             raise ValueError("callback_type 必须是 'HTTP' 或 'STREAM'")
         return self.set_field(task_name, 'callback_type', value)
 
-    def get_conversation_type(self, task_name: str, value: int):
+    def get_conversation_type(self, task_name: str) -> Optional[str]:
         """返回 open_conversation_type 字段值"""
         return self.get_field(task_name, "conversation_type")
 
     def set_conversation_type(self, task_name: str, value: int) -> bool:
         """设置 conversation_type"""
-        return self.set_field(task_name, "conversation_type")
+        return self.set_field(task_name, "conversation_type", value)
+
+    def get_open_space_id(self, task_name: str) -> Optional[str]:
+        """返回 open_space_id 字段值"""
+        return self.get_field(task_name, "open_space_id")
+
+    def set_open_space_id(self, task_name: str, value: int) -> str:
+        """设置 conversation_type"""
+        return self.set_field(task_name, "open_space_id", value)
 
     def get_all_fields(self, task_name: str) -> Dict[str, str]:
         """获取指定任务的所有字段值
@@ -140,3 +150,8 @@ class CardDataStore:
         except Exception as e:
             print(f"获取所有字段值失败: {e}")
             return {}
+
+if __name__ == "__main__":
+    pass
+    a = CardDataStore()
+    a.set_access_token("cicd-java-webhook-master-jagat-coin-f6ef144b-9pznj","123123")

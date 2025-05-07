@@ -95,7 +95,7 @@ class Card2(CreateAndDeliverRequest, CreateAndDeliverHeaders, SendInteractiveCar
         test.set_conversation_type(task_name, self.conversation_type)
         test.set_callback_type(task_name, self.callback_type)
         test.set_out_track_id(task_name, self.out_track_id)
-        test.set_open
+        test.set_open_conversation_id(task_name, self.open_conversation_id)
         # TODO: abc
 
     def gen_out_track_id(self) -> str:

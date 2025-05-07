@@ -64,7 +64,7 @@ def worker(task_name: Union[str] = "") -> list:
 
 def print_result(task):
     print("start print result.")
-    print(repr(dir(task)))
+    print("repr(dir(task)) --->", repr(dir(task)))
     result = (f"id={task.id} "
               f"group_id={task.group} "
               f"args={task.args[0]} "
@@ -72,7 +72,9 @@ def print_result(task):
               f"""duration="{format_timespan(task.stopped - task.started)}" """
               f"success={task.success} "
               f"task_result={task.result}")
+    # TODO 直接调用更新卡片的方法，实现更新卡片功能
     a2 = Card(access_token=settings.DINGTALK_CLIENT_ID, task_name=settings.DINGTALK_CLIENT_SECRET)
+    print(a2)
     # a2.update_card_vars = none
     # b2 = CardData(card_vars)
 

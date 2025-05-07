@@ -446,6 +446,9 @@ def update_card(request):
     base = DingtalkBase(settings.DINGTALK_CLIENT_ID, settings.DINGTALK_CLIENT_SECRET)
     token = base.get_access_token()
     logger.info("token: " + token)
+    abc = CardDataStore()
+    abc.set_access_token(request.GET.get("task_name"), token)
+    return HttpResponse("Done")
 
 
 @csrf_exempt
