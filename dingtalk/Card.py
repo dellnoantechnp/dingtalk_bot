@@ -20,6 +20,8 @@ from alibabacloud_dingtalk.im_1_0.client import Client as dingtalkim_1_0Client
 # from alibabacloud_dingtalk.im_1_0 import models as dingtalkim__1__0_models
 from alibabacloud_tea_openapi import models as open_api_models
 from alibabacloud_tea_util import models as util_models
+
+from core.redis_client import get_redis_cluster
 from dingtalk.DingtalkBase import DingtalkBase
 from dingtalk.CardException import (PersistentDataError,
                                     LoadPersistentDataError,
@@ -268,10 +270,11 @@ class Card(CreateAndDeliverRequest, CreateAndDeliverHeaders, SendInteractiveCard
 
         :return: redis_client
         """
-        if not hasattr(self, "redis_client"):
-            redis_cache = caches["default"]
-            redis_client = redis_cache.client.get_client()
-            self.redis_client = redis_client
+        self.redis_client = get_redis_cluster()
+        # if not hasattr(self, "redis_client"):
+        #     redis_cache = caches["default"]
+        #     redis_client = redis_cache.client.get_client()
+        #     self.redis_client = redis_client
         return self.redis_client
 
     def set_record_task_name_by_out_track_id(self, out_track_id: Union[str] = None,
