@@ -6,8 +6,10 @@ from alibabacloud_dingtalk.oauth2_1_0 import models as dingtalkoauth_2__1__0_mod
 from alibabacloud_tea_util.client import Client as UtilClient
 from logging import Logger
 from typing import Union, Optional
-from django.core.cache import caches
+# from django.core.cache import caches
 from django.core.cache.backends.redis import RedisCacheClient
+
+from core.redis_client import get_redis_cluster
 
 
 class DingtalkBase:
@@ -80,10 +82,11 @@ class DingtalkBase:
 
         :return: redis_client
         """
-        if not hasattr(self, "redis_client"):
-            redis_cache = caches["default"]
-            redis_client = redis_cache.client.get_client()
-            self.redis_client = redis_client
+        self.redis_client = get_redis_cluster()
+        # if not hasattr(self, "redis_client"):
+        #     redis_cache = caches["default"]
+        #     redis_client = redis_cache.client.get_client()
+        #     self.redis_client = redis_client
         return self.redis_client
 
     def redis_hset(self, key: str, value: dict) -> bool:
@@ -113,8 +116,9 @@ class DingtalkBase:
         """
         self.logger.debug(msg=f"Read token from redis complete, key [{key}]...")
         result = self.__get_redis_client().get(key)
+        print(result)
         if result:
-            return result.decode()
+            return result
         else:
             return ""
 

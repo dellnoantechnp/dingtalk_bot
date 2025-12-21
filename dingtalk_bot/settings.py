@@ -228,26 +228,26 @@ LOGGING = {
     }
 }
 
-CACHES = {
-    "default": {
-        "BACKEND": "django_redis.cache.RedisCache",
-        "LOCATION": f"redis://:{REDIS_PASSWORD}@{REDIS_ADDR}/{REDIS_DATABASE_NUM}",
-        "OPTIONS": {
-            "REDIS_CLIENT_CLASS": "rediscluster.RedisCluster",  # 连接类
-        #     "CLIENT_CLASS": "django_redis.client.DefaultClient",
-            "CONNECTION_POOL_CLASS": "rediscluster.connection.ClusterConnectionPool",  # 连接池类
-            "SOCKET_CONNECT_TIMEOUT": 5,
-            "SOCKET_TIMEOUT": 10,
-            "CONNECTION_POOL_KWARGS": {
-                'skip_full_coverage_check': True,
-                "max_connections": 10
-            },
-            "SERIALIZER": "django_redis.serializers.json.JSONSerializer",
-            'REDIS_CLIENT_KWARGS': {"decode_responses": True},
-        },
-        "KEY_PREFIX": "dingtalk_bot"  # 默认 KEY_PREFIX:VERSION:key, 暂未使用
-    }
-}
+# CACHES = {
+#     "default": {
+#         "BACKEND": "django_redis.cache.RedisCache",
+#         "LOCATION": f"redis://:{REDIS_PASSWORD}@{REDIS_ADDR}/{REDIS_DATABASE_NUM}",
+#         "OPTIONS": {
+#             "REDIS_CLIENT_CLASS": "rediscluster.RedisCluster",  # 连接类
+#         #     "CLIENT_CLASS": "django_redis.client.DefaultClient",
+#             "CONNECTION_POOL_CLASS": "rediscluster.connection.ClusterConnectionPool",  # 连接池类
+#             "SOCKET_CONNECT_TIMEOUT": 5,
+#             "SOCKET_TIMEOUT": 10,
+#             "CONNECTION_POOL_KWARGS": {
+#                 'skip_full_coverage_check': True,
+#                 "max_connections": 10
+#             },
+#             "SERIALIZER": "django_redis.serializers.json.JSONSerializer",
+#             'REDIS_CLIENT_KWARGS': {"decode_responses": True},
+#         },
+#         "KEY_PREFIX": "dingtalk_bot"  # 默认 KEY_PREFIX:VERSION:key, 暂未使用
+#     }
+# }
 
 Q_CLUSTER = {
     'name': 'project',
@@ -267,3 +267,8 @@ Q_CLUSTER = {
         "password": REDIS_PASSWORD
     }
 }
+
+## 设置 redis-cluster 任意节点地址
+REDIS_CLUSTER_NODES = [
+    {"host": "10.11.192.42", "port": 6379},
+]
