@@ -26,8 +26,9 @@ from dingtalk.DingtalkBase import DingtalkBase
 from dingtalk.CardException import (PersistentDataError,
                                     LoadPersistentDataError,
                                     SendCardRobotNotFoundException)
-from django.core.cache import caches, cache
-from django.core.cache.backends.redis import RedisCacheClient
+# from django.core.cache import caches, cache
+# from django.core.cache.backends.redis import RedisCacheClient
+from rediscluster import RedisCluster
 import time
 from typing import Optional, Union
 from dingtalk.CardData import CardData
@@ -245,18 +246,18 @@ class Card(CreateAndDeliverRequest, CreateAndDeliverHeaders, SendInteractiveCard
         previous_card = self.__get_redis_client().hgetall(task_name)
         if previous_card:
             if key_name:
-                return previous_card.get(key_name.encode()).decode()
+                return previous_card.get(key_name)
             else:
-                self.card_template_id = previous_card.get(b"card_template_id").decode()
-                self.robot_code = previous_card.get(b"robot_code").decode()
-                self.open_conversation_id = previous_card.get(b"open_conversation_id").decode()
-                self.conversation_type = previous_card.get(b"conversation_type").decode()
-                self.out_track_id = previous_card.get(b"out_track_id").decode()
+                self.card_template_id = previous_card.get("card_template_id")
+                self.robot_code = previous_card.get("robot_code")
+                self.open_conversation_id = previous_card.get("open_conversation_id")
+                self.conversation_type = previous_card.get("conversation_type")
+                self.out_track_id = previous_card.get("out_track_id")
 
                 # public data
-                self.update_card_vars = json.loads(previous_card.get(b"card_param_map_string").decode())
+                self.update_card_vars = json.loads(previous_card.get("card_param_map_string"))
                 # private data
-                self.load_private_data = json.loads(previous_card.get(b"private_data").decode())
+                self.load_private_data = json.loads(previous_card.get("private_data"))
                 # if self.load_private_data:
                 #     for user in self.load_private_data:
                 #         self.private_data = {user: PrivateCardData(json.loads(load_private_data.get(user)))}
@@ -264,7 +265,7 @@ class Card(CreateAndDeliverRequest, CreateAndDeliverHeaders, SendInteractiveCard
         else:
             raise LoadPersistentDataError(f"Load persistent data error, key name is [{task_name}]", 10001)
 
-    def __get_redis_client(self) -> RedisCacheClient:
+    def __get_redis_client(self) -> RedisCluster:
         """
         返回 redis_client
 
@@ -309,7 +310,7 @@ class Card(CreateAndDeliverRequest, CreateAndDeliverHeaders, SendInteractiveCard
         try:
             result = self.__get_redis_client().hget(self.task_track_mapping_key_name, key=out_track_id)
             if len(result) > 0:
-                return result.decode()
+                return result
         except Exception as err:
             self.logger.error(
                 f"error get task_name failed from {out_track_id} of redis key {self.task_track_mapping_key_name}")

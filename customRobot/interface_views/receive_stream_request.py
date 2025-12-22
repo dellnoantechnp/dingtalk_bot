@@ -55,7 +55,7 @@ def receive_stream_request(request):
     # a.send_interactive_card()
 
     # time.sleep(3)
-    a.update_card_vars["markdown_content"] = a.update_card_vars["markdown_content"] + "7890"
+    a.update_card_vars["markdown_content"] = a.update_card_vars["markdown_content"] + ". "
     b = CardData(a.update_card_vars)
 
     private_card_data = CardData(private_data[user_id])

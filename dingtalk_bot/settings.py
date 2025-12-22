@@ -270,5 +270,5 @@ Q_CLUSTER = {
 
 ## 设置 redis-cluster 任意节点地址
 REDIS_CLUSTER_NODES = [
-    {"host": "10.11.192.42", "port": 6379},
+    {"host": REDIS_ADDR.split(":")[0], "port": REDIS_ADDR.split(":")[1]},
 ]
