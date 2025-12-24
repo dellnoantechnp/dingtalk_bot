@@ -2,6 +2,8 @@ from rediscluster import RedisCluster
 from django.conf import settings
 import logging
 from core.RedisDataResponse import RedisDataResponse
+from utils.elapsed import timer
+
 _redis_cluster = None
 
 
@@ -16,41 +18,73 @@ def get_redis_cluster() -> RedisCluster:
         )
     return _redis_cluster
 
+
 def redis_set(key: str, value: str, timeout=7000) -> RedisDataResponse:
     """
     redis 设置基本字符串 key
     """
-    logging.debug(msg=f"Set redis key [{key}] to [{value}]")
-    set_status = get_redis_cluster().set(key, value, timeout)
-    if set_status >= 0:
-        result = RedisDataResponse()
-    return set_status
+    logging.debug(msg=f"Set redis key [{key}] ...")
 
-def redis_get(key) -> str:
+    result = RedisDataResponse()
+    # 计算耗时
+    with timer() as t:
+        ret = get_redis_cluster().set(key, value, timeout)
+        result.raw_value = ret
+        result.value = ret
+
+    result.elapsed = t.elapsed
+    if ret >= 0:
+        result.status_code = 10000
+    else:
+        result.status_code = 50000
+    logging.debug(msg=f"Set redis key [{key}] done, use_time={result.elapsed}, status_code={result.status_code} value={value}")
+    return result
+
+
+def redis_get(key) -> RedisDataResponse:
     """
     redis 读取基本字符串
     :return: token_string
     """
     logging.debug(msg=f"Read redis key [{key}] ...")
-    result = get_redis_cluster().get(key)
-    logging.debug(msg=f"Read redis key [{key}] done, value [{result}]")
-    if result:
-        return result
-    else:
-        return ""
 
-def redis_hset(key: str, mapping: dict, timeout=7000) -> bool:
+    result = RedisDataResponse()
+    with timer() as t:
+        ret = get_redis_cluster().get(key)
+        result.raw_value = ret
+        result.value = ret
+
+    result.elapsed = t.elapsed
+    if result:
+        result.status_code = 10000
+    else:
+        result.status_code = 50000
+    logging.debug(msg=f"Read redis key [{key}] done, use_time={result.elapsed} status_code={result.status_code} value={ret}")
+    return result
+
+
+def redis_hset(key: str, mapping: dict, timeout=7000) -> RedisDataResponse:
     """redis hset"""
     logging.debug(msg=f"Set redis hset key [{key}] to [{repr(mapping)}]")
-    status = get_redis_cluster().hset(name=key, mapping=mapping)
-    if status >= 0:
-        # redis_client.hset ret 0: update exists item
-        # redis_client.hset ret 1: update or create a key, add 1 item
-        # redis_client.hset ret more than 1: update or create a key, add more item
-        get_redis_cluster().execute_command('expire', key, timeout)
-        return True
-    else:
-        return False
+    result = RedisDataResponse()
+
+    with timer() as t:
+        ret = get_redis_cluster().hset(name=key, mapping=mapping)
+        result.raw_value = ret
+        result.value = ret
+        if ret >= 0:
+            # redis_client.hset ret 0: update exists item
+            # redis_client.hset ret 1: update or create a key, add 1 item
+            # redis_client.hset ret more than 1: update or create a key, add more item
+            get_redis_cluster().execute_command('expire', key, timeout)
+            result.status_code = 10000
+        else:
+            result.status_code = 50000
+
+    result.elapsed = t.elapsed
+    logging.debug(msg=f"Set redis hset key [{key}] done, use_time={result.elapsed} status_code={result.status_code} value={ret}")
+    return result
+
 
 def redis_hget_field(name: str, key: str) -> str:
     """redis hget"""
