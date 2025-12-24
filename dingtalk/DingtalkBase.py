@@ -9,7 +9,7 @@ from typing import Union, Optional
 # from django.core.cache import caches
 from django.core.cache.backends.redis import RedisCacheClient
 
-from core.redis_client import get_redis_cluster
+from core.redis_client import get_redis_cluster, redis_set, redis_get
 
 
 class DingtalkBase:
@@ -62,14 +62,15 @@ class DingtalkBase:
             app_secret=self.appSecret
         )
         try:
-            store_token = self.redis_get(self.token_redis_key_name)
+            store_token = redis_get(self.token_redis_key_name)
             if store_token:
+                self.logger.debug(msg=f"Load token from redis is [{store_token}]...")
                 return store_token
             else:
                 token_resp = self.client.get_access_token(get_access_token_request)
                 self.logger.info(f"Renew token: {token_resp.body.access_token}")
                 api_token = token_resp.body.access_token
-                self.redis_set(key=self.token_redis_key_name, value=api_token)
+                redis_set(key=self.token_redis_key_name, value=api_token)
                 return api_token
         except Exception as err:
             if not UtilClient.empty(err.code) and not UtilClient.empty(err.message):
@@ -97,30 +98,6 @@ class DingtalkBase:
         """
         return self.__get_redis_client().hset(name=key,
                                               mapping=value) >= 0
-
-    def redis_set(self, key: str, value: str, timeout=7000) -> bool:
-        """
-        redis 设置基本字符串 key
-
-        """
-        set_status = self.__get_redis_client().set(key,
-                                                   value,
-                                                   timeout)
-        return set_status
-
-    def redis_get(self, key) -> str:
-        """
-        读取 token
-
-        :return: token_string
-        """
-        self.logger.debug(msg=f"Read token from redis complete, key [{key}]...")
-        result = self.__get_redis_client().get(key)
-        print(result)
-        if result:
-            return result
-        else:
-            return ""
 
     # @staticmethod
     # async def main_async(

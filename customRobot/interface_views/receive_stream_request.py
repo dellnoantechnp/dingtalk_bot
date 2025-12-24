@@ -20,7 +20,6 @@ def receive_stream_request(request):
         f"appKey: {os.environ.get('DINGTALK_CLIENT_ID')} appSecret: {os.environ.get('DINGTALK_CLIENT_SECRET')}")
     dd = DingtalkBase(os.environ.get("DINGTALK_CLIENT_ID"), os.environ.get("DINGTALK_CLIENT_SECRET"), logger_name)
     token = dd.get_access_token()
-    logger.info("token: " + token)
     receive_out_track_id = request.POST.get("outTrackId")
     logger.info(f"request parma outTrackId: {receive_out_track_id} from CorpId: {request.POST.get('corpId')}")
 

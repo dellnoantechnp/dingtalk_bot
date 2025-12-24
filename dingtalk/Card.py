@@ -21,7 +21,7 @@ from alibabacloud_dingtalk.im_1_0.client import Client as dingtalkim_1_0Client
 from alibabacloud_tea_openapi import models as open_api_models
 from alibabacloud_tea_util import models as util_models
 
-from core.redis_client import get_redis_cluster
+from core.redis_client import get_redis_cluster, redis_hset
 from dingtalk.DingtalkBase import DingtalkBase
 from dingtalk.CardException import (PersistentDataError,
                                     LoadPersistentDataError,
@@ -226,15 +226,17 @@ class Card(CreateAndDeliverRequest, CreateAndDeliverHeaders, SendInteractiveCard
         self.logger.debug(f"persistent card private data on task_name is {key_name}")
 
         # 写入新数据
-        if self.__get_redis_client().hset(name=key_name,
-                                          mapping=mapping) >= 0:
-            # redis_client.hset ret 0: update exists item
-            # redis_client.hset ret 1: update or create a key, add 1 item
-            # redis_client.hset ret more than 1: update or create a key, add more item
-            self.logger.debug(f"persistent card param on key [{key_name}] to redis done, ttl is {timeout}")
-            self.redis_client.execute_command("expire", key_name, timeout)
-        else:
+        if not redis_hset(key=key_name, mapping=mapping, timeout=timeout):
             raise PersistentDataError(f"persistent card data [{key_name}] failed.", 10001)
+        # if self.__get_redis_client().hset(name=key_name,
+        #                                   mapping=mapping) >= 0:
+        #     # redis_client.hset ret 0: update exists item
+        #     # redis_client.hset ret 1: update or create a key, add 1 item
+        #     # redis_client.hset ret more than 1: update or create a key, add more item
+        #     self.logger.debug(f"persistent card param on key [{key_name}] to redis done, ttl is {timeout}")
+        #     self.redis_client.execute_command("expire", key_name, timeout)
+        # else:
+        #     raise PersistentDataError(f"persistent card data [{key_name}] failed.", 10001)
 
     def __load_data_from_persistent_store(self, task_name: Union[str], key_name: Optional[str] = None):
         """
@@ -290,15 +292,17 @@ class Card(CreateAndDeliverRequest, CreateAndDeliverHeaders, SendInteractiveCard
         :return: void
         """
         __temp_map = {out_track_id: task_name}
-        if self.__get_redis_client().hset(name=self.task_track_mapping_key_name,
-                                          mapping=__temp_map) >= 0:
-            # redis_client.hset ret 0: update exists item
-            # redis_client.hset ret 1: update or create a key, add 1 item
-            # redis_client.hset ret more than 1: update or create a key, add more item
-            self.logger.debug(f"store out_track_id mapping success.")
-            self.redis_client.execute_command("expire", self.task_track_mapping_key_name, timeout)
-        else:
+        if not redis_hset(key=self.task_track_mapping_key_name, mapping=__temp_map, timeout=timeout):
             raise PersistentDataError(f"store {self.task_track_mapping_key_name} failed.", 10002)
+        # if self.__get_redis_client().hset(name=self.task_track_mapping_key_name,
+        #                                   mapping=__temp_map) >= 0:
+        #     # redis_client.hset ret 0: update exists item
+        #     # redis_client.hset ret 1: update or create a key, add 1 item
+        #     # redis_client.hset ret more than 1: update or create a key, add more item
+        #     self.logger.debug(f"store out_track_id mapping success.")
+        #     self.redis_client.execute_command("expire", self.task_track_mapping_key_name, timeout)
+        # else:
+        #     raise PersistentDataError(f"store {self.task_track_mapping_key_name} failed.", 10002)
 
     def get_record_task_name_by_out_track_id(self, out_track_id: Union[str] = None) -> (str, None):
         """
