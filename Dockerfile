@@ -6,7 +6,7 @@ RUN pip config set global.index-url https://mirrors.tuna.tsinghua.edu.cn/pypi/we
 
 ADD requirements.txt /dingtalk_bot/requirements.txt
 
-RUN pip install -r requirements.txt
+RUN pip install --no-cache-dir -r requirements.txt
 
 COPY server_config/supervisord.conf /etc/supervisord.conf
 
