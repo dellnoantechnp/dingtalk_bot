@@ -38,6 +38,12 @@ class RedisDataResponse:
 
     @status_code.setter
     def status_code(self, value):
+        if not isinstance(value, int):
+            raise ValueError("status_code must be an integer")
+
+        if value < 0:
+            raise ValueError("status_code must be >= 0")
+
         self._status_code = value
 
     @elapsed.setter
