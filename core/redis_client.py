@@ -88,7 +88,7 @@ def redis_hset(key: str, mapping: dict, timeout=7000) -> RedisDataResponse:
     return result
 
 
-def redis_hget_field(key: str, field: str) -> RedisDataResponse:
+def redis_hget(key: str, field: str) -> RedisDataResponse:
     """redis hget single field"""
     logging.debug(msg=f"Read redis hash key [{key}].[{field}] ...")
     result = RedisDataResponse()
@@ -99,25 +99,25 @@ def redis_hget_field(key: str, field: str) -> RedisDataResponse:
         result.value = ret
 
     result.elapsed = t['elapsed']
-    if ret > 0:
+    if ret:
         result.status_code = 10000
     else:
         result.status_code = 50000
     logging.debug(msg=f"Get redis hset key [{key}].[{field}] done, use_time={result.elapsed.total_seconds() * 1000:.2f}ms status_code={result.status_code} value={ret}")
     return result
 
-def redis_hget(key: str) -> RedisDataResponse:
+def redis_hgetall(key: str) -> RedisDataResponse:
     """redis hget all fields"""
     logging.debug(msg=f"Read redis hash key [{key}] ...")
     result = RedisDataResponse()
 
     with timer() as t:
-        ret = get_redis_cluster().hget(name=key)
+        ret = get_redis_cluster().hgetall(name=key)
         result.raw_value = ret
         result.value = ret
 
     result.elapsed = t['elapsed']
-    if ret > 0:
+    if ret:
         result.status_code = 10000
     else:
         result.status_code = 50000
