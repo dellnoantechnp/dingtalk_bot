@@ -42,6 +42,10 @@ class RedisDataResponse:
 
     @property
     def ok(self) -> bool:
+        if self.status_code >= 50000:
+            self._ok = False
+        else:
+            self._ok = True
         return self._ok
 
     @reason.setter
@@ -69,7 +73,3 @@ class RedisDataResponse:
     @raw_value.setter
     def raw_value(self, value):
         self._raw_value = value
-
-    @ok.setter
-    def ok(self, value: bool):
-        self._ok = value

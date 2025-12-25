@@ -1,3 +1,5 @@
+import time
+
 from rediscluster import RedisCluster
 from django.conf import settings
 import logging
@@ -32,12 +34,12 @@ def redis_set(key: str, value: str, timeout=7000) -> RedisDataResponse:
         result.raw_value = ret
         result.value = ret
 
-    result.elapsed = t.elapsed
+    result.elapsed = t['elapsed']
     if ret >= 0:
         result.status_code = 10000
     else:
         result.status_code = 50000
-    logging.debug(msg=f"Set redis key [{key}] done, use_time={result.elapsed}, status_code={result.status_code} value={value}")
+    logging.debug(msg=f"Set redis key [{key}] done, use_time={result.elapsed.total_seconds() * 1000:.2f}ms  status_code={result.status_code} value={value}")
     return result
 
 
@@ -54,12 +56,12 @@ def redis_get(key) -> RedisDataResponse:
         result.raw_value = ret
         result.value = ret
 
-    result.elapsed = t.elapsed
+    result.elapsed = t['elapsed']
     if result:
         result.status_code = 10000
     else:
         result.status_code = 50000
-    logging.debug(msg=f"Read redis key [{key}] done, use_time={result.elapsed} status_code={result.status_code} value={ret}")
+    logging.debug(msg=f"Read redis key [{key}] done, use_time={result.elapsed.total_seconds() * 1000:.2f}ms status_code={result.status_code} value={ret}")
     return result
 
 
@@ -82,15 +84,42 @@ def redis_hset(key: str, mapping: dict, timeout=7000) -> RedisDataResponse:
             result.status_code = 50000
 
     result.elapsed = t.elapsed
-    logging.debug(msg=f"Set redis hset key [{key}] done, use_time={result.elapsed} status_code={result.status_code} value={ret}")
+    logging.debug(msg=f"Set redis hset key [{key}] done, use_time={result.elapsed.total_seconds() * 1000:.2f}ms status_code={result.status_code} value={ret}")
     return result
 
 
-def redis_hget_field(name: str, key: str) -> str:
-    """redis hget"""
-    logging.debug(msg=f"Read redis hash key [{name}].[{key}] ...")
-    result = get_redis_cluster().hget(name=name, key=key)
-    if result > 0:
-        return result
+def redis_hget_field(key: str, field: str) -> RedisDataResponse:
+    """redis hget single field"""
+    logging.debug(msg=f"Read redis hash key [{key}].[{field}] ...")
+    result = RedisDataResponse()
+
+    with timer() as t:
+        ret = get_redis_cluster().hget(name=key, key=field)
+        result.raw_value = ret
+        result.value = ret
+
+    result.elapsed = t['elapsed']
+    if ret > 0:
+        result.status_code = 10000
     else:
-        return ""
+        result.status_code = 50000
+    logging.debug(msg=f"Get redis hset key [{key}].[{field}] done, use_time={result.elapsed.total_seconds() * 1000:.2f}ms status_code={result.status_code} value={ret}")
+    return result
+
+def redis_hget(key: str) -> RedisDataResponse:
+    """redis hget all fields"""
+    logging.debug(msg=f"Read redis hash key [{key}] ...")
+    result = RedisDataResponse()
+
+    with timer() as t:
+        ret = get_redis_cluster().hget(name=key)
+        result.raw_value = ret
+        result.value = ret
+
+    result.elapsed = t['elapsed']
+    if ret > 0:
+        result.status_code = 10000
+    else:
+        result.status_code = 50000
+    logging.debug(msg=f"Get redis hset key [{key}] done, use_time={result.elapsed.total_seconds() * 1000:.2f}ms status_code={result.status_code} value={ret}")
+    return result
