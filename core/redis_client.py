@@ -86,7 +86,7 @@ def redis_hset(key: str, mapping: dict, timeout=7000) -> RedisDataResponse:
             result.status_code = 50000
             result.reason = "data store failed"
 
-    result.elapsed = t.elapsed
+    result.elapsed = t['elapsed']
     logging.debug(msg=f"Set redis hset key [{key}] done, use_time={result.elapsed.total_seconds() * 1000:.2f}ms status_code={result.status_code} value={ret}")
     return result
 

@@ -34,7 +34,7 @@ ARGO_WORKFLOWS_DOMAIN = os.environ.get("ARGO_WORKFLOWS_DOMAIN", "https://workflo
 
 ARGO_WORKFLOWS_TOKEN = os.environ.get("ARGO_WORKFLOWS_TOKEN", "undefined")
 
-ARGO_WORKFLOWS_WORKER_NAMESPACE = os.environ.get("ARGO_WORKFLOWS_WORKER_NAMESPACE", "workflows")
+ARGO_WORKFLOWS_WORKER_NAMESPACE = os.environ.get("ARGO_WORKFLOWS_WORKER_NAMESPACE", "Undefined_workflows_task_namespace")
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
