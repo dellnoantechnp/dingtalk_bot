@@ -305,7 +305,7 @@ def interactive_card_test(request):
     logger = logging.getLogger("dingtalk_bot")
     logger.debug("appKey:" + settings.DINGTALK_CLIENT_ID + " appSecret:" + settings.DINGTALK_CLIENT_SECRET)
     dd = DingtalkBase(settings.DINGTALK_CLIENT_ID, settings.DINGTALK_CLIENT_SECRET)
-    token = dd.get_access_token()
+    token = dd.access_token
 
     task_name = request.POST.get("task_name", "undefined")
 

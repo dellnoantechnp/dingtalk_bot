@@ -35,10 +35,11 @@ def redis_set(key: str, value: str, timeout=7000) -> RedisDataResponse:
         result.value = ret
 
     result.elapsed = t['elapsed']
-    if ret >= 0:
+    if ret:
         result.status_code = 10000
     else:
         result.status_code = 50000
+        result.reason = "data store failed"
     logging.debug(msg=f"Set redis key [{key}] done, use_time={result.elapsed.total_seconds() * 1000:.2f}ms  status_code={result.status_code} value={value}")
     return result
 
@@ -57,10 +58,11 @@ def redis_get(key) -> RedisDataResponse:
         result.value = ret
 
     result.elapsed = t['elapsed']
-    if result:
+    if ret:
         result.status_code = 10000
     else:
         result.status_code = 50000
+        result.reason = "data not found"
     logging.debug(msg=f"Read redis key [{key}] done, use_time={result.elapsed.total_seconds() * 1000:.2f}ms status_code={result.status_code} value={ret}")
     return result
 
@@ -82,6 +84,7 @@ def redis_hset(key: str, mapping: dict, timeout=7000) -> RedisDataResponse:
             result.status_code = 10000
         else:
             result.status_code = 50000
+            result.reason = "data store failed"
 
     result.elapsed = t.elapsed
     logging.debug(msg=f"Set redis hset key [{key}] done, use_time={result.elapsed.total_seconds() * 1000:.2f}ms status_code={result.status_code} value={ret}")
@@ -103,6 +106,7 @@ def redis_hget(key: str, field: str) -> RedisDataResponse:
         result.status_code = 10000
     else:
         result.status_code = 50000
+        result.reason = "data not found"
     logging.debug(msg=f"Get redis hset key [{key}].[{field}] done, use_time={result.elapsed.total_seconds() * 1000:.2f}ms status_code={result.status_code} value={ret}")
     return result
 
@@ -117,9 +121,10 @@ def redis_hgetall(key: str) -> RedisDataResponse:
         result.value = ret
 
     result.elapsed = t['elapsed']
-    if ret:
+    if len(ret.keys()) > 0:
         result.status_code = 10000
     else:
         result.status_code = 50000
+        result.reason = "data not found"
     logging.debug(msg=f"Get redis hset key [{key}] done, use_time={result.elapsed.total_seconds() * 1000:.2f}ms status_code={result.status_code} value={ret}")
     return result

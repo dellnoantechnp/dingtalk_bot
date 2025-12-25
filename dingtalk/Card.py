@@ -21,7 +21,7 @@ from alibabacloud_dingtalk.im_1_0.client import Client as dingtalkim_1_0Client
 from alibabacloud_tea_openapi import models as open_api_models
 from alibabacloud_tea_util import models as util_models
 
-from core.redis_client import get_redis_cluster, redis_hset
+from core.redis_client import get_redis_cluster, redis_hset, redis_hgetall, redis_hget
 from dingtalk.DingtalkBase import DingtalkBase
 from dingtalk.CardException import (PersistentDataError,
                                     LoadPersistentDataError,
@@ -226,7 +226,7 @@ class Card(CreateAndDeliverRequest, CreateAndDeliverHeaders, SendInteractiveCard
         self.logger.debug(f"persistent card private data on task_name is {key_name}")
 
         # 写入新数据
-        if not redis_hset(key=key_name, mapping=mapping, timeout=timeout):
+        if not redis_hset(key=key_name, mapping=mapping, timeout=timeout).ok:
             raise PersistentDataError(f"persistent card data [{key_name}] failed.", 10001)
         # if self.__get_redis_client().hset(name=key_name,
         #                                   mapping=mapping) >= 0:
@@ -245,21 +245,21 @@ class Card(CreateAndDeliverRequest, CreateAndDeliverHeaders, SendInteractiveCard
         :param task_name: 回调请求时，需传入 task_name，新创建卡片不用传入 task_name
         :param key_name: 仅返回指定 key_name 的持久化数据
         """
-        previous_card = self.__get_redis_client().hgetall(task_name)
-        if previous_card:
+        result = redis_hgetall(key=task_name)
+        if result.ok:
             if key_name:
-                return previous_card.get(key_name)
+                return result.value.get(key_name)
             else:
-                self.card_template_id = previous_card.get("card_template_id")
-                self.robot_code = previous_card.get("robot_code")
-                self.open_conversation_id = previous_card.get("open_conversation_id")
-                self.conversation_type = previous_card.get("conversation_type")
-                self.out_track_id = previous_card.get("out_track_id")
+                self.card_template_id = result.value.get("card_template_id")
+                self.robot_code = result.value.get("robot_code")
+                self.open_conversation_id = result.value.get("open_conversation_id")
+                self.conversation_type = result.value.get("conversation_type")
+                self.out_track_id = result.value.get("out_track_id")
 
                 # public data
-                self.update_card_vars = json.loads(previous_card.get("card_param_map_string"))
+                self.update_card_vars = json.loads(result.value.get("card_param_map_string"))
                 # private data
-                self.load_private_data = json.loads(previous_card.get("private_data"))
+                self.load_private_data = json.loads(result.value.get("private_data"))
                 # if self.load_private_data:
                 #     for user in self.load_private_data:
                 #         self.private_data = {user: PrivateCardData(json.loads(load_private_data.get(user)))}
@@ -267,18 +267,18 @@ class Card(CreateAndDeliverRequest, CreateAndDeliverHeaders, SendInteractiveCard
         else:
             raise LoadPersistentDataError(f"Load persistent data error, key name is [{task_name}]", 10001)
 
-    def __get_redis_client(self) -> RedisCluster:
-        """
-        返回 redis_client
-
-        :return: redis_client
-        """
-        self.redis_client = get_redis_cluster()
-        # if not hasattr(self, "redis_client"):
-        #     redis_cache = caches["default"]
-        #     redis_client = redis_cache.client.get_client()
-        #     self.redis_client = redis_client
-        return self.redis_client
+    # def __get_redis_client(self) -> RedisCluster:
+    #     """
+    #     返回 redis_client
+    #
+    #     :return: redis_client
+    #     """
+    #     self.redis_client = get_redis_cluster()
+    #     # if not hasattr(self, "redis_client"):
+    #     #     redis_cache = caches["default"]
+    #     #     redis_client = redis_cache.client.get_client()
+    #     #     self.redis_client = redis_client
+    #     return self.redis_client
 
     def set_record_task_name_by_out_track_id(self, out_track_id: Union[str] = None,
                                              task_name: Union[str] = None,
@@ -292,7 +292,7 @@ class Card(CreateAndDeliverRequest, CreateAndDeliverHeaders, SendInteractiveCard
         :return: void
         """
         __temp_map = {out_track_id: task_name}
-        if not redis_hset(key=self.task_track_mapping_key_name, mapping=__temp_map, timeout=timeout):
+        if not redis_hset(key=self.task_track_mapping_key_name, mapping=__temp_map, timeout=timeout).ok:
             raise PersistentDataError(f"store {self.task_track_mapping_key_name} failed.", 10002)
         # if self.__get_redis_client().hset(name=self.task_track_mapping_key_name,
         #                                   mapping=__temp_map) >= 0:
@@ -312,13 +312,13 @@ class Card(CreateAndDeliverRequest, CreateAndDeliverHeaders, SendInteractiveCard
         :return: 返回 task_name 名称
         """
         try:
-            result = self.__get_redis_client().hget(self.task_track_mapping_key_name, key=out_track_id)
-            if len(result) > 0:
-                return result
+            result = redis_hget(key=self.task_track_mapping_key_name, field=out_track_id)
+            if result.ok:
+                return result.value
         except Exception as err:
             self.logger.error(
                 f"error get task_name failed from {out_track_id} of redis key {self.task_track_mapping_key_name}")
-            return
+            raise Exception(f"error get task_name from key {self.task_track_mapping_key_name}")
 
     @staticmethod
     def Clear_mapping_value_is_none(input_dict: Union[dict]) -> dict:

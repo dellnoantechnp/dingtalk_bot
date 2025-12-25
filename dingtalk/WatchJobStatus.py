@@ -1,4 +1,6 @@
 import json
+from urllib.error import HTTPError
+
 import httpx
 from dingtalk.HttpxCustomBearerAuth import CustomBearerAuth
 from httpx._models import Response
@@ -60,10 +62,12 @@ def get_task_job_from_workflows_api(token: Union[str],
 
     url = f"{api_domain}/api/v1/workflows/{namespace}/{task_name}"
 
-    response = request.get(url=url)
+    try:
+        response = request.get(url=url)
+    except httpx.ConnectError as e:
+        raise ConnectionError(f"Connection workflows api {api_domain} error: {e}")
+    except httpx.HTTPError as e:
+        raise HTTPError(f"HTTPError workflows api {api_domain} error: {e}")
+
 
     return response
-
-#a = get_task_job_from_workflows_api(token=token, api_domain="https://workflows.poc.jagat.io", namespace="workflows", task_name="cicd-java-webhook-socket-server-92a4a10-47ftf")
-
-#print(gen_chart_data(a))

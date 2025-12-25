@@ -17,7 +17,7 @@ class DingtalkBase:
         self.logger = None
         self.appKey = app_key
         self.appSecret = app_secret
-        self.client = self.create_client()
+        self._client = None
         self.initial_logger(logger=logger_name)
         self.token_redis_key_name = "dingtalk_bot_token_" + app_key
 
@@ -27,8 +27,8 @@ class DingtalkBase:
         else:
             self.logger = logging.getLogger("dingtalk_bot")
 
-    @staticmethod
-    def create_client() -> dingtalkoauth2_1_0Client:
+    @property
+    def client(self) -> dingtalkoauth2_1_0Client:
         """
         使用 Token 初始化账号Client
         @return: Client
@@ -56,16 +56,17 @@ class DingtalkBase:
     #             # err 中含有 code 和 message 属性，可帮助开发定位问题
     #             pass
 
-    def get_access_token(self) -> str:
+    @property
+    def access_token(self) -> str:
         get_access_token_request = dingtalkoauth_2__1__0_models.GetAccessTokenRequest(
             app_key=self.appKey,
             app_secret=self.appSecret
         )
         try:
-            store_token = redis_get(self.token_redis_key_name)
-            if store_token:
-                self.logger.debug(msg=f"Load token from redis is [{store_token}]...")
-                return store_token
+            result = redis_get(self.token_redis_key_name)
+            if result.ok:
+                self.logger.debug(msg=f"Load token from redis is [{result.value}]...")
+                return result.value
             else:
                 token_resp = self.client.get_access_token(get_access_token_request)
                 self.logger.info(f"Renew token: {token_resp.body.access_token}")
@@ -76,28 +77,29 @@ class DingtalkBase:
             if not UtilClient.empty(err.code) and not UtilClient.empty(err.message):
                 # err 中含有 code 和 message 属性，可帮助开发定位问题
                 self.logger.error(msg="Request dingtalk api to get access_token error.")
+            raise err
 
-    def __get_redis_client(self) -> RedisCacheClient:
-        """
-        返回 redis_client
+    # def __get_redis_client(self) -> RedisCacheClient:
+    #     """
+    #     返回 redis_client
+    #
+    #     :return: redis_client
+    #     """
+    #     self.redis_client = get_redis_cluster()
+    #     # if not hasattr(self, "redis_client"):
+    #     #     redis_cache = caches["default"]
+    #     #     redis_client = redis_cache.client.get_client()
+    #     #     self.redis_client = redis_client
+    #     return self.redis_client
 
-        :return: redis_client
-        """
-        self.redis_client = get_redis_cluster()
-        # if not hasattr(self, "redis_client"):
-        #     redis_cache = caches["default"]
-        #     redis_client = redis_cache.client.get_client()
-        #     self.redis_client = redis_client
-        return self.redis_client
-
-    def redis_hset(self, key: str, value: dict) -> bool:
-        """
-        redis 设置 hset key
-
-        :return: True / False
-        """
-        return self.__get_redis_client().hset(name=key,
-                                              mapping=value) >= 0
+    # def redis_hset(self, key: str, value: dict) -> bool:
+    #     """
+    #     redis 设置 hset key
+    #
+    #     :return: True / False
+    #     """
+    #     return self.__get_redis_client().hset(name=key,
+    #                                           mapping=value) >= 0
 
     # @staticmethod
     # async def main_async(
