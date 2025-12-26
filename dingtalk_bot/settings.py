@@ -196,7 +196,7 @@ LOGGING = {
         },
         'console': {
             'level': 'DEBUG',
-            'filters': ['require_debug_true'],
+            #'filters': ['require_debug_true'], # filter为require_debug_true时表示只有当DEBUG,即DJANGO_DEBUG为True时该handler才会工作
             'class': 'logging.StreamHandler',
             'formatter': 'verbose'
         },
@@ -210,6 +210,11 @@ LOGGING = {
         }
     },
     'loggers': {
+        '': {
+            "handlers": ["console"],
+            "level": "INFO",
+            "propagate": False,
+        },
         'dingtalk_bot': {
             'handlers': ['console'],
             'level': 'DEBUG',

@@ -7,7 +7,7 @@ from core.RedisDataResponse import RedisDataResponse
 from utils.elapsed import timer
 
 _redis_cluster = None
-
+logger = logging.getLogger("dingtalk_bot")
 
 def get_redis_cluster() -> RedisCluster:
     global _redis_cluster
@@ -25,7 +25,7 @@ def redis_set(key: str, value: str, timeout=7000) -> RedisDataResponse:
     """
     redis 设置基本字符串 key
     """
-    logging.debug(msg=f"Set redis key [{key}] ...")
+    logger.debug(msg=f"Set redis key [{key}] ...")
 
     result = RedisDataResponse()
     # 计算耗时
@@ -40,7 +40,7 @@ def redis_set(key: str, value: str, timeout=7000) -> RedisDataResponse:
     else:
         result.status_code = 50000
         result.reason = "data store failed"
-    logging.debug(msg=f"Set redis key [{key}] done, use_time={result.elapsed.total_seconds() * 1000:.2f}ms  status_code={result.status_code} value={value}")
+    logger.debug(msg=f"Set redis key [{key}] done, use_time={result.elapsed.total_seconds() * 1000:.2f}ms  status_code={result.status_code} value={value}")
     return result
 
 
@@ -49,7 +49,7 @@ def redis_get(key) -> RedisDataResponse:
     redis 读取基本字符串
     :return: token_string
     """
-    logging.debug(msg=f"Read redis key [{key}] ...")
+    logger.debug(msg=f"Read redis key [{key}] ...")
 
     result = RedisDataResponse()
     with timer() as t:
@@ -63,13 +63,13 @@ def redis_get(key) -> RedisDataResponse:
     else:
         result.status_code = 50000
         result.reason = "data not found"
-    logging.debug(msg=f"Read redis key [{key}] done, use_time={result.elapsed.total_seconds() * 1000:.2f}ms status_code={result.status_code} value={ret}")
+    logger.debug(msg=f"Read redis key [{key}] done, use_time={result.elapsed.total_seconds() * 1000:.2f}ms status_code={result.status_code} value={ret}")
     return result
 
 
 def redis_hset(key: str, mapping: dict, timeout=7000) -> RedisDataResponse:
     """redis hset"""
-    logging.debug(msg=f"Set redis hset key [{key}] to [{repr(mapping)}]")
+    logger.debug(msg=f"Set redis hset key [{key}] to [{repr(mapping)}]")
     result = RedisDataResponse()
 
     with timer() as t:
@@ -87,13 +87,13 @@ def redis_hset(key: str, mapping: dict, timeout=7000) -> RedisDataResponse:
             result.reason = "data store failed"
 
     result.elapsed = t['elapsed']
-    logging.debug(msg=f"Set redis hset key [{key}] done, use_time={result.elapsed.total_seconds() * 1000:.2f}ms status_code={result.status_code} value={ret}")
+    logger.debug(msg=f"Set redis hset key [{key}] done, use_time={result.elapsed.total_seconds() * 1000:.2f}ms status_code={result.status_code} value={ret}")
     return result
 
 
 def redis_hget(key: str, field: str) -> RedisDataResponse:
     """redis hget single field"""
-    logging.debug(msg=f"Read redis hash key [{key}].[{field}] ...")
+    logger.debug(msg=f"Read redis hash key [{key}].[{field}] ...")
     result = RedisDataResponse()
 
     with timer() as t:
@@ -107,12 +107,12 @@ def redis_hget(key: str, field: str) -> RedisDataResponse:
     else:
         result.status_code = 50000
         result.reason = "data not found"
-    logging.debug(msg=f"Get redis hset key [{key}].[{field}] done, use_time={result.elapsed.total_seconds() * 1000:.2f}ms status_code={result.status_code} value={ret}")
+    logger.debug(msg=f"Get redis hset key [{key}].[{field}] done, use_time={result.elapsed.total_seconds() * 1000:.2f}ms status_code={result.status_code} value={ret}")
     return result
 
 def redis_hgetall(key: str) -> RedisDataResponse:
     """redis hget all fields"""
-    logging.debug(msg=f"Read redis hash key [{key}] ...")
+    logger.debug(msg=f"Read redis hash key [{key}] ...")
     result = RedisDataResponse()
 
     with timer() as t:
@@ -126,5 +126,5 @@ def redis_hgetall(key: str) -> RedisDataResponse:
     else:
         result.status_code = 50000
         result.reason = "data not found"
-    logging.debug(msg=f"Get redis hset key [{key}] done, use_time={result.elapsed.total_seconds() * 1000:.2f}ms status_code={result.status_code} value={ret}")
+    logger.debug(msg=f"Get redis hset key [{key}] done, use_time={result.elapsed.total_seconds() * 1000:.2f}ms status_code={result.status_code} value={ret}")
     return result

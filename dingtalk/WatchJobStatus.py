@@ -64,7 +64,7 @@ def get_task_job_from_workflows_api(token: Union[str],
 
     try:
         response = request.get(url=url)
-    except httpx.ConnectError as e:
+    except (httpx.ConnectError, httpx.ConnectTimeout) as e:
         raise ConnectionError(f"Connection workflows api {api_domain} error: {e}")
     except httpx.HTTPError as e:
         raise HTTPError(f"HTTPError workflows api {api_domain} error: {e}")
