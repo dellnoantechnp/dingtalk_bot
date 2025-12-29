@@ -17,6 +17,7 @@ from django.views.decorators.csrf import csrf_exempt
 
 from dingtalk.Card import Card, CardData
 from dingtalk.DingtalkBase import DingtalkBase
+from services.argo_workflows import ArgoWorkflowsService
 from . import EchoMarkdownHandler
 from dingtalk.WatchJobStatus import gen_chart_data, get_task_job_from_workflows_api, settings
 # from background_task import background
@@ -539,3 +540,9 @@ def my_task(args):
 
 def print_result(task):
     print(task.result)
+
+def workflow_test(request):
+    logger = logging.getLogger("dingtalk_bot")
+    a = ArgoWorkflowsService()
+    b = a.get_result(namespace="argo-workflows", name="cicd-java-webhook-main-finance-f434a517-9gszm")
+    return JsonResponse(b.dict())

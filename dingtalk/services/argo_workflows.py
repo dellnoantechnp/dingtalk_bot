@@ -1,33 +1,32 @@
 import json
 from urllib.error import HTTPError
 
-from argo_workflows.configuration import Configuration
-from argo_workflows.api_client import ApiClient
-from argo_workflows.api.workflow_service_api import WorkflowServiceApi
 import httpx
+from hera.workflows import WorkflowsService
+
 from dingtalk.HttpxCustomBearerAuth import CustomBearerAuth
 from httpx._models import Response
 from typing import Optional, Union
 from django.conf import settings
 
+
 class ArgoWorkflowsService:
     def __init__(self):
-        self._configuration = Configuration(host=settings.ARGO_WORKFLOWS_DOMAIN, access_token=settings.ARGO_WORKFLOWS_TOKEN)
-        self._client = ApiClient(
-            configuration=self._configuration,
-            #header_name="Authorization",
-            #header_value="Bearer " + settings.ARGO_WORKFLOWS_TOKEN
+        self.service = WorkflowsService(
+            host=settings.ARGO_WORKFLOWS_DOMAIN,
+            verify_ssl=True,
+            token=settings.ARGO_WORKFLOWS_TOKEN,
+            namespace=settings.ARGO_WORKFLOWS_WORKER_NAMESPACE,
         )
-        self.WorkflowServiceApi = WorkflowServiceApi(api_client=self._client)
 
     def get_result(self, namespace: str, name: str):
-        a = self.WorkflowServiceApi.get_workflow(namespace=namespace, name=name)
+        a = self.service.get_workflow(namespace=namespace, name=name)
         return a
+
 
 if __name__ == "__main__":
     test = ArgoWorkflowsService()
     test.get_result(namespace="workflows", name="cicd-java-webhook-production-day99-fund-1aae7e7c-c9clg")
-
 
 # def gen_chart_data(workflows_api_task_content: Response) -> list:
 #     """

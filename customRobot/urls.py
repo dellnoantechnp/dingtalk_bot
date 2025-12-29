@@ -12,6 +12,7 @@ urlpatterns = [
     path("test5", receive_stream_request.receive_stream_request),
     path("update_card", views.update_card),
     path("task", views.task_test),
-    path("list", views.stop_task)
+    path("list", views.stop_task),
+    path("workflow_test", views.workflow_test)
 ]
 
