@@ -20,8 +20,22 @@ class ArgoWorkflowsService:
         )
 
     def get_result(self, namespace: str, name: str):
-        a = self.service.get_workflow(namespace=namespace, name=name)
-        return a
+        try:
+            ret = self.service.get_workflow(namespace=namespace, name=name)
+
+            status = ret.status.phase
+            progress = ret.status.progress
+
+            nodes = ret.status.nodes if ret.status.nodes else {}
+            return {
+                "name": name,
+                "status": status,
+                "progress": progress,
+                "nodes": json.dumps(nodes)
+            }
+        except Exception as e:
+            print(f"Hera 获取任务失败: {e}")
+            return None
 
 
 if __name__ == "__main__":

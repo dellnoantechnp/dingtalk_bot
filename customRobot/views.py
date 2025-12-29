@@ -545,4 +545,5 @@ def workflow_test(request):
     logger = logging.getLogger("dingtalk_bot")
     a = ArgoWorkflowsService()
     b = a.get_result(namespace="argo-workflows", name="cicd-java-webhook-main-finance-f434a517-9gszm")
-    return JsonResponse(b.dict())
+    print(b)
+    return HttpResponse(json.dumps(b))
