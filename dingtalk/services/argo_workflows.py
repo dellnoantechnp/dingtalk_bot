@@ -2,11 +2,13 @@ import json
 from urllib.error import HTTPError
 
 import httpx
+from hera.workflows.models import NodeStatus
+from humanfriendly import format_timespan
 from hera.workflows import WorkflowsService
 
 from dingtalk.HttpxCustomBearerAuth import CustomBearerAuth
 from httpx._models import Response
-from typing import Optional, Union
+from typing import Optional, Union, Dict
 from django.conf import settings
 
 
@@ -19,7 +21,8 @@ class ArgoWorkflowsService:
             namespace=settings.ARGO_WORKFLOWS_WORKER_NAMESPACE,
         )
 
-    def get_result(self, namespace: str, name: str):
+    def get_result(self, namespace: str, name: str) -> dict[str, str]:
+        """处理任务输出"""
         try:
             ret = self.service.get_workflow(namespace=namespace, name=name)
 
@@ -27,20 +30,40 @@ class ArgoWorkflowsService:
             progress = ret.status.progress
 
             nodes = ret.status.nodes if ret.status.nodes else {}
+            nodes_status = sorted([self._node(nodes.get(node))
+                                   for node in nodes
+                                   if nodes.get(node).type == "Pod"], key=lambda x: x["started_at"])
             return {
                 "name": name,
                 "status": status,
                 "progress": progress,
-                "nodes": json.dumps(nodes)
+                "nodes": nodes_status
             }
         except Exception as e:
-            print(f"Hera 获取任务失败: {e}")
-            return None
+            raise Exception(f"Hera 获取 workflow 任务状态失败: {e}")
+
+    @staticmethod
+    def calculator_duration(node: NodeStatus) -> str:
+        """计算当前任务耗时，以可读方式输出"""
+        start_at = node.started_at.__root__
+        finished_at = node.finished_at.__root__
+        return format_timespan(finished_at - start_at)
+
+    def _node(self, node: NodeStatus) -> Dict[str, str]:
+        """组装node字段"""
+        ret = dict()
+        ret["name"] = node.template_name
+        ret["status"] = node.phase
+        ret["duration"] = self.calculator_duration(node)
+        ret["started_at"] = node.started_at.__root__
+        if node.phase != "Succeeded":
+            ret["message"] = node.message
+        return ret
 
 
 if __name__ == "__main__":
     test = ArgoWorkflowsService()
-    test.get_result(namespace="workflows", name="cicd-java-webhook-production-day99-fund-1aae7e7c-c9clg")
+    test.get_result(namespace="argo-workflows", name="xxxxxxx")
 
 # def gen_chart_data(workflows_api_task_content: Response) -> list:
 #     """
