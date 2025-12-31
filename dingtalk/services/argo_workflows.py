@@ -2,6 +2,7 @@ import json
 from urllib.error import HTTPError
 
 import httpx
+from django.core.cache import cache
 from hera.workflows.models import NodeStatus
 from humanfriendly import format_timespan
 from hera.workflows import WorkflowsService
@@ -59,6 +60,11 @@ class ArgoWorkflowsService:
         if node.phase != "Succeeded":
             ret["message"] = node.message
         return ret
+
+    def redis_test(self):
+        cache.set("abccc", "123456")
+        print("read cache")
+        print(cache.get("abccc"))
 
 
 if __name__ == "__main__":

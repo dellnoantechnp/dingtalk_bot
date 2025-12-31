@@ -233,26 +233,30 @@ LOGGING = {
     }
 }
 
-# CACHES = {
-#     "default": {
-#         "BACKEND": "django_redis.cache.RedisCache",
-#         "LOCATION": f"redis://:{REDIS_PASSWORD}@{REDIS_ADDR}/{REDIS_DATABASE_NUM}",
-#         "OPTIONS": {
-#             "REDIS_CLIENT_CLASS": "rediscluster.RedisCluster",  # 连接类
-#         #     "CLIENT_CLASS": "django_redis.client.DefaultClient",
-#             "CONNECTION_POOL_CLASS": "rediscluster.connection.ClusterConnectionPool",  # 连接池类
-#             "SOCKET_CONNECT_TIMEOUT": 5,
-#             "SOCKET_TIMEOUT": 10,
-#             "CONNECTION_POOL_KWARGS": {
-#                 'skip_full_coverage_check': True,
-#                 "max_connections": 10
-#             },
-#             "SERIALIZER": "django_redis.serializers.json.JSONSerializer",
-#             'REDIS_CLIENT_KWARGS': {"decode_responses": True},
-#         },
-#         "KEY_PREFIX": "dingtalk_bot"  # 默认 KEY_PREFIX:VERSION:key, 暂未使用
-#     }
-# }
+CACHES = {
+    "default": {
+        "BACKEND": "django_redis.cache.RedisCache",
+        "LOCATION": f"redis://:{REDIS_PASSWORD}@{REDIS_ADDR}/{REDIS_DATABASE_NUM}",
+        "OPTIONS": {
+            "REDIS_CLIENT_CLASS": "redis.cluster.RedisCluster",  # 连接类
+        #     "CLIENT_CLASS": "django_redis.client.DefaultClient",
+            #"CONNECTION_POOL_CLASS": "redis.connection.ConnectionPool",  # 连接池类
+            "SOCKET_CONNECT_TIMEOUT": 5,
+            "SOCKET_TIMEOUT": 10,
+            "CONNECTION_POOL_KWARGS": {
+                "decode_responses": True,
+                "password": REDIS_PASSWORD,
+                'read_from_replicas': True,        # 是否允许从 replica 节点读取
+                "retry_on_timeout": True,
+                "health_check_interval": 30,       # 健康检查，自动重连
+                "max_connections": 10
+            },
+            "SERIALIZER": "django_redis.serializers.json.JSONSerializer",
+            'REDIS_CLIENT_KWARGS': {"decode_responses": True},
+        },
+        "KEY_PREFIX": "dingtalk_bot"  # 默认 KEY_PREFIX:VERSION:key, 暂未使用
+    }
+}
 
 Q_CLUSTER = {
     'name': 'project',

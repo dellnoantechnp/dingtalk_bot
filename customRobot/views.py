@@ -548,4 +548,5 @@ def workflow_test(request):
         namespace=request.GET.get("namespace", "workflows"),
         name=request.GET.get("name")
     )
+    #workflow_instance.redis_test()
     return JsonResponse(b)
