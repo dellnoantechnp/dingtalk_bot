@@ -1,21 +1,39 @@
 import time
 
-from rediscluster import RedisCluster
+#from rediscluster import RedisCluster
+from redis import RedisCluster
 from django.conf import settings
 import logging
 from core.RedisDataResponse import RedisDataResponse
 from utils.elapsed import timer
+from django_redis.client import DefaultClient
 
 _redis_cluster = None
 logger = logging.getLogger("dingtalk_bot")
 
+
+# Custom Redis Cluster Client
+# For example::
+#
+#     redis://[[username]:[password]]@localhost:6379/0
+#     rediss://[[username]:[password]]@localhost:6379/0
+#     unix://[username@]/path/to/socket.sock?db=0[&password=password]
+class CustomRedisCluster(DefaultClient):
+
+    def connect(self, index: int = 0):
+        """Override the connection retrival function."""
+        logger.debug(msg=f"Connect to redis cluster [{self._server}] ...")
+        return RedisCluster.from_url(self._server[index])
+
+
+# Deprecated
 def get_redis_cluster() -> RedisCluster:
     global _redis_cluster
     if _redis_cluster is None:
         _redis_cluster = RedisCluster(
             startup_nodes=settings.REDIS_CLUSTER_NODES,
             decode_responses=True,
-            skip_full_coverage_check=True,
+            require_full_coverage=True,
             password=settings.REDIS_PASSWORD  # redis 密码
         )
     return _redis_cluster

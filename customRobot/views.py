@@ -410,7 +410,7 @@ def interactive_card_test(request):
         "reject_action": False,
         "cicd_status": request.POST.get("cicd_status", "正在更新中..."),  # 三个值，failure / success / 更新中...
         "config": {"autoLayout": "True" == request.POST.get("config.autoLayout")},  # 是否宽屏显示
-        "cicd_elapse": request.POST.get("cicd_elapse", "_")   # 最新的耗时时长
+        "cicd_elapse": request.POST.get("cicd_elapse", "_")  # 最新的耗时时长
     }
     b = CardData(card_vars)
     a.create_and_update_card_data(b)
@@ -462,13 +462,10 @@ def interactive_card_test2(request):
     logger.info("token: " + token)
 
     updateCard = Card(access_token=token,
-             card_template_id="98a61096-31e1-4611-be4e-b1d2f6897225.schema",
-             robot_code="dingqkoo0gpksjflc7ih",
-             open_conversation_id="cidUQXUpOwFEbiRNp87JyFE3w==",
-             )
-
-
-
+                      card_template_id="98a61096-31e1-4611-be4e-b1d2f6897225.schema",
+                      robot_code="dingqkoo0gpksjflc7ih",
+                      open_conversation_id="cidUQXUpOwFEbiRNp87JyFE3w==",
+                      )
 
     card_vars = {
         "markdown_content": "#### Tiltle\n* 123\n* 456",
@@ -503,7 +500,8 @@ def task_test(request):
     # schedule("my_task", schedule_type=Schedule.ONCE, next_run=timezone.now() + timedelta(minutes=1))
     # task_test_job(repeat=10)
     #task_id = async_task("customRobot.views.my_task", hook="customRobot.views.print_result")
-    task_id = schedule("customRobot.views.my_task", args=("abcd",), schedule_type=Schedule.MINUTES, minutes=0.5, repeats=-1)
+    task_id = schedule("customRobot.views.my_task", args=("abcd",), schedule_type=Schedule.MINUTES, minutes=0.5,
+                       repeats=-1)
     #task_result = result(task_id)
     #return HttpResponse(f"OK111 {task_id} result: {task_result}")
     return HttpResponse(f"OK111")
@@ -519,7 +517,7 @@ def stop_task(request):
     scheduled_tasks = Schedule.objects.all()
     for task in scheduled_tasks:
         print(f"Task Name: {task.name}, Func: {task.func}, Cron: {task.task}, IsSuccess: {task.success()} was deleted.")
-        #task.delete()
+        # task.delete()
     return HttpResponse("OK")
 
 
@@ -530,6 +528,8 @@ def my_task(args):
     print(f"定时任务执行了！！ {args} {datetime.datetime.now()}")
     logger.info("task completed.")
     return 2
+
+
 # @background(schedule=10, remove_existing_tasks=True)
 # def task_test_job():
 #     logger = logging.getLogger("dingtalk_bot")
@@ -541,6 +541,7 @@ def my_task(args):
 def print_result(task):
     print(task.result)
 
+
 def workflow_test(request):
     logger = logging.getLogger("dingtalk_bot")
     workflow_instance = ArgoWorkflowsService()
@@ -548,5 +549,5 @@ def workflow_test(request):
         namespace=request.GET.get("namespace", "workflows"),
         name=request.GET.get("name")
     )
-    #workflow_instance.redis_test()
+    workflow_instance.redis_test()
     return JsonResponse(b)

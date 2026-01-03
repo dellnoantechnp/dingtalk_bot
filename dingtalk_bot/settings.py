@@ -26,6 +26,8 @@ DINGTALK_CLIENT_SECRET= os.environ.get("DINGTALK_CLIENT_SECRET")
 
 REDIS_ADDR = os.environ.get("REDIS_ADDR", "127.0.0.1:6379")
 
+REDIS_URL = os.getenv("REDIS_URL", "redis://:password@127.0.0.1:6379")
+
 REDIS_DATABASE_NUM = os.environ.get("REDIS_DATABASE_NUM", "0")
 
 REDIS_PASSWORD = os.environ.get("REDIS_PASSWORD", "")
@@ -236,23 +238,33 @@ LOGGING = {
 CACHES = {
     "default": {
         "BACKEND": "django_redis.cache.RedisCache",
-        "LOCATION": f"redis://:{REDIS_PASSWORD}@{REDIS_ADDR}/{REDIS_DATABASE_NUM}",
+        "LOCATION": REDIS_URL,
         "OPTIONS": {
-            "REDIS_CLIENT_CLASS": "redis.cluster.RedisCluster",  # 连接类
-        #     "CLIENT_CLASS": "django_redis.client.DefaultClient",
-            #"CONNECTION_POOL_CLASS": "redis.connection.ConnectionPool",  # 连接池类
+            # "REDIS_CLIENT_CLASS": "redis.cluster.RedisCluster",  # 连接类
+            # "CLIENT_CLASS": "redis.cluster.CustomRedisCluster",
+            "CLIENT_CLASS": "core.redis_client.CustomRedisCluster",
+            "CONNECTION_POOL_CLASS": "redis.connection.ConnectionPool",  # 连接池类
+            "PASSWORD": REDIS_PASSWORD,
+            "REDIS_CLIENT_KWARGS": {
+                "startup_nodes": [
+                    {"host": REDIS_ADDR.split(':')[0], "port": REDIS_ADDR.split(':')[1]}
+                ],
+            },
+            # "CONNECTION_POOL_KWARGS": {
+            #     "startup_nodes": [
+            #         {"host": REDIS_ADDR.split(':')[0], "port": int(REDIS_ADDR.split(':')[1])}
+            #     ],
+            #     "decode_responses": True,
+            #     # # "password": REDIS_PASSWORD,
+            #     # 'read_from_replicas': True,        # 是否允许从 replica 节点读取
+            #     # "retry_on_timeout": True,
+            #     # "health_check_interval": 30,       # 健康检查，自动重连
+            #     # "max_connections": 10
+            # },
+            "SERIALIZER": "django_redis.serializers.json.JSONSerializer",
             "SOCKET_CONNECT_TIMEOUT": 5,
             "SOCKET_TIMEOUT": 10,
-            "CONNECTION_POOL_KWARGS": {
-                "decode_responses": True,
-                "password": REDIS_PASSWORD,
-                'read_from_replicas': True,        # 是否允许从 replica 节点读取
-                "retry_on_timeout": True,
-                "health_check_interval": 30,       # 健康检查，自动重连
-                "max_connections": 10
-            },
-            "SERIALIZER": "django_redis.serializers.json.JSONSerializer",
-            'REDIS_CLIENT_KWARGS': {"decode_responses": True},
+            #'REDIS_CLIENT_KWARGS': {"decode_responses": True},
         },
         "KEY_PREFIX": "dingtalk_bot"  # 默认 KEY_PREFIX:VERSION:key, 暂未使用
     }
@@ -277,6 +289,7 @@ Q_CLUSTER = {
     }
 }
 
+# Deprecated
 ## 设置 redis-cluster 任意节点地址
 REDIS_CLUSTER_NODES = [
     {"host": REDIS_ADDR.split(":")[0], "port": REDIS_ADDR.split(":")[1]},
