@@ -1,0 +1,23 @@
+[project]
+name = "dingtalk-bot"
+version = "0.1.0"
+description = "Dingtalk interactive card bot"
+requires-python = ">=3.13"
+dependencies = [
+    "alibabacloud-dingtalk==2.2.37",
+    "anytree==2.13.0",
+    "celery~=5.6.1",
+    "daphne==4.2.1",
+    "dingtalk-stream==0.18.1",
+    "django~=5.2.9",
+    "django-celery-beat~=2.8.1",
+    "django-q2==1.7.6",
+    "django-redis==6.0.0",
+    "hera~=5.26.1",
+    "httpx[http2]~=0.28.1",
+    "humanfriendly~=10.0",
+    "redis~=7.1.0",
+    "requests~=2.32.0",
+    "setuptools>=80.9.0",
+    "supervisor~=4.2.5",
+]

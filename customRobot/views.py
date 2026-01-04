@@ -82,9 +82,9 @@ def create_card_client() -> dingtalkcard_1_0Client:
 @csrf_exempt
 def dingtalk_test(request):
     logger = logging.getLogger("dingtalk_bot")
-    logger.debug("appKey:" + request.POST.get("appKey") + " appSecret:" + request.POST.get("appSecret"))
-    dd = DingtalkBase(request.POST.get("appKey"), request.POST.get("appSecret"))
-    token = dd.get_access_token()
+    logger.debug("appKey:" + settings.DINGTALK_CLIENT_ID + " appSecret:" + settings.DINGTALK_CLIENT_SECRET)
+    dd = DingtalkBase(settings.DINGTALK_CLIENT_ID, settings.DINGTALK_CLIENT_SECRET)
+    token = dd.access_token
     logger.info("token: " + token)
     time_tag = int(time.time() * 1000)
     # card_template_id = "bd57beb1-d127-45e5-92d4-81277c59c87b.schema"
@@ -121,7 +121,7 @@ def dingtalk_test(request):
 
     ## Card
     create_and_deliver_headers = dingtalkcard__1__0_models.CreateAndDeliverHeaders()
-    create_and_deliver_headers.x_acs_dingtalk_access_token = dd.get_access_token()
+    create_and_deliver_headers.x_acs_dingtalk_access_token = dd.access_token
     create_and_deliver_request = dingtalkcard__1__0_models.CreateAndDeliverRequest()
     create_and_deliver_request.card_template_id = card_template_id
     # send_interactive_card_request.card_template_id = "b2a8bb23-0b04-45c7-8686-e3668b082ed8.schema"
@@ -149,11 +149,11 @@ def dingtalk_test(request):
     card_client = create_card_client()
     try:
         logger.info("卡片创建和投递")
-        resp: dingtalkcard__1__0_models.CreateAndDeliverResponse = card_client.create_and_deliver_with_options(
-            create_and_deliver_request,
-            create_and_deliver_headers,
-            util_models.RuntimeOptions()
-        )
+        # resp: dingtalkcard__1__0_models.CreateAndDeliverResponse = card_client.create_and_deliver_with_options(
+        #     create_and_deliver_request,
+        #     create_and_deliver_headers,
+        #     util_models.RuntimeOptions()
+        # )
 
         logger.info("卡片消息投递到聊天")
         resp: dingtalkim__1__0_models.SendInteractiveCardResponse = im_client.send_interactive_card_with_options(

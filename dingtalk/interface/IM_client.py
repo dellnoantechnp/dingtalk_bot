@@ -6,5 +6,6 @@ class IM_Client(ABC):
     def send(self):
         pass
 
+    @abstractmethod
     def update(self):
         pass
