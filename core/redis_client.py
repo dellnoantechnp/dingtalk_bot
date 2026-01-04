@@ -52,6 +52,7 @@ def redis_set(key: str, value: str, timeout=7000) -> RedisDataResponse:
         result.value = ret
 
     result.elapsed = t['elapsed']
+    result.key = key
     if ret:
         result.status_code = 10000
     else:
@@ -64,7 +65,7 @@ def redis_set(key: str, value: str, timeout=7000) -> RedisDataResponse:
 def redis_get(key) -> RedisDataResponse:
     """
     redis 读取基本字符串
-    :return: token_string
+    :return: RedisDataResponse
     """
     logger.debug(msg=f"Read redis key [{key}] ...")
 
@@ -75,6 +76,7 @@ def redis_get(key) -> RedisDataResponse:
         result.value = ret
 
     result.elapsed = t['elapsed']
+    result.key = key
     if ret:
         result.status_code = 10000
     else:
@@ -104,6 +106,7 @@ def redis_hset(key: str, mapping: dict, timeout=7000) -> RedisDataResponse:
             result.reason = "data store failed"
 
     result.elapsed = t['elapsed']
+    result.key = key
     logger.debug(msg=f"Set redis hset key [{key}] done, use_time={result.elapsed.total_seconds() * 1000:.2f}ms status_code={result.status_code} value={ret}")
     return result
 
@@ -119,6 +122,8 @@ def redis_hget(key: str, field: str) -> RedisDataResponse:
         result.value = ret
 
     result.elapsed = t['elapsed']
+    result.key = key
+    result.field = field
     if ret:
         result.status_code = 10000
     else:
@@ -126,6 +131,7 @@ def redis_hget(key: str, field: str) -> RedisDataResponse:
         result.reason = "data not found"
     logger.debug(msg=f"Get redis hset key [{key}].[{field}] done, use_time={result.elapsed.total_seconds() * 1000:.2f}ms status_code={result.status_code} value={ret}")
     return result
+
 
 def redis_hgetall(key: str) -> RedisDataResponse:
     """redis hget all fields"""
@@ -138,6 +144,7 @@ def redis_hgetall(key: str) -> RedisDataResponse:
         result.value = ret
 
     result.elapsed = t['elapsed']
+    result.key = key
     if len(ret.keys()) > 0:
         result.status_code = 10000
     else:

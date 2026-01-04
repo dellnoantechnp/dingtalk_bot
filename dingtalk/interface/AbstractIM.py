@@ -1,7 +1,7 @@
 from abc import ABC, abstractmethod
 
 
-class IM_Client(ABC):
+class AbstractIMClient(ABC):
     @abstractmethod
     def send(self):
         pass

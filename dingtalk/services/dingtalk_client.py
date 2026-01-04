@@ -4,7 +4,8 @@ from alibabacloud_dingtalk.card_1_0.models import CreateAndDeliverHeaders, \
     CreateAndDeliverRequestImGroupOpenDeliverModel, CreateCardRequestImGroupOpenSpaceModel
 from darabonba.policy.retry import RetryOptions, RetryCondition
 
-from dingtalk.interface.IM_client import IM_Client
+from core.redis_client import redis_hgetall, redis_hget
+from dingtalk.interface.AbstractIM import AbstractIMClient
 from alibabacloud_tea_openapi import models as open_api_models
 from typing import Optional, Union, Any
 from dingtalk.DingtalkBase import DingtalkBase
@@ -17,29 +18,25 @@ import logging
 logger = logging.getLogger("dingtalk_bot")
 
 
-class DingTalkClient(IM_Client, DingtalkBase):
+class DingTalkClient(AbstractIMClient, DingtalkBase):
 
-    def __init__(self, access_token: str = None,
-                 task_name: Optional[str] = "",
-                 card_template_id: Optional[str] = None,
-                 robot_code: Optional[str] = None,
-                 open_conversation_id: Optional[str] = None,
-                 conversation_type: Optional[int] = 1,
-                 callback_type: Optional[str] = "STREAM",
+    def __init__(self, task_name: Optional[str] = "", card_template_id: Optional[str] = None,
+                 robot_code: Optional[str] = None, open_conversation_id: Optional[str] = None,
+                 conversation_type: Optional[int] = 1, callback_type: Optional[str] = "STREAM",
                  out_track_id: Optional[str] = None):
-        """初始化 Card 类相关的所有参数
+        """
+        初始化 Card 类相关的所有参数
         OpenSpaceId Docs: https://open.dingtalk.com/document/orgapp/open-interface-card-delivery-instance
-
-        :param access_token: token
-        :param task_name: 任务名称
-        :param card_template_id: 卡片模板ID
+        :param task_name: workflows 任务名称
+        :param card_template_id: 钉钉开放平台互动卡片模板ID
         :param robot_code: 机器人code
-        :param open_conversation_id: 群ID
+        :param open_conversation_id: 群聊ID
         :param conversation_type: 会话类型，0 单聊   1 群聊, 单聊不用填写open_conversation_id
         :#param open_space_id: 在投放接口中，使用openSpaceId作为统一投放id，openSpaceId采用固定协议且支持版本升级，主要由版本、场域类型、场域id三部分内容组成
         :param callback_type: 回调模式， HTTP  STREAM
         :param out_track_id: 回调请求时，需传入 out_track_id，新创建卡片不用传入 out_track_id
         """
+        super().__init__()
         self.task_track_mapping_key_name = "cicd_task_name_mapping_out_track_id"
         if out_track_id and card_template_id is None:
             # 更新卡片逻辑,从历史数据中加载相关参数
@@ -117,11 +114,24 @@ class DingTalkClient(IM_Client, DingtalkBase):
 
         return ret
 
+    def __load_data_from_persistent_store(self, name: str, field: str = None) -> dict:
+        if field:
+            ret = redis_hget(key=self.task_track_mapping_key_name, field=field)
+            if ret.ok:
+                return ret.value
+            else:
+                raise ValueError(f"dingtalk get task_track_mapping_key {ret.key}.{ret.field} value error, {ret.reason}")
+        else:
+            ret = redis_hgetall(key=self.task_track_mapping_key_name)
+            if ret.ok:
+                return ret.value
+            else:
+                raise ValueError(f"dingtalk get task_track_mapping_key {ret.key} value error, {ret.reason}")
 
     @staticmethod
     def card_data(card_param_map: dict[str, str],
-                   card_media_id_param_map=None
-                   ) -> dingtalkim__1__0_models.SendInteractiveCardRequestCardData:
+                  card_media_id_param_map=None
+                  ) -> dingtalkim__1__0_models.SendInteractiveCardRequestCardData:
         """
         创建 card_data 对象.
         :param card_param_map: 卡片参数dict对象
@@ -159,3 +169,6 @@ class DingTalkClient(IM_Client, DingtalkBase):
             headers=req["send_interactive_card_headers"],
             runtime=req["runtime"],
         )
+
+    def update(self):
+        pass
