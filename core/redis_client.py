@@ -31,10 +31,9 @@ def get_redis_cluster() -> RedisCluster:
     global _redis_cluster
     if _redis_cluster is None:
         _redis_cluster = RedisCluster(
-            startup_nodes=settings.REDIS_CLUSTER_NODES,
+            url=settings.REDIS_URL,
             decode_responses=True,
             require_full_coverage=True,
-            password=settings.REDIS_PASSWORD  # redis 密码
         )
     return _redis_cluster
 

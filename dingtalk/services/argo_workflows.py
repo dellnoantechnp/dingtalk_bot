@@ -2,11 +2,12 @@ import json
 from urllib.error import HTTPError
 
 import httpx
-from django.core.cache import cache
+from django.core.cache import caches
 from hera.workflows.models import NodeStatus
 from humanfriendly import format_timespan
 from hera.workflows import WorkflowsService
 
+from core.redis_client import redis_hset, redis_hgetall
 from dingtalk.HttpxCustomBearerAuth import CustomBearerAuth
 from httpx._models import Response
 from typing import Optional, Union, Dict
@@ -62,9 +63,12 @@ class ArgoWorkflowsService:
         return ret
 
     def redis_test(self):
+        cache = caches["default"]
         cache.set("abccc", "123456")
         print("read cache")
         print(cache.get("abccc"))
+        redis_hset("abccce", {"abccc": "123456"})
+        print(redis_hgetall("abccce").value)
 
 
 if __name__ == "__main__":
