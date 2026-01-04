@@ -62,13 +62,6 @@ class ArgoWorkflowsService:
             ret["message"] = node.message
         return ret
 
-    def redis_test(self):
-        cache = caches["default"]
-        cache.set("abccc", "123456")
-        print("read cache")
-        print(cache.get("abccc"))
-        redis_hset("abccce", {"abccc": "123456"})
-        print(redis_hgetall("abccce").value)
 
 
 if __name__ == "__main__":
