@@ -13,6 +13,7 @@ urlpatterns = [
     path("update_card", views.update_card),
     path("task", views.task_test),
     path("list", views.stop_task),
-    path("workflow_test", views.workflow_test)
+    path("workflow_test", views.workflow_test),
+    path(route="new_notice", view=views.new_notification),
 ]
 

@@ -3,17 +3,20 @@ import time
 from alibabacloud_dingtalk.card_1_0.models import CreateAndDeliverHeaders, \
     CreateAndDeliverRequestImGroupOpenDeliverModel, CreateCardRequestImGroupOpenSpaceModel
 from darabonba.policy.retry import RetryOptions, RetryCondition
+from urllib3.exceptions import ResponseError
 
 from core.redis_client import redis_hgetall, redis_hget
 from dingtalk.interface.AbstractIM import AbstractIMClient
 from alibabacloud_tea_openapi import models as open_api_models
 from typing import Optional, Union, Any
-from dingtalk.DingtalkBase import DingtalkBase
+from dingtalk.services.dingtalk_base import DingtalkBase
 from alibabacloud_dingtalk.card_1_0 import models as dingtalkcard__1__0_models
 from alibabacloud_dingtalk.im_1_0 import models as dingtalkim__1__0_models
 from alibabacloud_dingtalk.im_1_0.client import Client as dingtalkim_1_0Client
 from alibabacloud_tea_util import models as util_models
 import logging
+
+from dingtalk.services.dingtalk_card_struct import DingTalkCardData
 
 logger = logging.getLogger("dingtalk_bot")
 
@@ -42,7 +45,7 @@ class DingTalkClient(AbstractIMClient, DingtalkBase):
             # 更新卡片逻辑,从历史数据中加载相关参数
             task_name = self.get_record_task_name_by_out_track_id(out_track_id=out_track_id)
             logger.info(f"load card parameters from redis, task_name={task_name}")
-            self.__load_data_from_persistent_store(task_name=task_name)
+            self.__load_data_from_persistent_store(name=task_name)
         else:
             # 新创建卡片逻辑,需要传入初始参数
             logger.debug(
@@ -91,7 +94,7 @@ class DingTalkClient(AbstractIMClient, DingtalkBase):
         else:
             raise ValueError("dingtalk conversation_type value must be 1.")
 
-    def _send_interactive_card_req(self) -> dict[str, Any]:
+    def __send_interactive_card_req(self) -> dict[str, Any]:
         ret = {}
 
         logger.debug("initial interactive card headers.")
@@ -113,6 +116,24 @@ class DingTalkClient(AbstractIMClient, DingtalkBase):
         ret["runtime"] = runtime
 
         return ret
+
+    def __persistent_card(self, key: str, timeout: Optional[int] = 604800) -> bool:
+        """持久化卡片数据
+        :param key: persistent key name
+        :param timeout: 超时时间，默认值7day
+        """
+        mapping = DingTalkCardData()
+        mapping.card_template_id = self.card_template_id
+        mapping.conversation_type = self.conversation_type
+        mapping.robot_code = self.robot_code
+        mapping.open_conversation_id = self.open_conversation_id
+        mapping.task_name = self.task_name
+        mapping.card_parm_map_string = {}
+        mapping.private_data = {}
+        logger.info(f"persistent card key:{key}")
+        logger.debug(f"persistent card key:{key}, value:{mapping.model_json_schema()}")
+
+
 
     def __load_data_from_persistent_store(self, name: str, field: str = None) -> dict:
         if field:
@@ -157,7 +178,7 @@ class DingTalkClient(AbstractIMClient, DingtalkBase):
         return dingtalkim_1_0Client(config)
 
     def send(self) -> None:
-        req = self._send_interactive_card_req()
+        req = self.__send_interactive_card_req()
 
         logger.info("initial card data.")
         card_data = self.card_data(card_param_map=self.card_param_map,
@@ -169,6 +190,10 @@ class DingTalkClient(AbstractIMClient, DingtalkBase):
             headers=req["send_interactive_card_headers"],
             runtime=req["runtime"],
         )
+        if resp.status_code == 200:
+            return resp.body
+        else:
+            raise ResponseError(resp)
 
     def update(self):
         pass

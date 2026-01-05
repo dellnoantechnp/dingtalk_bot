@@ -1,15 +1,7 @@
-import json
-from urllib.error import HTTPError
-
-import httpx
-from django.core.cache import caches
 from hera.workflows.models import NodeStatus
 from humanfriendly import format_timespan
 from hera.workflows import WorkflowsService
 
-from core.redis_client import redis_hset, redis_hgetall
-from dingtalk.HttpxCustomBearerAuth import CustomBearerAuth
-from httpx._models import Response
 from typing import Optional, Union, Dict
 from django.conf import settings
 
@@ -32,7 +24,7 @@ class ArgoWorkflowsService:
             progress = ret.status.progress
 
             nodes = ret.status.nodes if ret.status.nodes else {}
-            nodes_status = sorted([self._node(nodes.get(node))
+            nodes_status = sorted([self.__node(nodes.get(node))
                                    for node in nodes
                                    if nodes.get(node).type == "Pod"], key=lambda x: x["started_at"])
             return {
@@ -51,7 +43,7 @@ class ArgoWorkflowsService:
         finished_at = node.finished_at.__root__
         return format_timespan(finished_at - start_at)
 
-    def _node(self, node: NodeStatus) -> Dict[str, str]:
+    def __node(self, node: NodeStatus) -> Dict[str, str]:
         """组装node字段"""
         ret = dict()
         ret["name"] = node.template_name

@@ -18,6 +18,8 @@ from django.views.decorators.csrf import csrf_exempt
 from dingtalk.Card import Card, CardData
 from dingtalk.DingtalkBase import DingtalkBase
 from dingtalk.services.argo_workflows import ArgoWorkflowsService
+from dingtalk.services.dingtalk_card_struct import GROUP_SESSION
+from dingtalk.services.dingtalk_client import DingTalkClient
 from . import EchoMarkdownHandler
 from dingtalk.WatchJobStatus import gen_chart_data, get_task_job_from_workflows_api, settings
 # from background_task import background
@@ -29,6 +31,7 @@ from dingtalk.tasks.TaskStatusOfWorkflowsJob import add_schedule_job
 
 from dingtalk.CardDataStore import CardDataStore
 
+logger = logging.getLogger("dingtalk_bot")
 
 def index(request):
     return JsonResponse({"foo": "bar"})
@@ -543,10 +546,21 @@ def print_result(task):
 
 
 def workflow_test(request):
-    logger = logging.getLogger("dingtalk_bot")
     workflow_instance = ArgoWorkflowsService()
     b = workflow_instance.get_result(
         namespace=request.GET.get("namespace", "workflows"),
         name=request.GET.get("name")
     )
     return JsonResponse(b)
+
+@csrf_exempt
+def new_notification(request):
+    notice = DingTalkClient(
+        task_name=request.POST.get("task_name"),
+        card_template_id=request.POST.get("card_template_id"),
+        robot_code=request.POST.get("robot_code"),
+        open_conversation_id=request.POST.get("open_conversation_id"),
+        conversation_type=GROUP_SESSION
+    )
+    notice.send()
+    return HttpResponse("OK")

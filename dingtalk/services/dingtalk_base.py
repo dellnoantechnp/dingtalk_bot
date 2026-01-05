@@ -6,26 +6,23 @@ from alibabacloud_dingtalk.oauth2_1_0 import models as dingtalkoauth_2__1__0_mod
 from alibabacloud_tea_util.client import Client as UtilClient
 from logging import Logger
 from typing import Union, Optional
+
+from django.conf import settings
 # from django.core.cache import caches
 from django.core.cache.backends.redis import RedisCacheClient
 
 from core.redis_client import get_redis_cluster, redis_set, redis_get
 
+logger = logging.getLogger("dingtalk_bot")
+
 
 class DingtalkBase:
-    def __init__(self, app_key: Union[str] = "", app_secret: Union[str] = "", logger_name: Optional[str] = None):
+    def __init__(self):
         self.logger = None
-        self.appKey = app_key
-        self.appSecret = app_secret
+        self.appKey = settings.DINGTALK_CLIENT_ID
+        self.appSecret = settings.DINGTALK_CLIENT_SECRET
         self._client = None
-        self.initial_logger(logger=logger_name)
-        self.token_redis_key_name = "dingtalk_bot_token_" + app_key
-
-    def initial_logger(self, logger):
-        if logger:
-            self.logger = logging.getLogger(logger)
-        else:
-            self.logger = logging.getLogger("dingtalk_bot")
+        self.token_redis_key_name = "dingtalk_bot_token_" + self.appKey
 
     @property
     def client(self) -> dingtalkoauth2_1_0Client:
@@ -69,7 +66,7 @@ class DingtalkBase:
                 return result.value
             else:
                 token_resp = self.client.get_access_token(get_access_token_request)
-                self.logger.info(f"Renew token: {token_resp.body.access_token}")
+                logger.info(f"Renew token: {token_resp.body.access_token}")
                 api_token = token_resp.body.access_token
                 redis_set(key=self.token_redis_key_name, value=api_token)
                 return api_token
