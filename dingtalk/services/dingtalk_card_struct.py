@@ -1,19 +1,12 @@
 from datetime import timedelta
 from typing import Optional
 from pydantic import BaseModel, Field, HttpUrl
-from redis.commands.json import JSON
 
 
-class DingTalkCardData(BaseModel):
-    """DingTalk interactive card data"""
-    card_template_id: str = Field(default=None, description="互动卡片模板ID")
-    out_track_id: str = Field(default=None, description="卡片消息out_track_id")
-    robot_code: str = Field(default=None, description="机器人应用code")
-    open_conversation_id: str = Field(default=None, description="群聊ID")
-    conversation_type: int = Field(default=None, description="群聊类型", ge=0, le=1)
-    task_name: str = Field(default=None, description="workflows task name")
-    card_parm_map_string: dict[str, str] = Field(default=None, description="卡片公共变量")
-    private_data: dict[str, str] = Field(default=None, description="卡片私有变量")
+class DingTalkCardPrivateDataItem(BaseModel):
+    """DingTalk interactive card private data"""
+    approve_action: bool = False
+    reject_action: bool = False
 
 
 class DingTalkCardParmData(BaseModel):
@@ -35,6 +28,21 @@ class DingTalkCardParmData(BaseModel):
     card_title: str = Field(default=None, description="卡片通知标题")
     markdown_title: str = Field(default=None, description="消息体markdown的标题")
     chart_data: str = Field(default=None, description="图表JSON体")
+
+
+class DingTalkCardData(BaseModel):
+    """DingTalk interactive card data"""
+    card_template_id: str = Field(default=None, description="互动卡片模板ID")
+    out_track_id: str = Field(default=None, description="卡片消息out_track_id")
+    robot_code: str = Field(default=None, description="机器人应用code")
+    open_conversation_id: str = Field(default=None, description="群聊ID")
+    conversation_type: int = Field(default=None, description="群聊类型", ge=0, le=1)
+    task_name: str = Field(default=None, description="workflows task name")
+    card_parm_map_string: DingTalkCardParmData
+    private_data: dict[int, DingTalkCardPrivateDataItem] = Field(default=[], description="private data list")
+
+
+
 
 
 class Enum:
