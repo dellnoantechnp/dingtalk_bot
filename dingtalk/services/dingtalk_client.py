@@ -177,10 +177,15 @@ class DingTalkClient(AbstractIMClient, DingtalkBase):
         config.retry_options = retry_option
         return dingtalkim_1_0Client(config)
 
+    # TODO: coding card param mapping...
+    def data(self):
+        pass
+
     def send(self) -> None:
         req = self.__send_interactive_card_req()
 
         logger.info("initial card data.")
+        # TODO: coding there....
         card_data = self.card_data(card_param_map=self.card_param_map,
                                    card_media_id_param_map=self.card_media_id_param_map)
         req["send_interactive_card_request"].card_data = card_data
