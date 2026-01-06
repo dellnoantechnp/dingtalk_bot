@@ -104,13 +104,12 @@ class DingTalkClient(AbstractIMClient, DingtalkBase):
             raise ValueError("dingtalk conversation_type value must be 1.")
 
     def __send_interactive_card_req(self, card_data: DingTalkCardData) -> dict[str, Any]:
+        """准备底层客户端"""
         ret = {}
 
         logger.debug("initial interactive card headers.")
         im_group_interactive_card_headers = dingtalkim__1__0_models.CreateAndDeliverHeaders()
         im_group_interactive_card_headers.x_acs_dingtalk_access_token = self.access_token
-
-
 
         # Card Request
         logger.debug("initial interactive card request.")
@@ -140,8 +139,8 @@ class DingTalkClient(AbstractIMClient, DingtalkBase):
         logger.debug("initial interactive imGroupOpenDeliverModel.")
         im_group_interactive_open_deliver_model = dingtalkcard__1__0_models.CreateAndDeliverRequestImGroupOpenDeliverModel()
         im_group_interactive_open_deliver_model.robot_code = self.robot_code
-        #send_interactive_card_request.open_conversation_id = self.open_conversation_id
-        #send_interactive_card_request.conversation_type = self.conversation_type
+        # send_interactive_card_request.open_conversation_id = self.open_conversation_id
+        # send_interactive_card_request.conversation_type = self.conversation_type
         # send_interactive_card_request.conversation_type
 
         # 组装 request 参数
@@ -159,6 +158,10 @@ class DingTalkClient(AbstractIMClient, DingtalkBase):
         return ret
 
     def build_card_data(self, card_parm_map: T) -> DingTalkCardData[T]:
+        """装载 card parm data
+        :param card_parm_map: 模型数据对象
+        :return: DingTalkCardData: 返回模型数据对象
+        """
         logger.debug(f"build card data. {card_parm_map}")
         card_data = DingTalkCardData(
             card_template_id=self.card_template_id,
@@ -190,6 +193,8 @@ class DingTalkClient(AbstractIMClient, DingtalkBase):
 
 
     def __load_data_from_persistent_store(self, name: str, field: str = None) -> dict:
+        """从历史数据中加载 card data
+        :param name: persistent key name"""
         if field:
             ret = redis_hget(key=self.task_track_mapping_key_name, field=field)
             if ret.ok:
@@ -236,6 +241,7 @@ class DingTalkClient(AbstractIMClient, DingtalkBase):
         pass
 
     def send(self) -> None:
+        """卡片发送"""
         req = self.__send_interactive_card_req(self.card_param_map)
 
         logger.info("initial card data.")
@@ -255,4 +261,5 @@ class DingTalkClient(AbstractIMClient, DingtalkBase):
             raise ResponseError(resp)
 
     def update(self):
+        """更新卡片"""
         pass
