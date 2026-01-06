@@ -62,7 +62,7 @@ class DingtalkBase:
         try:
             result = redis_get(self.token_redis_key_name)
             if result.ok:
-                self.logger.debug(msg=f"Load token from redis is [{result.value}]...")
+                logger.debug(msg=f"Load token from redis is [{result.value}]...")
                 return result.value
             else:
                 token_resp = self.client.get_access_token(get_access_token_request)
@@ -73,7 +73,7 @@ class DingtalkBase:
         except Exception as err:
             if not UtilClient.empty(err.code) and not UtilClient.empty(err.message):
                 # err 中含有 code 和 message 属性，可帮助开发定位问题
-                self.logger.error(msg="Request dingtalk api to get access_token error.")
+                logger.error(msg="Request dingtalk api to get access_token error.")
             raise err
 
     # def __get_redis_client(self) -> RedisCacheClient:

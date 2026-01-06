@@ -17,8 +17,9 @@ from django.views.decorators.csrf import csrf_exempt
 
 from dingtalk.Card import Card, CardData
 from dingtalk.DingtalkBase import DingtalkBase
+from dingtalk.Schema.APISchema import NewNoticeSchema
 from dingtalk.services.argo_workflows import ArgoWorkflowsService
-from dingtalk.services.dingtalk_card_struct import GROUP_SESSION
+from dingtalk.services.dingtalk_card_struct import SpaceTypeEnum
 from dingtalk.services.dingtalk_client import DingTalkClient
 from . import EchoMarkdownHandler
 from dingtalk.WatchJobStatus import gen_chart_data, get_task_job_from_workflows_api, settings
@@ -558,9 +559,14 @@ def new_notification(request):
     notice = DingTalkClient(
         task_name=request.POST.get("task_name"),
         card_template_id=request.POST.get("card_template_id"),
-        robot_code=request.POST.get("robot_code"),
+        robot_code=settings.DINGTALK_ROBOT_CODE,
         open_conversation_id=request.POST.get("open_conversation_id"),
-        conversation_type=GROUP_SESSION
+        space_type=SpaceTypeEnum.IM_GROUP
     )
+    body = request.POST.dict()
+    schema = NewNoticeSchema.model_validate(body)
+    ret = notice.build_card_data(schema)
+    notice.card_param_map = ret
+    print(ret)
     notice.send()
     return HttpResponse("OK")
