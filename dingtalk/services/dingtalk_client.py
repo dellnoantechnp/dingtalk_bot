@@ -10,20 +10,17 @@ from httpx import RequestError
 from urllib3.exceptions import ResponseError
 
 from core.redis_client import redis_hgetall, redis_hget
-from dingtalk.Schema.APISchema import APISchema
 from dingtalk.interface.AbstractIM import AbstractIMClient
 from alibabacloud_tea_openapi import models as open_api_models
-from typing import Optional, Union, Any, Dict
+from typing import Optional, Dict
 from dingtalk.services.dingtalk_base import DingtalkBase
 from alibabacloud_dingtalk.card_1_0 import models as dingtalkcard__1__0_models
 from alibabacloud_dingtalk.card_1_0.client import Client as dingtalkcard_1_0Client
-from alibabacloud_dingtalk.im_1_0 import models as dingtalkim__1__0_models
-from alibabacloud_dingtalk.im_1_0.client import Client as dingtalkim_1_0Client
 from alibabacloud_tea_util import models as util_models
 import logging
 
-from dingtalk.services.dingtalk_card_struct import DingTalkCardData, SpaceTypeEnum, UserIdTypeModel, T
-from dingtalk.types.types import TeaType
+from Schema.dingtalk_card_struct import DingTalkCardData, SpaceTypeEnum, UserIdTypeModel, T
+from dingtalk.type.types import TeaType
 
 logger = logging.getLogger("dingtalk_bot")
 
@@ -77,8 +74,6 @@ class DingTalkClient(AbstractIMClient, DingtalkBase):
 
         self.common_headers = None
         self.task_name = task_name
-
-
 
     @property
     def out_track_id(self) -> str:
@@ -134,10 +129,6 @@ class DingTalkClient(AbstractIMClient, DingtalkBase):
         im_group_interactive_card_request.user_id_type = UserIdTypeModel.userId
         im_group_interactive_card_request.card_data = self.card_data(self.data.card_parm_map.model_dump())
 
-        # TODO: card data
-        # imgroup_interactive_card_request.card_data =
-        # imgroup_interactive_card_request.private_data =
-
         # imGroupOpenSpaceModel
         logger.debug("initial interactive imGroupOpenSpaceModel.")
         im_group_interactive_open_space_model = CreateAndDeliverRequestImGroupOpenSpaceModel()
@@ -155,9 +146,6 @@ class DingTalkClient(AbstractIMClient, DingtalkBase):
         logger.debug("initial interactive imGroupOpenDeliverModel.")
         im_group_interactive_open_deliver_model = dingtalkcard__1__0_models.CreateAndDeliverRequestImGroupOpenDeliverModel()
         im_group_interactive_open_deliver_model.robot_code = self.data.robot_code
-        # send_interactive_card_request.open_conversation_id = self.open_conversation_id
-        # send_interactive_card_request.conversation_type = self.conversation_type
-        # send_interactive_card_request.conversation_type
 
         # 组装 request 参数
         im_group_interactive_card_request.im_group_open_space_model = im_group_interactive_open_space_model
@@ -208,7 +196,6 @@ class DingTalkClient(AbstractIMClient, DingtalkBase):
         mapping.private_data = {}
         logger.info(f"persistent card key:{key}")
         logger.debug(f"persistent card key:{key}, value:{mapping.model_json_schema()}")
-
 
     def __load_data_from_persistent_store(self, name: str, field: str = None) -> dict:
         """从历史数据中加载 card data
@@ -270,7 +257,6 @@ class DingTalkClient(AbstractIMClient, DingtalkBase):
         )
         config.retry_options = retry_option
         return dingtalkcard_1_0Client(config)
-
 
     def send(self) -> None:
         """构造卡片对象和发送消息体"""

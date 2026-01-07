@@ -17,17 +17,13 @@ from django.views.decorators.csrf import csrf_exempt
 
 from dingtalk.Card import Card, CardData
 from dingtalk.DingtalkBase import DingtalkBase
-from dingtalk.Schema.APISchema import APISchema
 from dingtalk.services.argo_workflows import ArgoWorkflowsService
-from dingtalk.services.dingtalk_card_struct import SpaceTypeEnum
+from Schema.dingtalk_card_struct import SpaceTypeEnum
 from dingtalk.services.dingtalk_client import DingTalkClient
 from . import EchoMarkdownHandler
 from dingtalk.WatchJobStatus import gen_chart_data, get_task_job_from_workflows_api, settings
-# from background_task import background
-from django_q.tasks import async_task, result, schedule
+from django_q.tasks import schedule
 from django_q.models import Schedule, Task
-from django.utils import timezone
-from datetime import timedelta
 from dingtalk.tasks.TaskStatusOfWorkflowsJob import add_schedule_job
 
 from dingtalk.CardDataStore import CardDataStore

@@ -3,7 +3,7 @@ from typing import Generic
 from pydantic import BaseModel, Field, HttpUrl, computed_field, model_validator
 from typing_extensions import Annotated
 
-from dingtalk.types.types import T
+from dingtalk.type.types import T
 
 
 class DingTalkCardPrivateDataItem(BaseModel):
