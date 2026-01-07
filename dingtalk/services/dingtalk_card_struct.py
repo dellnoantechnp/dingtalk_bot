@@ -1,10 +1,9 @@
 from enum import Enum
-from typing import Optional, TypeVar, Generic
+from typing import Generic
 from pydantic import BaseModel, Field, HttpUrl, computed_field, model_validator
 from typing_extensions import Annotated
 
-# 定义一个类型变量 T，且必须是 BaseModel 的子类
-T = TypeVar("T", bound=BaseModel)
+from dingtalk.types.types import T
 
 
 class DingTalkCardPrivateDataItem(BaseModel):
@@ -17,24 +16,27 @@ EntityUserID = Annotated[int, Field(gt=0, description="DingTalk UserID")]
 
 
 class DingTalkCardParmData(BaseModel):
-    """Card param data"""
-    cicd_elapse: list[str] = Field(default=None, description="耗时")
-    cicd_status: list[str] = Field(default=None, description="任务状态")
-    environment: list[str] = Field(default=None, description="环境名称")
-    commit_sha: list[str] = Field(default=None, description="Git commit sha")
-    branch: list[str] = Field(default=None, description="Git branch")
-    author: list[str] = Field(default=None, description="CICD action author")
-    project_id: list[str] = Field(default=None, description="工程项目id")
-    repository: list[str] = Field(default=None, description="工程项目名称")
-    card_ref_link: list[str] = HttpUrl
-    approve_max: list[str] = Field(default=10, description="投票上限", ge=0, le=10)
-    reject_max: list[str] = Field(default=2, description="拒绝上限", ge=0, le=2)
-    markdown_content: list[str] = Field(default=None, description="消息内容markdown")
-    approve: list[str] = Field(default=0, description="当前投票数", ge=0, le=10)
-    reject: list[str] = Field(default=0, description="当前拒绝数", ge=0, le=2)
-    card_title: list[str] = Field(default=None, description="卡片通知标题")
-    markdown_title: list[str] = Field(default=None, description="消息体markdown的标题")
-    chart_data: list[str] = Field(default=None, description="图表JSON体")
+    """Card view param data
+    https://open.dingtalk.com/document/orgapp/instructions-for-filling-in-api-card-data#445386b2a8qss
+    根据文档说明，所有字段均为字符串。
+    """
+    cicd_elapse: str = Field(default=None, description="任务耗时")
+    cicd_status: str = Field(default=None, description="任务状态")
+    environment: str = Field(default=None, description="环境名称")
+    commit_sha: str = Field(default=None, description="Git commit sha")
+    branch: str = Field(default=None, description="Git branch")
+    author: str = Field(default=None, description="CICD action author")
+    project_id: str = Field(default=None, description="工程项目id")
+    repository: str = Field(default=None, description="工程项目名称")
+    card_ref_link: str = HttpUrl
+    approve_max: str = Field(default="10", description="投票上限", ge=0, le=10)
+    reject_max: str = Field(default="2", description="拒绝上限", ge=0, le=2)
+    markdown_content: str = Field(default=None, description="消息内容markdown")
+    approve: str = Field(default="0", description="当前投票数", ge=0, le=10)
+    reject: str = Field(default="0", description="当前拒绝数", ge=0, le=2)
+    card_title: str = Field(default=None, description="卡片通知标题")
+    markdown_title: str = Field(default=None, description="消息体markdown的标题")
+    chart_data: str = Field(default=None, description="图表JSON体")
 
 
 class SpaceTypeEnum(str, Enum):
@@ -78,10 +80,10 @@ class DingTalkCardData(BaseModel, Generic[T]):
     out_track_id: str = Field(default=None, description="卡片消息out_track_id")
     robot_code: str = Field(default=None, description="机器人应用code")
     open_conversation_id: str = Field(default=None, description="群聊ID")
-    space_type: SpaceTypeEnum | None = Field(default=None, description="场域类型")
+    space_type: SpaceTypeEnum = Field(default=SpaceTypeEnum.IM_GROUP, description="场域类型")
     task_name: str = Field(default=None, description="workflows 任务名称")
     # open_space_id: str | None = Field(default=None, description="场域ID")
-    card_parm_map: BaseModel
+    card_parm_map: DingTalkCardParmData = Field(default_factory=DingTalkCardParmData, description="卡片view数据字段")
     private_data: dict[EntityUserID, DingTalkCardPrivateDataItem] = Field(
         default_factory=dict,
         description="private data object"

@@ -4,21 +4,26 @@ from alibabacloud_dingtalk.card_1_0.models import (CreateAndDeliverRequestImGrou
                                                    CreateCardRequestImGroupOpenSpaceModelNotification,
                                                    CreateAndDeliverRequestImGroupOpenSpaceModel)
 from darabonba.policy.retry import RetryOptions, RetryCondition
+from django.conf import settings
+from django.http import HttpRequest
+from httpx import RequestError
 from urllib3.exceptions import ResponseError
 
 from core.redis_client import redis_hgetall, redis_hget
-from dingtalk.Schema.APISchema import NewNoticeSchema
+from dingtalk.Schema.APISchema import APISchema
 from dingtalk.interface.AbstractIM import AbstractIMClient
 from alibabacloud_tea_openapi import models as open_api_models
-from typing import Optional, Union, Any
+from typing import Optional, Union, Any, Dict
 from dingtalk.services.dingtalk_base import DingtalkBase
 from alibabacloud_dingtalk.card_1_0 import models as dingtalkcard__1__0_models
+from alibabacloud_dingtalk.card_1_0.client import Client as dingtalkcard_1_0Client
 from alibabacloud_dingtalk.im_1_0 import models as dingtalkim__1__0_models
 from alibabacloud_dingtalk.im_1_0.client import Client as dingtalkim_1_0Client
 from alibabacloud_tea_util import models as util_models
 import logging
 
 from dingtalk.services.dingtalk_card_struct import DingTalkCardData, SpaceTypeEnum, UserIdTypeModel, T
+from dingtalk.types.types import TeaType
 
 logger = logging.getLogger("dingtalk_bot")
 
@@ -43,6 +48,13 @@ class DingTalkClient(AbstractIMClient, DingtalkBase):
         """
         super().__init__()
         self.task_track_mapping_key_name = "cicd_task_name_mapping_out_track_id"
+
+        self.data: Optional[DingTalkCardData] = DingTalkCardData()
+        self.data.robot_code = settings.DINGTALK_ROBOT_CODE
+
+        self._card_template_id: Optional[str] = None
+        self._alert_content: str = "Test message."
+
         if out_track_id and card_template_id is None:
             # 更新卡片逻辑,从历史数据中加载相关参数
             task_name = self.get_record_task_name_by_out_track_id(out_track_id=out_track_id)
@@ -53,8 +65,7 @@ class DingTalkClient(AbstractIMClient, DingtalkBase):
             logger.debug(
                 f"create new card, card_template_id={card_template_id} robot_code={robot_code} open_conversation_id={open_conversation_id}")
             self.card_template_id = card_template_id
-            self.robot_code = robot_code
-            self.open_conversation_id = open_conversation_id
+            self._robot_code = robot_code
 
         self.space_type = space_type
         self.callback_type = callback_type
@@ -62,10 +73,12 @@ class DingTalkClient(AbstractIMClient, DingtalkBase):
         # self.open_space_id = self.gen_open_space_id()
         # 创建并投放卡片
         self.im_group_open_deliver_model = CreateAndDeliverRequestImGroupOpenDeliverModel()
-        self.im_group_open_deliver_model.robot_code = self.robot_code
+        self.im_group_open_deliver_model.robot_code = self._robot_code
 
         self.common_headers = None
         self.task_name = task_name
+
+
 
     @property
     def out_track_id(self) -> str:
@@ -74,7 +87,7 @@ class DingTalkClient(AbstractIMClient, DingtalkBase):
         """
         logger.debug("生成out_track_id")
         time_tag = int(time.time() * 1000)
-        return f"{self.card_template_id}.{time_tag}"
+        return f"{self._card_template_id}.{time_tag}"
 
     @property
     def open_space_id(self) -> str:
@@ -103,22 +116,23 @@ class DingTalkClient(AbstractIMClient, DingtalkBase):
         else:
             raise ValueError("dingtalk conversation_type value must be 1.")
 
-    def __send_interactive_card_req(self, card_data: DingTalkCardData) -> dict[str, Any]:
+    def __send_interactive_card_req(self, card_data: DingTalkCardData) -> Dict[str, TeaType]:
         """准备底层客户端"""
         ret = {}
 
         logger.debug("initial interactive card headers.")
-        im_group_interactive_card_headers = dingtalkim__1__0_models.CreateAndDeliverHeaders()
+        im_group_interactive_card_headers = dingtalkcard__1__0_models.CreateAndDeliverHeaders()
         im_group_interactive_card_headers.x_acs_dingtalk_access_token = self.access_token
 
         # Card Request
         logger.debug("initial interactive card request.")
         im_group_interactive_card_request = dingtalkcard__1__0_models.CreateAndDeliverRequest()
-        im_group_interactive_card_request.card_template_id = self.card_template_id
-        im_group_interactive_card_request.out_track_id = self.out_track_id
+        im_group_interactive_card_request.card_template_id = self.data.card_template_id
+        im_group_interactive_card_request.out_track_id = self.data.out_track_id
         im_group_interactive_card_request.callback_type = self.callback_type
         im_group_interactive_card_request.open_space_id = card_data.open_space_id
         im_group_interactive_card_request.user_id_type = UserIdTypeModel.userId
+        im_group_interactive_card_request.card_data = self.card_data(self.data.card_parm_map.model_dump())
 
         # TODO: card data
         # imgroup_interactive_card_request.card_data =
@@ -131,14 +145,16 @@ class DingTalkClient(AbstractIMClient, DingtalkBase):
         im_group_interactive_open_space_model.support_forward = True
         # TODO: 测试IM群组卡片通知内容
         im_group_interactive_open_space_model.notification = CreateCardRequestImGroupOpenSpaceModelNotification(
-            alert_content="test alert content",
+            # 新卡片通知的外部预览信息
+            alert_content=self._alert_content,
+            # 是否关闭推送通知
             notification_off=False
         )
 
         # imGroupOpenDeliverModel
         logger.debug("initial interactive imGroupOpenDeliverModel.")
         im_group_interactive_open_deliver_model = dingtalkcard__1__0_models.CreateAndDeliverRequestImGroupOpenDeliverModel()
-        im_group_interactive_open_deliver_model.robot_code = self.robot_code
+        im_group_interactive_open_deliver_model.robot_code = self.data.robot_code
         # send_interactive_card_request.open_conversation_id = self.open_conversation_id
         # send_interactive_card_request.conversation_type = self.conversation_type
         # send_interactive_card_request.conversation_type
@@ -153,27 +169,30 @@ class DingTalkClient(AbstractIMClient, DingtalkBase):
 
         ret["im_group_interactive_card_headers"] = im_group_interactive_card_headers
         ret["im_group_interactive_card_request"] = im_group_interactive_card_request
+        ret["im_group_interactive_open_space_model"] = im_group_interactive_open_space_model
+        ret["im_group_interactive_open_deliver_model"] = im_group_interactive_open_deliver_model
         ret["runtime"] = runtime
 
         return ret
 
-    def build_card_data(self, card_parm_map: T) -> DingTalkCardData[T]:
+    def build_card_data(self, card_parm_map: T) -> DingTalkCardData:
         """装载 card parm data
         :param card_parm_map: 模型数据对象
         :return: DingTalkCardData: 返回模型数据对象
         """
         logger.debug(f"build card data. {card_parm_map}")
         card_data = DingTalkCardData(
-            card_template_id=self.card_template_id,
+            card_template_id=self.data.card_template_id,
             out_track_id=self.out_track_id,
-            robot_code=self.robot_code,
-            open_conversation_id=self.open_conversation_id,
+            robot_code=self.data.robot_code,
+            open_conversation_id=self.data.open_conversation_id,
             space_type=SpaceTypeEnum.IM_GROUP,
             task_name=self.task_name,
             card_parm_map=card_parm_map
         )
         return card_data
 
+    # TODO: 完善持久化功能
     def __persistent_card(self, key: str, timeout: Optional[int] = 604800) -> bool:
         """持久化卡片数据
         :param key: persistent key name
@@ -182,14 +201,13 @@ class DingTalkClient(AbstractIMClient, DingtalkBase):
         mapping = DingTalkCardData()
         mapping.card_template_id = self.card_template_id
         mapping.conversation_type = self.conversation_type
-        mapping.robot_code = self.robot_code
+        mapping.robot_code = self._robot_code
         mapping.open_conversation_id = self.open_conversation_id
         mapping.task_name = self.task_name
         mapping.card_parm_map = {"abc": "abc"}
         mapping.private_data = {}
         logger.info(f"persistent card key:{key}")
         logger.debug(f"persistent card key:{key}, value:{mapping.model_json_schema()}")
-
 
 
     def __load_data_from_persistent_store(self, name: str, field: str = None) -> dict:
@@ -208,51 +226,60 @@ class DingTalkClient(AbstractIMClient, DingtalkBase):
             else:
                 raise ValueError(f"dingtalk get task_track_mapping_key {ret.key} value error, {ret.reason}")
 
+    def parse_api_data(self, request: HttpRequest) -> DingTalkCardData:
+        """解析 API request 数据"""
+        if request.method == 'POST':
+            logger.info(f"request data parse ....")
+            card_template_id = request.headers.get("x-card-template-id")
+            self._card_template_id = card_template_id
+            open_conversation_id = request.headers.get("x-open-conversation-id")
+            task_name = request.POST.get("task_name")
+            body = request.POST.dict()
+            data = {"card_template_id": card_template_id,
+                    "open_conversation_id": open_conversation_id,
+                    "task_name": task_name,
+                    "card_parm_map": body,
+                    "robot_code": settings.DINGTALK_ROBOT_CODE,
+                    "out_track_id": self.out_track_id
+                    }
+            schema = DingTalkCardData.model_validate(data)
+            logger.debug(f"parsed data {schema.model_dump()}")
+            self.data = schema
+        else:
+            raise RequestError(message=f'request method {request.method} not supported')
+
     @staticmethod
-    def card_data(card_param_map: dict[str, str],
-                  card_media_id_param_map=None
-                  ) -> dingtalkcard__1__0_models.CreateAndDeliverRequestCardData:
+    def card_data(card_param_map: dict[str, str]) -> dingtalkcard__1__0_models.CreateAndDeliverRequestCardData:
         """
         创建 card_data 对象.
         :param card_param_map: 卡片参数dict对象
-        :param card_media_id_param_map: 卡片多媒体对象dict
+        :return: CreateAndDeliverRequestCardData
         """
-        if card_media_id_param_map is None:
-            card_media_id_param_map = {}
         request_card_data = dingtalkcard__1__0_models.CreateAndDeliverRequestCardData()
         request_card_data.card_param_map = card_param_map
-        #card_data.media_id_param_map = card_media_id_param_map
         return request_card_data
 
     @property
-    def im_client(self) -> dingtalkim_1_0Client:
+    def im_client(self) -> dingtalkcard_1_0Client:
         logger.debug("initial IM client.")
         config = open_api_models.Config()
         config.protocol = "https"
         config.region_id = "central"
         retry_option = RetryOptions(
-            options={"retryCondition": RetryCondition(condition={"maxAttempts": 5})}
+            options={"retryCondition": [RetryCondition(condition={"maxAttempts": 5})]}
         )
         config.retry_options = retry_option
-        return dingtalkim_1_0Client(config)
+        return dingtalkcard_1_0Client(config)
 
-    # TODO: coding card param mapping...
-    def data(self):
-        pass
 
     def send(self) -> None:
-        """卡片发送"""
-        req = self.__send_interactive_card_req(self.card_param_map)
+        """构造卡片对象和发送消息体"""
+        req = self.__send_interactive_card_req(self.data)
 
-        logger.info("initial card data.")
-        # TODO: coding there....
-        # card_data = self.card_data(card_param_map=self.card_param_map,
-        #                            card_media_id_param_map=self.card_media_id_param_map)
-        req["send_interactive_card_request"].card_data = card_data
-
-        resp: dingtalkim__1__0_models.SendInteractiveCardResponse = self.im_client.send_interactive_card_with_options(
-            request=req["send_interactive_card_request"],
-            headers=req["send_interactive_card_headers"],
+        logger.info("sending card ....")
+        resp: dingtalkcard__1__0_models.CreateAndDeliverResponse = self.im_client.create_and_deliver_with_options(
+            request=req["im_group_interactive_card_request"],
+            headers=req["im_group_interactive_card_headers"],
             runtime=req["runtime"],
         )
         if resp.status_code == 200:
@@ -262,4 +289,7 @@ class DingTalkClient(AbstractIMClient, DingtalkBase):
 
     def update(self):
         """更新卡片"""
+        pass
+
+    def get_record_task_name_by_out_track_id(self, out_track_id):
         pass

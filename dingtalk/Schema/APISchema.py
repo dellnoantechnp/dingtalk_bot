@@ -1,25 +1,19 @@
-from pydantic import BaseModel, HttpUrl, Json, Field
+from pydantic import BaseModel, Field
+
+from dingtalk.services.dingtalk_card_struct import DingTalkCardParmData
 
 
-class NewNoticeSchema(BaseModel):
-    markdown_title: str
-    markdown_content: str
-    card_ref_link: HttpUrl
-    commit_sha: str
-    repository: str
-    project_id: int
-    author: str
-    branch: str
-    environment: str
-    chart_data: Json
-    task_name: str
-    cicd_status: str
-    card_title: str
-    card_template_id: str
-    open_conversation_id: str
-    autoLayout: bool = Field(alias="config.autoLayout", default=False)
-    cicd_elapse: str
-
+class SchemaConfig(BaseModel):
     class Config:
-        # 允许通过别名或变量名赋值
-        populate_by_default = True
+        # 是否允许通过模型属性名称填充字段
+        validate_by_name = True
+        # 是否允许通过模型属性别名填充字段
+        validate_by_alias = True
+
+class APISchema(SchemaConfig):
+    """Schema data"""
+    card_template_id: str = Field(default=None, alias="x-card-template-id", description="卡片模板ID")
+    open_conversation_id: str = Field(default=None, alias="x-open-conversation-id", description="卡片消息群聊ID")
+    robot_code: str = Field(default=None, description="机器人应用code")
+    task_name: str = Field(default=None, description="workflow task name")
+    card_view_data: DingTalkCardParmData = Field(default_factory=DingTalkCardParmData, description="卡片view数据结构")
