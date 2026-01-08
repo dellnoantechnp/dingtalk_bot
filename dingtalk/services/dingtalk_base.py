@@ -22,7 +22,7 @@ class DingtalkBase:
         self.appKey = settings.DINGTALK_CLIENT_ID
         self.appSecret = settings.DINGTALK_CLIENT_SECRET
         self._client = None
-        self.token_redis_key_name = "dingtalk_bot_token_" + self.appKey
+        self.token_redis_key_name = "dingtalk_bot:token:" + self.appKey
 
     @property
     def client(self) -> dingtalkoauth2_1_0Client:
@@ -62,7 +62,7 @@ class DingtalkBase:
         try:
             result = redis_get(self.token_redis_key_name)
             if result.ok:
-                logger.debug(msg=f"Load token from redis is [{result.value}]...")
+                logger.debug(msg=f"Load token from redis {self.token_redis_key_name} value is [{result.value}]...")
                 return result.value
             else:
                 token_resp = self.client.get_access_token(get_access_token_request)

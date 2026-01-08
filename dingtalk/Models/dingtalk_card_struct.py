@@ -29,13 +29,12 @@ class DingTalkCardParmData(BaseModel):
     project_id: str = Field(default=None, description="工程项目id")
     repository: str = Field(default=None, description="工程项目名称")
     card_ref_link: str = HttpUrl
-    approve_max: str = Field(default="10", description="投票上限", ge=0, le=10)
-    reject_max: str = Field(default="2", description="拒绝上限", ge=0, le=2)
+    approve_max: str = Field(default="10", description="投票上限, must be str", ge=0, le=10)
+    reject_max: str = Field(default="2", description="拒绝上限, must be str", ge=0, le=2)
     markdown_content: str = Field(default=None, description="消息内容markdown")
-    approve: str = Field(default="0", description="当前投票数", ge=0, le=10)
-    reject: str = Field(default="0", description="当前拒绝数", ge=0, le=2)
+    approve: str = Field(default="0", description="当前投票数, must be str", ge=0, le=10)
+    reject: str = Field(default="0", description="当前拒绝数, must be str", ge=0, le=2)
     card_title: str = Field(default=None, description="卡片通知标题")
-    markdown_title: str = Field(default=None, description="消息体markdown的标题")
     chart_data: str = Field(default=None, description="图表JSON体")
 
 
@@ -112,39 +111,3 @@ class DingTalkCardData(BaseModel, Generic[T]):
             )
             self.final_open_space_id = temp_model.open_space_id
         return self
-
-
-
-
-
-# class Enum:
-#     name: Optional[str] = None
-#
-#     def __init__(self, value: int) -> None:
-#         self.value = value
-#
-#     def __repr__(self) -> str:
-#         return f"<{self.name}: {self.value}>"
-#
-#     def __str__(self) -> int:
-#         return self.value
-#
-#
-# class ConversationEnum(Enum):
-#     name = "conversation_type"
-#
-# SINGLE_SESSION = ConversationEnum(value=0)
-# GROUP_SESSION = ConversationEnum(value=1)
-
-
-# class DingtalkCardData2(NamedTuple):
-#     """DingTalk Card Data"""
-#     task_name: str = None
-#     card_parm_map_string: dict[int, str] = None
-#     card_template_id: str = None
-#     out_track_id: str = None
-#     robot_code: str = None
-#     open_conversation_id: str = None
-#     conversation_type: int = None
-#     private_data: dict[int, str] = None
-#

@@ -10,17 +10,19 @@ from httpx import RequestError
 from urllib3.exceptions import ResponseError
 
 from core.redis_client import redis_hgetall, redis_hget
+from dingtalk.Models.CardRepository import CardRepository
+from dingtalk.Models.dingtalk_card_struct import DingTalkCardData, UserIdTypeModel, SpaceTypeEnum
 from dingtalk.interface.AbstractIM import AbstractIMClient
 from alibabacloud_tea_openapi import models as open_api_models
-from typing import Optional, Dict
+from typing import Optional, Dict, NoReturn
 from dingtalk.services.dingtalk_base import DingtalkBase
 from alibabacloud_dingtalk.card_1_0 import models as dingtalkcard__1__0_models
 from alibabacloud_dingtalk.card_1_0.client import Client as dingtalkcard_1_0Client
 from alibabacloud_tea_util import models as util_models
 import logging
 
-from Schema.dingtalk_card_struct import DingTalkCardData, SpaceTypeEnum, UserIdTypeModel, T
-from dingtalk.type.types import TeaType
+from dingtalk.type.types import TeaType, T
+from utils.markdown_template import render_git_log_to_md
 
 logger = logging.getLogger("dingtalk_bot")
 
@@ -86,7 +88,7 @@ class DingTalkClient(AbstractIMClient, DingtalkBase):
 
     @property
     def open_space_id(self) -> str:
-        """
+        r"""
         在将卡片投放到不同的场域时，使用outTrackId唯一标识一张卡片，通过openSpaceId标识需要被投放的场域及其
         场域Id，通过openDeliverModels传入不同的投放场域。
         例如： 为：
@@ -181,21 +183,23 @@ class DingTalkClient(AbstractIMClient, DingtalkBase):
         return card_data
 
     # TODO: 完善持久化功能
-    def __persistent_card(self, key: str, timeout: Optional[int] = 604800) -> bool:
+    def __persistent_card(self) -> bool:
         """持久化卡片数据
         :param key: persistent key name
         :param timeout: 超时时间，默认值7day
         """
-        mapping = DingTalkCardData()
-        mapping.card_template_id = self.card_template_id
-        mapping.conversation_type = self.conversation_type
-        mapping.robot_code = self._robot_code
-        mapping.open_conversation_id = self.open_conversation_id
-        mapping.task_name = self.task_name
-        mapping.card_parm_map = {"abc": "abc"}
-        mapping.private_data = {}
-        logger.info(f"persistent card key:{key}")
-        logger.debug(f"persistent card key:{key}, value:{mapping.model_json_schema()}")
+        return CardRepository.save(self.data)
+
+        # mapping = DingTalkCardData()
+        # mapping.card_template_id = self.card_template_id
+        # mapping.conversation_type = self.conversation_type
+        # mapping.robot_code = self._robot_code
+        # mapping.open_conversation_id = self.open_conversation_id
+        # mapping.task_name = self.task_name
+        # mapping.card_parm_map = {"abc": "abc"}
+        # mapping.private_data = {}
+        # logger.info(f"persistent card key:{key}")
+        # logger.debug(f"persistent card key:{key}, value:{mapping.model_json_schema()}")
 
     def __load_data_from_persistent_store(self, name: str, field: str = None) -> dict:
         """从历史数据中加载 card data
@@ -213,7 +217,7 @@ class DingTalkClient(AbstractIMClient, DingtalkBase):
             else:
                 raise ValueError(f"dingtalk get task_track_mapping_key {ret.key} value error, {ret.reason}")
 
-    def parse_api_data(self, request: HttpRequest) -> DingTalkCardData:
+    def parse_api_data(self, request: HttpRequest) -> NoReturn:
         """解析 API request 数据"""
         if request.method == 'POST':
             logger.info(f"request data parse ....")
@@ -230,6 +234,8 @@ class DingTalkClient(AbstractIMClient, DingtalkBase):
                     "out_track_id": self.out_track_id
                     }
             schema = DingTalkCardData.model_validate(data)
+            # render Markdown content
+            schema.card_parm_map.markdown_content = render_git_log_to_md(schema.card_parm_map.markdown_content)
             logger.debug(f"parsed data {schema.model_dump()}")
             self.data = schema
         else:
@@ -268,6 +274,7 @@ class DingTalkClient(AbstractIMClient, DingtalkBase):
             headers=req["im_group_interactive_card_headers"],
             runtime=req["runtime"],
         )
+        self.__persistent_card()
         if resp.status_code == 200:
             return resp.body
         else:

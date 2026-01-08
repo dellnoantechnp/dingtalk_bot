@@ -12,14 +12,17 @@ from alibabacloud_dingtalk.im_1_0 import models as dingtalkim__1__0_models
 from alibabacloud_dingtalk.im_1_0.client import Client as dingtalkim_1_0Client
 from alibabacloud_tea_openapi import models as open_api_models
 from alibabacloud_tea_util import models as util_models
+from celery import shared_task
 from django.http.response import JsonResponse, HttpResponse
 from django.views.decorators.csrf import csrf_exempt
 
 from dingtalk.Card import Card, CardData
 from dingtalk.DingtalkBase import DingtalkBase
+from dingtalk.Models.dingtalk_card_struct import SpaceTypeEnum
 from dingtalk.services.argo_workflows import ArgoWorkflowsService
-from Schema.dingtalk_card_struct import SpaceTypeEnum
+
 from dingtalk.services.dingtalk_client import DingTalkClient
+from utils.markdown_template import render_git_log_to_md
 from . import EchoMarkdownHandler
 from dingtalk.WatchJobStatus import gen_chart_data, get_task_job_from_workflows_api, settings
 from django_q.tasks import schedule
@@ -548,6 +551,10 @@ def workflow_test(request):
         namespace=request.GET.get("namespace", "workflows"),
         name=request.GET.get("name")
     )
+
+    @shared_task
+    def test():
+        print("celery task test")
     return JsonResponse(b)
 
 @csrf_exempt
@@ -556,7 +563,7 @@ def new_notification(request):
         task_name=request.POST.get("task_name"),
         space_type=SpaceTypeEnum.IM_GROUP
     )
-    schema = notice.parse_api_data(request=request)
+    notice.parse_api_data(request=request)
     # ret = notice.build_card_data(schema)
     # notice.card_param_map = ret
     # print(ret)

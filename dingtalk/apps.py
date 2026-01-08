@@ -1,4 +1,3 @@
-import asyncio
 import os
 
 import requests
@@ -7,11 +6,13 @@ import dingtalk_stream
 from dingtalk_stream import AckMessage
 import logging
 import threading
-from django.core.cache import cache
-from django.conf import settings
 
+from dingtalk.services.dingtalk_base import DingtalkBase
 
-class CustomrobotConfig(AppConfig):
+logger = logging.getLogger("dingtalk_bot")
+
+class CustomRobotConfig(AppConfig):
+    """启动 STREAM 后台线程，并注册 STREAM 回调接口"""
     default_auto_field = 'django.db.models.BigAutoField'
     name = 'customRobot'
 
@@ -20,20 +21,20 @@ class CustomrobotConfig(AppConfig):
 
     def run_dingtalk_stream(self):
         threads = []
+        logger.info(f"initial dingtalk stream threads ...")
         client_id = os.environ.get("DINGTALK_CLIENT_ID")
         client_secret = os.environ.get("DINGTALK_CLIENT_SECRET")
         credential = dingtalk_stream.Credential(client_id=client_id, client_secret=client_secret)
         client = dingtalk_stream.DingTalkStreamClient(credential)
-        logger = logging.getLogger("dingtalk_bot")
-        logger.setLevel("DEBUG")
         # client.register_callback_handler(dingtalk_stream.chatbot.ChatbotMessage.TOPIC,
         # self.EchoMarkdownHandler(logger=logger))
         ## 注册回调事件的 TOPIC
         client.register_callback_handler(dingtalk_stream.chatbot.ChatbotHandler.TOPIC_CARD_CALLBACK,
-                                         self.EchoMarkdownHandler(logger=logger))
+                                         self.EchoMarkdownHandler())
         t = threading.Thread(target=client.start_forever, name="dingtalk_stream")
         t.daemon = True
         threads.append(t)
+        logger.info(f"start {t.name} thread ...")
         t.start()
         # loop = asyncio.get_event_loop()
         # result = loop.run_until_complete(client.start())
@@ -41,10 +42,8 @@ class CustomrobotConfig(AppConfig):
 
     class EchoMarkdownHandler(dingtalk_stream.ChatbotHandler):
 
-        def __init__(self, logger: logging.Logger = None):
+        def __init__(self):
             super().__init__()
-            if logger:
-                self.logger = logger
 
         async def process(self, callback: dingtalk_stream.CallbackMessage):
             """
@@ -59,6 +58,17 @@ class CustomrobotConfig(AppConfig):
             # 回复一个普通文本消息
             # self.reply_text(text=text, incoming_message=incoming_message)
             # return AckMessage.STATUS_OK, 'OK'
+            # 获取STREAM回调数据
             post_data = incoming_message.to_dict()
-            requests.post("http://localhost:8000/customRobot/test5", data=post_data)
-            return AckMessage.STATUS_OK, 'OK'
+            # 调用接口请求，处理卡片数据，更新卡片内容
+            logger.debug(f"call back raw_data: {post_data}")
+            try:
+                resp = requests.post("http://localhost:8000/customRobot/test5", data=post_data)
+                if resp.status_code >= 500:
+                    return AckMessage.STATUS_SYSTEM_EXCEPTION, "INTERNAL ERROR"
+                elif resp.status_code == 400:
+                    return AckMessage.STATUS_BAD_REQUEST, "Bad Request"
+                elif resp.status_code == 200:
+                    return AckMessage.STATUS_OK, 'OK'
+            except Exception as e:
+                raise Exception(f"Call back api response error, {e}")

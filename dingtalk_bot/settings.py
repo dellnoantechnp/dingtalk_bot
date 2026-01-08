@@ -70,7 +70,9 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'customRobot',
     # "background_task"
-    'django_q'
+    'django_q',
+    'django_celery_beat',
+    'django_celery_results'
 ]
 
 MIDDLEWARE = [
@@ -294,3 +296,18 @@ Q_CLUSTER = {
 REDIS_CLUSTER_NODES = [
     {"host": REDIS_ADDR.split(":")[0], "port": REDIS_ADDR.split(":")[1]},
 ]
+
+# 设置存储 Celery 任务队列的 Redis 数据库
+CELERY_BROKER_URL = REDIS_URL
+CELERY_ACCEPT_CONTENT = ['json']
+CELERY_TASK_SERIALIZER = 'json'
+
+CELERY_WORKER_DISABLE_RATE_LIMITS = True
+CELERY_WORKER_SEND_TASK_EVENTS = False
+CELERY_WORKER_ENABLE_REMOTE_CONTROL = False
+# 设置存储 Celery 任务结果的数据库
+# CELERY_RESULT_BACKEND = 'django-db'
+
+# 设置定时任务相关配置
+# CELERY_ENABLE_UTC = False
+# CELERY_BEAT_SCHEDULER = 'django_celery_beat.schedulers:DatabaseScheduler'

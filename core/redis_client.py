@@ -26,7 +26,6 @@ class CustomRedisCluster(DefaultClient):
         return RedisCluster.from_url(self._server[index])
 
 
-# Deprecated
 def get_redis_cluster() -> RedisCluster:
     global _redis_cluster
     if _redis_cluster is None:
