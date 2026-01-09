@@ -1,9 +1,14 @@
+from datetime import datetime, timezone
+
 from hera.workflows.models import NodeStatus
 from humanfriendly import format_timespan
 from hera.workflows import WorkflowsService
 
-from typing import Optional, Union, Dict
+from typing import Dict
 from django.conf import settings
+import logging
+
+logger = logging.getLogger("dingtalk_bot")
 
 
 class ArgoWorkflowsService:
@@ -18,10 +23,12 @@ class ArgoWorkflowsService:
     def get_result(self, namespace: str, name: str) -> dict[str, str]:
         """处理任务输出"""
         try:
+            logger.debug(f"get workflow result: {namespace}/{name} ...")
             ret = self.service.get_workflow(namespace=namespace, name=name)
 
             status = ret.status.phase
             progress = ret.status.progress
+            logger.debug(f"get workflow result: {namespace}/{name}, status={status}, progress={progress}")
 
             nodes = ret.status.nodes if ret.status.nodes else {}
             nodes_status = sorted([self.__node(nodes.get(node))
@@ -40,7 +47,11 @@ class ArgoWorkflowsService:
     def calculator_duration(node: NodeStatus) -> str:
         """计算当前任务耗时，以可读方式输出"""
         start_at = node.started_at.__root__
-        finished_at = node.finished_at.__root__
+        if node.phase == "Running":
+            logger.debug(f"node {node.name} is running ...")
+            finished_at = datetime.now(timezone.utc)
+        else:
+            finished_at = node.finished_at.__root__
         return format_timespan(finished_at - start_at)
 
     def __node(self, node: NodeStatus) -> Dict[str, str]:
