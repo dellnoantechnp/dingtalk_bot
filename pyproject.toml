@@ -7,7 +7,7 @@ dependencies = [
     "alibabacloud-dingtalk==2.2.37",
     "anytree==2.13.0",
     "celery~=5.6.1",
-    "celery-types>=0.24.0",
+    "celery-types==0.24.0",
     "daphne==4.2.1",
     "dingtalk-stream==0.18.1",
     "django~=5.2.9",
