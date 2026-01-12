@@ -4,8 +4,8 @@ from celery import shared_task
 
 from dingtalk.WatchJobStatus import gen_chart_data, get_task_job_from_workflows_api, settings
 from typing import Union, Optional
-from django_q.tasks import async_task, result, schedule
-from django_q.models import Schedule, Task
+# from django_q.tasks import async_task, result, schedule
+# from django_q.models import Schedule, Task
 from django.utils import timezone
 from datetime import timedelta, datetime
 from humanfriendly import format_timespan
@@ -14,24 +14,24 @@ from dingtalk.CardData import CardData
 from django.conf import settings
 
 
-def add_schedule_job(args,
-                     minutes: float = 0.2,
-                     repeat: int = -1) -> Schedule:
-    """
-    添加后台任务队列，默认 12s 执行一次
-    :param args: worker 任务的入参，这里指的是 Workflows 任务的名称
-    :param minutes: worker 任务的执行间隔， 默认 12s 执行一次
-    :param repeat: worker 任务的重复周期，默认永久重复
-    :return: 返回 Django_Q 的 Schedule 对象
-    """
-    logger = logging.getLogger("dingtalk_bot")
-    logger.info(f"add schedule job {args}")
-    task_id = schedule("dingtalk.tasks.TaskStatusOfWorkflowsJob.worker", args,
-                       schedule_type=Schedule.MINUTES,
-                       minutes=minutes,
-                       repeats=repeat,
-                       hook="dingtalk.tasks.TaskStatusOfWorkflowsJob.print_result")
-    return task_id
+# def add_schedule_job(args,
+#                      minutes: float = 0.2,
+#                      repeat: int = -1) -> Schedule:
+#     """
+#     添加后台任务队列，默认 12s 执行一次
+#     :param args: worker 任务的入参，这里指的是 Workflows 任务的名称
+#     :param minutes: worker 任务的执行间隔， 默认 12s 执行一次
+#     :param repeat: worker 任务的重复周期，默认永久重复
+#     :return: 返回 Django_Q 的 Schedule 对象
+#     """
+#     logger = logging.getLogger("dingtalk_bot")
+#     logger.info(f"add schedule job {args}")
+#     task_id = schedule("dingtalk.tasks.TaskStatusOfWorkflowsJob.worker", args,
+#                        schedule_type=Schedule.MINUTES,
+#                        minutes=minutes,
+#                        repeats=repeat,
+#                        hook="dingtalk.tasks.TaskStatusOfWorkflowsJob.print_result")
+#     return task_id
 
 
 logger = logging.getLogger("django-q")
@@ -87,7 +87,7 @@ def print_result(task):
 def remove_task(task_name):
     print(f"Removing task {task_name} .....")
     test_arg = str((task_name,))
-    Schedule.objects.filter(args=test_arg).delete()
+    # Schedule.objects.filter(args=test_arg).delete()
 
 
 @shared_task

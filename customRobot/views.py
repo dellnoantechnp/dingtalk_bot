@@ -12,7 +12,6 @@ from alibabacloud_dingtalk.im_1_0 import models as dingtalkim__1__0_models
 from alibabacloud_dingtalk.im_1_0.client import Client as dingtalkim_1_0Client
 from alibabacloud_tea_openapi import models as open_api_models
 from alibabacloud_tea_util import models as util_models
-from celery import shared_task
 from django.http.response import JsonResponse, HttpResponse
 from django.views.decorators.csrf import csrf_exempt
 
@@ -22,12 +21,11 @@ from dingtalk.Models.dingtalk_card_struct import SpaceTypeEnum
 from dingtalk.services.argo_workflows import ArgoWorkflowsService
 
 from dingtalk.services.dingtalk_client import DingTalkClient
-from utils.markdown_template import render_git_log_to_md
 from . import EchoMarkdownHandler
 from dingtalk.WatchJobStatus import gen_chart_data, get_task_job_from_workflows_api, settings
-from django_q.tasks import schedule
-from django_q.models import Schedule, Task
-from dingtalk.tasks.TaskStatusOfWorkflowsJob import add_schedule_job, test
+# from django_q.tasks import schedule
+# from django_q.models import Schedule, Task
+from dingtalk.tasks.TaskStatusOfWorkflowsJob import test
 
 from dingtalk.CardDataStore import CardDataStore
 
@@ -387,7 +385,7 @@ def interactive_card_test(request):
     default_chart_data["data"] = gen_chart_data(task_info)
 
     # 增加定时调度任务
-    add_schedule_job(request.POST.get("task_name", "none"))
+    # add_schedule_job(request.POST.get("task_name", "none"))
 
     card_vars = {
         "markdown_content": markdown_content,
@@ -503,8 +501,8 @@ def task_test(request):
     # schedule("my_task", schedule_type=Schedule.ONCE, next_run=timezone.now() + timedelta(minutes=1))
     # task_test_job(repeat=10)
     #task_id = async_task("customRobot.views.my_task", hook="customRobot.views.print_result")
-    task_id = schedule("customRobot.views.my_task", args=("abcd",), schedule_type=Schedule.MINUTES, minutes=0.5,
-                       repeats=-1)
+    # task_id = schedule("customRobot.views.my_task", args=("abcd",), schedule_type=Schedule.MINUTES, minutes=0.5,
+    #                    repeats=-1)
     #task_result = result(task_id)
     #return HttpResponse(f"OK111 {task_id} result: {task_result}")
     return HttpResponse(f"OK111")
@@ -513,14 +511,14 @@ def task_test(request):
 def stop_task(request):
     logger = logging.getLogger("dingtalk_bot")
     logger.info("stop schedule job")
-    recent_tasks = Task.objects.all()
-    filter_schedule = Schedule.objects.filter(args="('abc1',)")
-    print(filter_schedule)
-
-    scheduled_tasks = Schedule.objects.all()
-    for task in scheduled_tasks:
-        print(f"Task Name: {task.name}, Func: {task.func}, Cron: {task.task}, IsSuccess: {task.success()} was deleted.")
-        # task.delete()
+    # recent_tasks = Task.objects.all()
+    # filter_schedule = Schedule.objects.filter(args="('abc1',)")
+    # print(filter_schedule)
+    #
+    # scheduled_tasks = Schedule.objects.all()
+    # for task in scheduled_tasks:
+    #     print(f"Task Name: {task.name}, Func: {task.func}, Cron: {task.task}, IsSuccess: {task.success()} was deleted.")
+    #     # task.delete()
     return HttpResponse("OK")
 
 

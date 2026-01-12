@@ -70,7 +70,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'customRobot',
     # "background_task"
-    'django_q',
+    # 'django_q',
     'django_celery_beat',
     'django_celery_results'
 ]
