@@ -1,17 +1,16 @@
-import time
-
-#from rediscluster import RedisCluster
-from redis import RedisCluster
+import redis
+from redis import RedisCluster, Redis, ConnectionPool
 from django.conf import settings
 import logging
 from core.RedisDataResponse import RedisDataResponse
 from utils.elapsed import timer
 from django_redis.client import DefaultClient
 
-_redis_cluster = None
+_redis = None
 logger = logging.getLogger("dingtalk_bot")
 
 
+# Deprecated
 # Custom Redis Cluster Client
 # For example::
 #
@@ -26,15 +25,23 @@ class CustomRedisCluster(DefaultClient):
         return RedisCluster.from_url(self._server[index])
 
 
-def get_redis_cluster() -> RedisCluster:
-    global _redis_cluster
-    if _redis_cluster is None:
-        _redis_cluster = RedisCluster(
-            url=settings.REDIS_URL,
-            decode_responses=True,
-            require_full_coverage=True,
-        )
-    return _redis_cluster
+def get_redis_cluster() -> Redis:
+    global _redis
+    if _redis is None:
+        try:
+            _pool = ConnectionPool.from_url(
+                url=settings.REDIS_URL,
+                decode_responses=True,
+                #require_full_coverage=True,
+                max_connections=10,
+            )
+            _redis = redis.Redis.from_pool(connection_pool=_pool)
+            logger.info(f"Redis client initialized successfully with URL: {settings.REDIS_URL}, "
+                        f"pool size is {_redis.connection_pool._created_connections}/{_pool.max_connections}")
+        except Exception as e:
+            logger.error(msg=f"Redis client initialized failed with exception: {e}")
+            raise e
+    return _redis
 
 
 def redis_set(key: str, value: str, timeout=7000) -> RedisDataResponse:
