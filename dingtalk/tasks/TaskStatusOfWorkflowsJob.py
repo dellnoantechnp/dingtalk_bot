@@ -1,4 +1,7 @@
 import logging
+
+from celery import shared_task
+
 from dingtalk.WatchJobStatus import gen_chart_data, get_task_job_from_workflows_api, settings
 from typing import Union, Optional
 from django_q.tasks import async_task, result, schedule
@@ -85,3 +88,9 @@ def remove_task(task_name):
     print(f"Removing task {task_name} .....")
     test_arg = str((task_name,))
     Schedule.objects.filter(args=test_arg).delete()
+
+
+@shared_task
+def test():
+    print("celery task test")
+    return "abccc"

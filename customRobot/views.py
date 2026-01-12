@@ -27,7 +27,7 @@ from . import EchoMarkdownHandler
 from dingtalk.WatchJobStatus import gen_chart_data, get_task_job_from_workflows_api, settings
 from django_q.tasks import schedule
 from django_q.models import Schedule, Task
-from dingtalk.tasks.TaskStatusOfWorkflowsJob import add_schedule_job
+from dingtalk.tasks.TaskStatusOfWorkflowsJob import add_schedule_job, test
 
 from dingtalk.CardDataStore import CardDataStore
 
@@ -552,9 +552,8 @@ def workflow_test(request):
         name=request.GET.get("name")
     )
 
-    @shared_task
-    def test():
-        print("celery task test")
+    # TODO: 测试异步任务执行
+    test.delay()  # 测试触发异步任务
     return JsonResponse(b)
 
 @csrf_exempt
