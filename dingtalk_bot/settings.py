@@ -9,7 +9,7 @@ https://docs.djangoproject.com/en/5.0/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.0/ref/settings/
 """
-
+from datetime import timedelta
 from pathlib import Path
 import os
 
@@ -306,7 +306,9 @@ CELERY_TASK_SERIALIZER = 'json'
 # CELERY_WORKER_SEND_TASK_EVENTS = False
 # CELERY_WORKER_ENABLE_REMOTE_CONTROL = False
 # 设置存储 Celery 任务结果的数据库
-# CELERY_RESULT_BACKEND = 'django-db'
+CELERY_RESULT_BACKEND = REDIS_URL
+# celery-task-meta-* 过期时间默认 1day
+CELERY_RESULT_EXPIRES = timedelta(weeks=1)
 
 # 设置定时任务相关配置
 # CELERY_ENABLE_UTC = False

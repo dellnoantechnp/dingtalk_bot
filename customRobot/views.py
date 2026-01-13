@@ -565,5 +565,6 @@ def new_notification(request):
         GET=request.GET.dict(),
         POST=request.POST.dict(),
     )
-    create_and_update_card.delay(req_data.model_dump(mode='json'))
-    return HttpResponse("OK")
+    task = create_and_update_card.delay(req_data.model_dump(mode='json'))
+    result = task.get(timeout=5)
+    return HttpResponse(result)
