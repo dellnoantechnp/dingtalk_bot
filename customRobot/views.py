@@ -12,12 +12,14 @@ from alibabacloud_dingtalk.im_1_0 import models as dingtalkim__1__0_models
 from alibabacloud_dingtalk.im_1_0.client import Client as dingtalkim_1_0Client
 from alibabacloud_tea_openapi import models as open_api_models
 from alibabacloud_tea_util import models as util_models
+from celery.result import AsyncResult
 from django.http.response import JsonResponse, HttpResponse
 from django.views.decorators.csrf import csrf_exempt
 
 from dingtalk.Card import Card, CardData
 from dingtalk.DingtalkBase import DingtalkBase
 from dingtalk.Models.dingtalk_card_struct import SpaceTypeEnum
+from dingtalk.Models.request_data_model import ReqDataModel, HttpMethodEnum
 from dingtalk.services.argo_workflows import ArgoWorkflowsService
 
 from dingtalk.services.dingtalk_client import DingTalkClient
@@ -26,6 +28,7 @@ from dingtalk.WatchJobStatus import gen_chart_data, get_task_job_from_workflows_
 # from django_q.tasks import schedule
 # from django_q.models import Schedule, Task
 from dingtalk.tasks.TaskStatusOfWorkflowsJob import test
+from dingtalk.tasks.workflow_task import fetch_task_info, create_and_update_card
 
 from dingtalk.CardDataStore import CardDataStore
 
@@ -556,13 +559,11 @@ def workflow_test(request):
 
 @csrf_exempt
 def new_notification(request):
-    notice = DingTalkClient(
-        task_name=request.POST.get("task_name"),
-        space_type=SpaceTypeEnum.IM_GROUP
+    req_data = ReqDataModel(
+        method=HttpMethodEnum(request.method),
+        headers=dict(request.headers),
+        GET=request.GET.dict(),
+        POST=request.POST.dict(),
     )
-    notice.parse_api_data(request=request)
-    # ret = notice.build_card_data(schema)
-    # notice.card_param_map = ret
-    # print(ret)
-    notice.send()
+    create_and_update_card.delay(req_data.model_dump(mode='json'))
     return HttpResponse("OK")

@@ -34,7 +34,7 @@ from django.conf import settings
 #     return task_id
 
 
-logger = logging.getLogger("django-q")
+logger = logging.getLogger("dingtalk_bot")
 
 def worker(task_name: Union[str] = "") -> list:
     """
@@ -93,4 +93,5 @@ def remove_task(task_name):
 @shared_task
 def test():
     print("celery task test")
+    logger.debug("celery task test log")
     return "abccc"

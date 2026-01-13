@@ -5,6 +5,7 @@ from alibabacloud_dingtalk.card_1_0.models import (CreateAndDeliverRequestImGrou
                                                    CreateAndDeliverRequestImGroupOpenSpaceModel)
 from darabonba.policy.retry import RetryOptions, RetryCondition
 from django.conf import settings
+from django.core.handlers.asgi import ASGIRequest
 from django.http import HttpRequest
 from httpx import RequestError
 from urllib3.exceptions import ResponseError
@@ -12,6 +13,7 @@ from urllib3.exceptions import ResponseError
 from core.redis_client import redis_hgetall, redis_hget
 from dingtalk.Models.CardRepository import CardRepository
 from dingtalk.Models.dingtalk_card_struct import DingTalkCardData, UserIdTypeModel, SpaceTypeEnum
+from dingtalk.Models.request_data_model import ReqDataModel
 from dingtalk.interface.AbstractIM import AbstractIMClient
 from alibabacloud_tea_openapi import models as open_api_models
 from typing import Optional, Dict, NoReturn
@@ -217,15 +219,15 @@ class DingTalkClient(AbstractIMClient, DingtalkBase):
             else:
                 raise ValueError(f"dingtalk get task_track_mapping_key {ret.key} value error, {ret.reason}")
 
-    def parse_api_data(self, request: HttpRequest) -> NoReturn:
+    def parse_api_data(self, req_data: ReqDataModel) -> bool:
         """解析 API request 数据"""
-        if request.method == 'POST':
+        if req_data.method == 'POST':
             logger.info(f"request data parse ....")
-            card_template_id = request.headers.get("x-card-template-id")
+            card_template_id = req_data.headers.get("x-card-template-id")
             self._card_template_id = card_template_id
-            open_conversation_id = request.headers.get("x-open-conversation-id")
-            task_name = request.POST.get("task_name")
-            body = request.POST.dict()
+            open_conversation_id = req_data.headers.get("x-open-conversation-id")
+            task_name = req_data.POST.get("task_name")
+            body = dict(req_data.POST)
             data = {"card_template_id": card_template_id,
                     "open_conversation_id": open_conversation_id,
                     "task_name": task_name,
@@ -238,8 +240,9 @@ class DingTalkClient(AbstractIMClient, DingtalkBase):
             schema.card_parm_map.markdown_content = render_git_log_to_md(schema.card_parm_map.markdown_content)
             logger.debug(f"parsed data {schema.model_dump()}")
             self.data = schema
+            return True
         else:
-            raise RequestError(message=f'request method {request.method} not supported')
+            raise RequestError(message=f'request method {req_data.method} not supported')
 
     @staticmethod
     def card_data(card_param_map: dict[str, str]) -> dingtalkcard__1__0_models.CreateAndDeliverRequestCardData:
@@ -264,7 +267,7 @@ class DingTalkClient(AbstractIMClient, DingtalkBase):
         config.retry_options = retry_option
         return dingtalkcard_1_0Client(config)
 
-    def send(self) -> None:
+    def send(self) -> dingtalkcard__1__0_models.CreateAndDeliverResponse:
         """构造卡片对象和发送消息体"""
         req = self.__send_interactive_card_req(self.data)
 
@@ -276,9 +279,9 @@ class DingTalkClient(AbstractIMClient, DingtalkBase):
         )
         self.__persistent_card()
         if resp.status_code == 200:
-            return resp.body
+            return resp
         else:
-            raise ResponseError(resp)
+            raise RuntimeError(resp)
 
     def update(self):
         """更新卡片"""
