@@ -8,6 +8,8 @@ from typing import Dict
 from django.conf import settings
 import logging
 
+from dingtalk.Models.workflow_output_parameters_model import WorkflowOutputParameterModel
+
 logger = logging.getLogger("dingtalk_bot")
 
 
@@ -64,6 +66,35 @@ class ArgoWorkflowsService:
         if node.phase != "Succeeded":
             ret["message"] = node.message
         return ret
+
+    #@property
+    def change_log(self, namespace: str,
+                   name: str, template_name: str = "change-log",
+                   output_parameters: str = "CHANGE_LOG") -> WorkflowOutputParameterModel:
+        logger.debug(f"get workflow result: {namespace}/{name} ...")
+        ret = self.service.get_workflow(namespace=namespace, name=name)
+
+        status = ret.status.phase
+        progress = ret.status.progress
+        logger.debug(f"get workflow result: {namespace}/{name}, status={status}, progress={progress}")
+
+        workflow_output_data = WorkflowOutputParameterModel()
+
+        if ret.status and ret.status.nodes:
+            for node_id, node in ret.status.nodes.items():
+                # 匹配指定任务模板名称
+                if node.template_name == template_name:
+                    # 获取输出参数列表
+                    if node.outputs and node.outputs.parameters:
+                        for item in node.outputs.parameters:
+                            if item.name == output_parameters:
+                                workflow_output_data.name = item.name
+                                workflow_output_data.value = item.value
+                                workflow_output_data.description = item.description
+                                workflow_output_data.template_name = node.template_name
+                                workflow_output_data.workflow_id = node.boundary_id
+                                workflow_output_data.node_id = node_id
+        return workflow_output_data
 
 
 

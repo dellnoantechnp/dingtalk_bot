@@ -1,1 +1,1 @@
-default_app_config = "customRobot.CustomrobotConfig"
+# default_app_config = "customRobot.CustomRobotConfig"

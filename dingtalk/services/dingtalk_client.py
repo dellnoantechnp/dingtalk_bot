@@ -16,7 +16,7 @@ from dingtalk.Models.dingtalk_card_struct import DingTalkCardData, UserIdTypeMod
 from dingtalk.Models.request_data_model import ReqDataModel
 from dingtalk.interface.AbstractIM import AbstractIMClient
 from alibabacloud_tea_openapi import models as open_api_models
-from typing import Optional, Dict, NoReturn
+from typing import Optional, Dict, NoReturn, Callable, List
 from dingtalk.services.dingtalk_base import DingtalkBase
 from alibabacloud_dingtalk.card_1_0 import models as dingtalkcard__1__0_models
 from alibabacloud_dingtalk.card_1_0.client import Client as dingtalkcard_1_0Client
@@ -267,6 +267,24 @@ class DingTalkClient(AbstractIMClient, DingtalkBase):
         config.retry_options = retry_option
         return dingtalkcard_1_0Client(config)
 
+    @staticmethod
+    def before_send(todo_funcs: List[Callable]):
+        """类静态方法装饰器，用于在 send 操作之前执行一系列操作
+        :param todo_funcs: list of functions
+        """
+        def before(func: Callable) -> Callable:
+            def wrapper(self, *args, **kwargs):
+                for f in todo_funcs:
+                    f(self)
+                return func(self, *args, **kwargs)
+            return wrapper
+        return before
+
+    def update_alert_content_msg(self):
+        self._alert_content = (f"在 {self.data.card_parm_map.environment} 环境中"
+                               f" {self.data.card_parm_map.repository} 有新的任务")
+
+    @before_send([update_alert_content_msg])
     def send(self) -> dingtalkcard__1__0_models.CreateAndDeliverResponse:
         """构造卡片对象和发送消息体"""
         req = self.__send_interactive_card_req(self.data)

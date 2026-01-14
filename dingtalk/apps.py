@@ -7,9 +7,8 @@ from dingtalk_stream import AckMessage
 import logging
 import threading
 
-from dingtalk.services.dingtalk_base import DingtalkBase
-
 logger = logging.getLogger("dingtalk_bot")
+
 
 class CustomRobotConfig(AppConfig):
     """启动 STREAM 后台线程，并注册 STREAM 回调接口"""
@@ -17,6 +16,9 @@ class CustomRobotConfig(AppConfig):
     name = 'customRobot'
 
     def ready(self):
+        # 如果设置有环境变量 DISABLE_STREAM=true 则不启动 Stream 后台线程
+        if os.environ.get("DISABLE_STREAM", "false").lower() == "true":
+            return
         self.run_dingtalk_stream()
 
     def run_dingtalk_stream(self):

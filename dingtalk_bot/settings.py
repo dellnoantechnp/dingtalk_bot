@@ -68,7 +68,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     "daphne",
     'django.contrib.staticfiles',
-    'customRobot',
+    'dingtalk.apps.CustomRobotConfig',
     # "background_task"
     # 'django_q',
     'django_celery_beat',

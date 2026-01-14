@@ -73,12 +73,28 @@ def create_and_update_card(req_data_dict: Dict[str, str]) -> Dict[str, str]:
         namespace=namespace,
         name=task_name
     )
+    change_log = workflow_instance.change_log(
+        namespace=namespace,
+        name=task_name
+    )
+    req_data.POST["markdown_content"] = change_log.value
 
     notice = DingTalkClient(
         task_name=task_name,
         space_type=SpaceTypeEnum.IM_GROUP
     )
     notice.parse_api_data(req_data=req_data)
+
+    # @notice.before_send
+    # def update_alert_text():
+    #     notice._alert_content = notice.data.card_parm_map.repository + " 更新"
+
+    # notice._alert_content = notice.data.card_parm_map.repository
+
+
+
+    # @notice.before_send([test1])
     resp = notice.send()
+
     logger.info(resp.body)
     return notice.data.card_parm_map.markdown_content
