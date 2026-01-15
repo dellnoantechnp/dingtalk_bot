@@ -8,6 +8,8 @@ from typing import Dict
 from django.conf import settings
 import logging
 
+from nice_duration import duration_string
+
 from dingtalk.Models.workflow_output_parameters_model import WorkflowOutputParameterModel
 
 logger = logging.getLogger("dingtalk_bot")
@@ -54,7 +56,7 @@ class ArgoWorkflowsService:
             finished_at = datetime.now(timezone.utc)
         else:
             finished_at = node.finished_at.__root__
-        return format_timespan(finished_at - start_at)
+        return duration_string(timedelta=(finished_at - start_at))
 
     def __node(self, node: NodeStatus) -> Dict[str, str]:
         """组装node字段"""
@@ -67,10 +69,9 @@ class ArgoWorkflowsService:
             ret["message"] = node.message
         return ret
 
-    #@property
-    def change_log(self, namespace: str,
+    def get_output_parameter(self, namespace: str,
                    name: str, template_name: str = "change-log",
-                   output_parameters: str = "CHANGE_LOG") -> WorkflowOutputParameterModel:
+                   output_parameter: str = "CHANGE_LOG") -> WorkflowOutputParameterModel:
         logger.debug(f"get workflow result: {namespace}/{name} ...")
         ret = self.service.get_workflow(namespace=namespace, name=name)
 
@@ -87,7 +88,7 @@ class ArgoWorkflowsService:
                     # 获取输出参数列表
                     if node.outputs and node.outputs.parameters:
                         for item in node.outputs.parameters:
-                            if item.name == output_parameters:
+                            if item.name == output_parameter:
                                 workflow_output_data.name = item.name
                                 workflow_output_data.value = item.value
                                 workflow_output_data.description = item.description
@@ -95,6 +96,18 @@ class ArgoWorkflowsService:
                                 workflow_output_data.workflow_id = node.boundary_id
                                 workflow_output_data.node_id = node_id
         return workflow_output_data
+
+    def duration(self, namespace: str, name: str) -> str:
+        """get workflow duration time string"""
+        ret = self.service.get_workflow(namespace=namespace, name=name)
+        started_at = ret.status.started_at.__root__
+        status = ret.status.phase
+        if status == "Running" and not ret.status.finished_at:
+            finished_at = datetime.now(timezone.utc)
+        else:
+            finished_at = ret.status.finished_at.__root__
+        duration = duration_string(timedelta=(finished_at - started_at))
+        return duration
 
 
 

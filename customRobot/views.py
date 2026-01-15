@@ -553,9 +553,10 @@ def workflow_test(request):
         name=request.GET.get("name")
     )
 
-    c = workflow_instance.change_log(
+    c = workflow_instance.get_output_parameter(
         namespace=request.GET.get("namespace", "workflows"),
         name=request.GET.get("name"))
+    print(workflow_instance.duration(namespace=request.GET.get("namespace"), name=request.GET.get("name")))
     # TODO: 测试异步任务执行
     test.delay()  # 测试触发异步任务
     return JsonResponse(c.model_dump())

@@ -2,7 +2,8 @@ import time
 
 from alibabacloud_dingtalk.card_1_0.models import (CreateAndDeliverRequestImGroupOpenDeliverModel,
                                                    CreateCardRequestImGroupOpenSpaceModelNotification,
-                                                   CreateAndDeliverRequestImGroupOpenSpaceModel)
+                                                   CreateAndDeliverRequestImGroupOpenSpaceModel,
+                                                   CreateCardRequestImGroupOpenSpaceModelSearchSupport)
 from darabonba.policy.retry import RetryOptions, RetryCondition
 from django.conf import settings
 from django.core.handlers.asgi import ASGIRequest
@@ -55,6 +56,7 @@ class DingTalkClient(AbstractIMClient, DingtalkBase):
 
         self._card_template_id: Optional[str] = None
         self._alert_content: str = "Test message."
+        self._repository: str = "ExampleProject"
 
         if out_track_id and card_template_id is None:
             # 更新卡片逻辑,从历史数据中加载相关参数
@@ -132,18 +134,24 @@ class DingTalkClient(AbstractIMClient, DingtalkBase):
         im_group_interactive_card_request.open_space_id = card_data.open_space_id
         im_group_interactive_card_request.user_id_type = UserIdTypeModel.userId
         im_group_interactive_card_request.card_data = self.card_data(self.data.card_parm_map.model_dump())
+        im_group_interactive_card_request
 
         # imGroupOpenSpaceModel
         logger.debug("initial interactive imGroupOpenSpaceModel.")
         im_group_interactive_open_space_model = CreateAndDeliverRequestImGroupOpenSpaceModel()
         # 支持卡片消息转发操作
         im_group_interactive_open_space_model.support_forward = True
-        # TODO: 测试IM群组卡片通知内容
+        # 新消息弹窗通知内容
         im_group_interactive_open_space_model.notification = CreateCardRequestImGroupOpenSpaceModelNotification(
             # 新卡片通知的外部预览信息
             alert_content=self._alert_content,
             # 是否关闭推送通知
             notification_off=False
+        )
+
+        # 卡片消息搜索关键字
+        im_group_interactive_open_space_model.search_support = CreateCardRequestImGroupOpenSpaceModelSearchSupport(
+            search_desc=self._repository
         )
 
         # imGroupOpenDeliverModel
@@ -280,11 +288,16 @@ class DingTalkClient(AbstractIMClient, DingtalkBase):
             return wrapper
         return before
 
-    def update_alert_content_msg(self):
+    def __update_alert_content_msg(self):
+        logger.debug(f"update alert content msg ....")
         self._alert_content = (f"在 {self.data.card_parm_map.environment} 环境中"
                                f" {self.data.card_parm_map.repository} 有新的任务")
 
-    @before_send([update_alert_content_msg])
+    def __update_card_search_keyword(self):
+        logger.debug("update card search keyword ....")
+        self._repository = self.data.card_parm_map.repository
+
+    @before_send([__update_alert_content_msg, __update_card_search_keyword])
     def send(self) -> dingtalkcard__1__0_models.CreateAndDeliverResponse:
         """构造卡片对象和发送消息体"""
         req = self.__send_interactive_card_req(self.data)

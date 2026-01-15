@@ -5,6 +5,7 @@ from typing import Dict
 from celery import Celery, shared_task
 from django.conf import settings
 from django.core.handlers.asgi import ASGIRequest
+from django.utils.duration import duration_string
 from httpcore import Request
 
 from dingtalk.Models.dingtalk_card_struct import SpaceTypeEnum
@@ -73,11 +74,24 @@ def create_and_update_card(req_data_dict: Dict[str, str]) -> Dict[str, str]:
         namespace=namespace,
         name=task_name
     )
-    change_log = workflow_instance.change_log(
+    change_log = workflow_instance.get_output_parameter(
         namespace=namespace,
         name=task_name
     )
     req_data.POST["markdown_content"] = change_log.value
+    environment = workflow_instance.get_output_parameter(
+        namespace=namespace,
+        name=task_name,
+        template_name="change-log",
+        output_parameter="CI_ENVIRONMENT_NAME"
+    )
+    req_data.POST["environment"] = environment.value
+
+    task_duration = workflow_instance.duration(
+        namespace=namespace,
+        name=task_name
+    )
+    req_data.POST["cicd_elapse"] = task_duration
 
     notice = DingTalkClient(
         task_name=task_name,
