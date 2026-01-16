@@ -125,6 +125,7 @@ class DingTalkStreamDataModel(BaseModel):
     corpId: str = Field(default=None, description="企业组织ID")
     spaceType: str = Field(default="im", description="场域类型")
     userIdType: int = Field(default=1, description="用户ID表示类型，1：UserID  2：UnionID")
+    userId: str = Field(default=None, description="用户 ID")
     spaceId: str = Field(default=None, description="场域ID")
     outTrackId: str = Field(default=None, description="卡片ID")
     atUsers: List[str] = Field(default_factory=list, description="@用户ID列表")

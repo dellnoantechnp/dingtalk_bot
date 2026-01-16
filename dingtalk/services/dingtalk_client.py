@@ -14,7 +14,7 @@ from urllib3.exceptions import ResponseError
 from core.redis_client import redis_hgetall, redis_hget
 from dingtalk.Models.CardRepository import CardRepository
 from dingtalk.Models.dingtalk_card_struct import DingTalkCardData, UserIdTypeModel, SpaceTypeEnum, \
-    DingTalkCardPrivateDataItem, DingTalkCardParmData
+    DingTalkCardPrivateDataItem, DingTalkCardParmData, DingTalkStreamDataModel
 from dingtalk.Models.request_data_model import ReqDataModel
 from dingtalk.interface.AbstractIM import AbstractIMClient
 from alibabacloud_tea_openapi import models as open_api_models
@@ -196,8 +196,9 @@ class DingTalkClient(AbstractIMClient, DingtalkBase):
         card_data = dingtalkcard__1__0_models.UpdateCardRequestCardData(
             card_param_map=card_parm_data.model_dump(mode='json')
         )
+        user_private_data = private_param_data.get(user_id)
         private_data_value_key = dingtalkcard__1__0_models.PrivateDataValue(
-            card_param_map=private_param_data.model_dump(mode='json')
+            card_param_map=user_private_data.model_dump(mode='json')
         )
         private_data = {user_id: private_data_value_key}
 
@@ -209,10 +210,14 @@ class DingTalkClient(AbstractIMClient, DingtalkBase):
             user_id_type=UserIdTypeModel.userId,
         )
 
+        logger.debug("initial interactive req RuntimeOptions.")
+        runtime = util_models.RuntimeOptions()
+        runtime.keep_alive = True
+
         ret["update_card_request"] = update_card_request
         ret["update_card_headers"] = update_card_headers
+        ret["runtime"] = runtime
         return ret
-
 
     def build_card_data(self, card_parm_map: T) -> DingTalkCardData:
         """装载 card parm data
@@ -250,21 +255,18 @@ class DingTalkClient(AbstractIMClient, DingtalkBase):
         # logger.info(f"persistent card key:{key}")
         # logger.debug(f"persistent card key:{key}, value:{mapping.model_json_schema()}")
 
-    def __load_data_from_persistent_store(self, name: str, field: str = None) -> dict:
+    def __load_data_from_persistent_store(self, out_track_id: str) -> bool:
         """从历史数据中加载 card data
-        :param name: persistent key name"""
-        if field:
-            ret = redis_hget(key=self.task_track_mapping_key_name, field=field)
-            if ret.ok:
-                return ret.value
-            else:
-                raise ValueError(f"dingtalk get task_track_mapping_key {ret.key}.{ret.field} value error, {ret.reason}")
+        :param out_track_id: card outTrackId"""
+        logger.debug(f"load card data. {out_track_id}")
+        data = CardRepository.load(out_track_id)
+        status = data is not None
+        if status:
+            logger.info(f"load persistent card data. out_track_id={out_track_id} task_name={data.task_name}")
+            self.data = data
         else:
-            ret = redis_hgetall(key=self.task_track_mapping_key_name)
-            if ret.ok:
-                return ret.value
-            else:
-                raise ValueError(f"dingtalk get task_track_mapping_key {ret.key} value error, {ret.reason}")
+            logger.error(f"load persistent card data ERROR. out_track_id={out_track_id}")
+        return status
 
     def parse_api_data(self, req_data: ReqDataModel) -> bool:
         """解析 API request 数据"""
@@ -291,11 +293,28 @@ class DingTalkClient(AbstractIMClient, DingtalkBase):
         else:
             raise RequestError(message=f'request method {req_data.method} not supported')
 
-    def parse_stream_callback_data(self, callback_data: DingTalkCardPrivateDataItem):
-        userId = callback_data.get("userId")
-        outTrackId = callback_data.get("outTrackId")
-        spaceId = callback_data.get("spaceId")
-        value = callback_data.get("value")
+    def parse_stream_callback_data(self, callback_data: DingTalkStreamDataModel):
+        """parse callback data from dingtalk stream
+        :param callback_data: callback data
+        """
+        out_track_id = callback_data.outTrackId
+        self.__load_data_from_persistent_store(out_track_id=out_track_id)
+
+        action = callback_data.value.cardPrivateData.get("params")
+        if "approve" in action:
+            old_approve_value = self.data.card_parm_map.approve
+            self.data.card_parm_map.approve = str(int(old_approve_value) + 1)
+            self.data.private_data = {callback_data.userId: DingTalkCardPrivateDataItem(approve_action=True)}
+            logger.info(f"receive approve vote on userId {callback_data.userId}, "
+                        f"now approve is {old_approve_value}->{self.data.card_parm_map.approve}")
+        elif "reject" in action:
+            old_reject_value = self.data.card_parm_map.approve
+            self.data.card_parm_map.reject = str(int(old_reject_value) + 1)
+            self.data.private_data = {callback_data.userId: DingTalkCardPrivateDataItem(reject_action=True)}
+            logger.info(f"receive reject vote on userId {callback_data.userId}, "
+                        f"now reject is {old_reject_value}->{self.data.card_parm_map.reject}")
+        else:
+            raise ValueError(f'callback data {callback_data} not supported')
 
     @staticmethod
     def card_data(card_param_map: dict[str, str]) -> dingtalkcard__1__0_models.CreateAndDeliverRequestCardData:
@@ -325,12 +344,15 @@ class DingTalkClient(AbstractIMClient, DingtalkBase):
         """类静态方法装饰器，用于在 send 操作之前执行一系列操作
         :param todo_funcs: list of functions
         """
+
         def before(func: Callable) -> Callable:
             def wrapper(self, *args, **kwargs):
                 for f in todo_funcs:
                     f(self)
                 return func(self, *args, **kwargs)
+
             return wrapper
+
         return before
 
     def __update_alert_content_msg(self):
@@ -361,7 +383,12 @@ class DingTalkClient(AbstractIMClient, DingtalkBase):
 
     def update(self, user_id: str):
         """更新卡片"""
-        req = self.__update_interactive_card_req(card_parm_data=self.data.card_parm_map, user_id=user_id)
+        req = self.__update_interactive_card_req(card_parm_data=self.data.card_parm_map, user_id=user_id,
+                                                 private_param_data=self.data.private_data)
+        resp = self.im_client.update_card_with_options(request=req["update_card_request"],
+                                                       headers=req["update_card_headers"],
+                                                       runtime=req["runtime"])
+        return resp.body
 
     def get_record_task_name_by_out_track_id(self, out_track_id):
         pass

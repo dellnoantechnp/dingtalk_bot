@@ -7,6 +7,7 @@ from dingtalk_stream import AckMessage
 import logging
 import threading
 
+from Models.dingtalk_card_struct import DingTalkCardPrivateDataItem, DingTalkStreamDataModel
 from dingtalk.Models.CardRepository import CardRepository
 from dingtalk.services.dingtalk_client import DingTalkClient
 
@@ -80,14 +81,16 @@ class EchoMarkdownHandler(dingtalk_stream.ChatbotHandler):
         # 回复一个普通文本消息
         # self.reply_text(text=text, incoming_message=incoming_message)
         # return AckMessage.STATUS_OK, 'OK'
-        # 获取STREAM回调数据
-        post_data = incoming_message.to_dict()
+
         # 调用接口请求，处理卡片数据，更新卡片内容
-        logger.debug(f"call back raw_data: {json.dumps(post_data)}")
-        out_track_id = post_data.get("outTrackId")
+        logger.debug(f"call back raw_data: {incoming_message.to_dict()}")
+        # 获取STREAM回调数据
+        post_data = DingTalkStreamDataModel.model_validate(incoming_message.to_dict())
+        out_track_id = post_data.outTrackId
         persistent_data = CardRepository.load(out_track_id)
         update_notice = DingTalkClient(out_track_id=out_track_id)
-        update_notice.update()
+        update_notice.parse_stream_callback_data(post_data)
+        update_notice.update(post_data.userId)
         try:
             resp = requests.post("http://localhost:8000/customRobot/test5", data=post_data)
             if resp.status_code >= 500:
