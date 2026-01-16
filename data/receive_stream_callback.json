@@ -1,0 +1,14 @@
+{
+    "extension": "{}",
+    "corpId": "ding51xxxxxxxx726",
+    "spaceType": "im",
+    "userIdType": 1,
+    "type": "actionCallback",
+    "userId": "052605xxxxx1061",
+    "content": "{\"cardPrivateData\":{\"actionIds\":[\"single_button_1\"],\"params\":{\"approve\":\"1\"}}}",
+    "spaceId": "cidUQXxxxxxxxE3w==",
+    "outTrackId": "98a61096-31e1-4611-be4e-b1d2f6897225.schema.1768470601416",
+    "value": "{\"cardPrivateData\":{\"actionIds\":[\"single_button_1\"],\"params\":{\"approve\":\"1\"}}}",
+    "atUsers":
+    []
+}

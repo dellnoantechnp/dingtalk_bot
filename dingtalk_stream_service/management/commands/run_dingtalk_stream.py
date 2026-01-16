@@ -1,5 +1,5 @@
 from django.core.management.base import BaseCommand
-from dingtalk.apps import run
+from dingtalk.services.apps import run
 
 
 class Command(BaseCommand):

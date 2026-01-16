@@ -1,9 +1,13 @@
+import json
 from enum import Enum
-from typing import Generic
-from pydantic import BaseModel, Field, HttpUrl, computed_field, model_validator
+from typing import Generic, List, Mapping, Any, Optional, Union, Dict
+from pydantic import BaseModel, Field, HttpUrl, computed_field, model_validator, field_serializer
+import logging
 from typing_extensions import Annotated
 
 from dingtalk.type.types import T
+
+logger = logging.getLogger("dingtalk_bot")
 
 
 class DingTalkCardPrivateDataItem(BaseModel):
@@ -29,11 +33,11 @@ class DingTalkCardParmData(BaseModel):
     project_id: str = Field(default=None, description="工程项目id")
     repository: str = Field(default=None, description="工程项目名称")
     card_ref_link: str = HttpUrl
-    approve_max: str = Field(default="10", description="投票上限, must be str", ge=0, le=10)
-    reject_max: str = Field(default="2", description="拒绝上限, must be str", ge=0, le=2)
+    approve_max: str = Field(default="10", description="投票上限, must be str")
+    reject_max: str = Field(default="2", description="拒绝上限, must be str")
     markdown_content: str = Field(default=None, description="消息内容markdown")
-    approve: str = Field(default="0", description="当前投票数, must be str", ge=0, le=10)
-    reject: str = Field(default="0", description="当前拒绝数, must be str", ge=0, le=2)
+    approve: str = Field(default="0", description="当前投票数, must be str")
+    reject: str = Field(default="0", description="当前拒绝数, must be str")
     card_title: str = Field(default=None, description="卡片通知标题")
     chart_data: str = Field(default=None, description="图表JSON体")
 
@@ -111,3 +115,44 @@ class DingTalkCardData(BaseModel, Generic[T]):
             )
             self.final_open_space_id = temp_model.open_space_id
         return self
+
+
+class DingTalkStreamDataValueModel(BaseModel):
+    cardPrivateData: Dict[str, Any] = Field(default=None, description="回调数据字段")
+
+
+class DingTalkStreamDataModel(BaseModel):
+    corpId: str = Field(default=None, description="企业组织ID")
+    spaceType: str = Field(default="im", description="场域类型")
+    userIdType: int = Field(default=1, description="用户ID表示类型，1：UserID  2：UnionID")
+    spaceId: str = Field(default=None, description="场域ID")
+    outTrackId: str = Field(default=None, description="卡片ID")
+    atUsers: List[str] = Field(default_factory=list, description="@用户ID列表")
+    value: Union[DingTalkStreamDataValueModel, Dict[str, Any], str, None] = Field(default=None, description="回调数据值")
+
+    # set
+    @model_validator(mode='after')
+    def parse_value_string(self) -> "DingTalkStreamDataModel":
+        if isinstance(self.value, str):
+            try:
+                # 尝试解析json字符串
+                parsed_json = json.loads(self.value)
+                # 转化为子模型
+                self.value = DingTalkStreamDataValueModel.model_validate(parsed_json)
+            except (json.JSONDecodeError, ValueError):
+                # 解析失败或不符合模型，存储原始字符串
+                logger.warning(f"DingTalkStreamDataModel.parse_value_string error: {self.value}")
+                pass
+        return self
+
+    # dump
+    @field_serializer('value')
+    def serialize_value(self, value: Any, _info) -> Optional[str]:
+        if value is None:
+            return None
+        # 如果是模型或字典，导出时转为 JSON 字符串
+        if isinstance(value, (BaseModel, dict)):
+            # 如果是模型，先转为字典
+            data = value.model_dump() if isinstance(value, BaseModel) else value
+            return json.dumps(data, ensure_ascii=False)
+        return value

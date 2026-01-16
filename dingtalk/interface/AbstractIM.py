@@ -7,5 +7,5 @@ class AbstractIMClient(ABC):
         pass
 
     @abstractmethod
-    def update(self):
+    def update(self, user_id: str):
         pass
