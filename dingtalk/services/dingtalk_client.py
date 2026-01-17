@@ -304,13 +304,13 @@ class DingTalkClient(AbstractIMClient, DingtalkBase):
         if "approve" in action:
             old_approve_value = self.data.card_parm_map.approve
             self.data.card_parm_map.approve = str(int(old_approve_value) + 1)
-            self.data.private_data = {callback_data.userId: DingTalkCardPrivateDataItem(approve_action=True)}
+            self.data.private_data = {callback_data.userId: DingTalkCardPrivateDataItem(approve_action="true")}
             logger.info(f"receive approve vote on userId {callback_data.userId}, "
                         f"now approve is {old_approve_value}->{self.data.card_parm_map.approve}")
         elif "reject" in action:
-            old_reject_value = self.data.card_parm_map.approve
+            old_reject_value = self.data.card_parm_map.reject
             self.data.card_parm_map.reject = str(int(old_reject_value) + 1)
-            self.data.private_data = {callback_data.userId: DingTalkCardPrivateDataItem(reject_action=True)}
+            self.data.private_data = {callback_data.userId: DingTalkCardPrivateDataItem(reject_action="true")}
             logger.info(f"receive reject vote on userId {callback_data.userId}, "
                         f"now reject is {old_reject_value}->{self.data.card_parm_map.reject}")
         else:
@@ -388,7 +388,13 @@ class DingTalkClient(AbstractIMClient, DingtalkBase):
         resp = self.im_client.update_card_with_options(request=req["update_card_request"],
                                                        headers=req["update_card_headers"],
                                                        runtime=req["runtime"])
-        return resp.body
+        if resp.status_code == 200:
+            self.__persistent_card()
+            logger.info("update card successfully.")
+            return resp
+        else:
+            logger.error("update card failed.")
+            raise RuntimeError(resp)
 
     def get_record_task_name_by_out_track_id(self, out_track_id):
         pass

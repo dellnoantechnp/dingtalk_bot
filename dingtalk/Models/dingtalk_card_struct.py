@@ -12,11 +12,11 @@ logger = logging.getLogger("dingtalk_bot")
 
 class DingTalkCardPrivateDataItem(BaseModel):
     """DingTalk interactive card private data"""
-    approve_action: bool = False
-    reject_action: bool = False
+    approve_action: str = Field(default="false", description="var approve_action, must be str")
+    reject_action: str = Field(default="false", description="var reject_action, must be str")
 
 
-EntityUserID = Annotated[int, Field(gt=0, description="DingTalk UserID")]
+EntityUserID = Annotated[str, Field(description="DingTalk UserID, must be str")]
 
 
 class DingTalkCardParmData(BaseModel):

@@ -90,9 +90,9 @@ class EchoMarkdownHandler(dingtalk_stream.ChatbotHandler):
         persistent_data = CardRepository.load(out_track_id)
         update_notice = DingTalkClient(out_track_id=out_track_id)
         update_notice.parse_stream_callback_data(post_data)
-        update_notice.update(post_data.userId)
+        resp = update_notice.update(post_data.userId)
         try:
-            resp = requests.post("http://localhost:8000/customRobot/test5", data=post_data)
+            # resp = requests.post("http://localhost:8000/customRobot/test5", data=post_data)
             if resp.status_code >= 500:
                 return AckMessage.STATUS_SYSTEM_EXCEPTION, "INTERNAL ERROR"
             elif resp.status_code == 400:
