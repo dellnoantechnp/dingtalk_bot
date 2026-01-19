@@ -2,6 +2,8 @@ import re
 from django.template import Template, Context
 from typing import List, Dict
 
+from django.utils.safestring import SafeString
+
 
 def parse_complex_log(raw_text: str) -> List[Dict[str, str]]:
     """将 Git Changelog 文笔处理为结构化数据"""
@@ -54,7 +56,7 @@ def parse_complex_log(raw_text: str) -> List[Dict[str, str]]:
     return authors
 
 
-def render_git_log_to_md(raw_text):
+def render_git_log_to_md(raw_text) -> SafeString:
     # 1. 结构化数据 (解析逻辑同前)
     # 这里假设我们已经得到了 structured_data = {"range": "...", "authors": [...]}
     structured_data = parse_complex_log(raw_text)
@@ -76,6 +78,12 @@ def render_git_log_to_md(raw_text):
     return t.render(c)
 
 
+def parse_user_name_from_git_log(raw_text) -> List[str]:
+    """get user list from git change log"""
+    structured_data = parse_complex_log(raw_text)
+    return [item["name"] for item in structured_data if "name" in item]
+
+
 if __name__ == '__main__':
     raw_data = '''
 From: f6811dea..HEAD
@@ -88,3 +96,4 @@ From: f6811dea..HEAD
     123e8b054 feat2.2'''
 
     print(render_git_log_to_md(raw_data))
+    print(parse_user_name_from_git_log(raw_data))
