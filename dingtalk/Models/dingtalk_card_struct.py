@@ -40,6 +40,7 @@ class DingTalkCardParmData(BaseModel):
     reject: str = Field(default="0", description="当前拒绝数, must be str")
     card_title: str = Field(default=None, description="卡片通知标题")
     chart_data: str = Field(default=None, description="图表JSON体")
+    waring_text: str = Field(default=None, description="警告栏提示信息")
 
 
 class SpaceTypeEnum(str, Enum):
