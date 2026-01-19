@@ -4,6 +4,7 @@ from alibabacloud_dingtalk.card_1_0.models import (CreateAndDeliverRequestImGrou
                                                    CreateCardRequestImGroupOpenSpaceModelNotification,
                                                    CreateAndDeliverRequestImGroupOpenSpaceModel,
                                                    CreateCardRequestImGroupOpenSpaceModelSearchSupport)
+from alibabacloud_dingtalk.contact_1_0.models import SearchUserResponse
 from darabonba.policy.retry import RetryOptions, RetryCondition
 from django.conf import settings
 from django.core.handlers.asgi import ASGIRequest
@@ -23,7 +24,11 @@ from typing import Optional, Dict, NoReturn, Callable, List, Mapping
 from dingtalk.services.dingtalk_base import DingtalkBase
 from alibabacloud_dingtalk.card_1_0 import models as dingtalkcard__1__0_models
 from alibabacloud_dingtalk.card_1_0.client import Client as dingtalkcard_1_0Client
+# contact
+from alibabacloud_dingtalk.contact_1_0.client import Client as dingtalkcontact_1_0Client
+from alibabacloud_dingtalk.contact_1_0 import models as dingtalkcontact__1__0_models
 from alibabacloud_tea_util import models as util_models
+from alibabacloud_tea_util.client import Client as UtilClient
 import logging
 
 from dingtalk.type.types import TeaType, T
@@ -306,13 +311,13 @@ class DingTalkClient(AbstractIMClient, DingtalkBase):
         if "approve" in action:
             old_approve_value = self.data.card_parm_map.approve
             self.data.card_parm_map.approve = str(int(old_approve_value) + 1)
-            self.data.private_data = {callback_data.userId: DingTalkCardPrivateDataItem(approve_action="true")}
+            self.data.private_data.update({callback_data.userId: DingTalkCardPrivateDataItem(approve_action="true")})
             logger.info(f"receive approve vote on userId {callback_data.userId}, "
                         f"now approve is {old_approve_value}->{self.data.card_parm_map.approve}")
         elif "reject" in action:
             old_reject_value = self.data.card_parm_map.reject
             self.data.card_parm_map.reject = str(int(old_reject_value) + 1)
-            self.data.private_data = {callback_data.userId: DingTalkCardPrivateDataItem(reject_action="true")}
+            self.data.private_data.update({callback_data.userId: DingTalkCardPrivateDataItem(reject_action="true")})
             logger.info(f"receive reject vote on userId {callback_data.userId}, "
                         f"now reject is {old_reject_value}->{self.data.card_parm_map.reject}")
         else:
@@ -406,3 +411,36 @@ class DingTalkClient(AbstractIMClient, DingtalkBase):
 
     def get_record_task_name_by_out_track_id(self, out_track_id):
         pass
+
+    @property
+    def contact_client(self) -> dingtalkcontact_1_0Client:
+        """Dingtalk contact client"""
+        config = open_api_models.Config(protocol="https", region_id="central")
+        return dingtalkcontact_1_0Client(config)
+
+    def search_userid_by_name(self, name: str) -> SearchUserResponse:
+        """search userid by name
+        :param name: user name
+        :return: SearchUserResponse
+        """
+        search_user_header = dingtalkcontact__1__0_models.SearchUserHeaders()
+        search_user_header.x_acs_dingtalk_access_token = self.access_token
+        search_user_request = dingtalkcontact__1__0_models.SearchUserRequest(
+            query_word=name,
+            offset=0,
+            size=20,
+            full_match_field=1
+        )
+        logger.info(f"search user {name}")
+        try:
+            resp: SearchUserResponse = self.contact_client.search_user_with_options(
+                request=search_user_request,
+                headers=search_user_header,
+                runtime=util_models.RuntimeOptions()
+            )
+            return resp
+        except Exception as e:
+            if not UtilClient.empty(e.code) and not UtilClient.empty(e.message):
+                pass
+            else:
+                raise RuntimeError(e)
