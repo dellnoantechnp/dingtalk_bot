@@ -20,7 +20,7 @@ from dingtalk.Card import Card, CardData
 from dingtalk.DingtalkBase import DingtalkBase
 from dingtalk.Models.dingtalk_card_struct import SpaceTypeEnum
 from dingtalk.Models.request_data_model import ReqDataModel, HttpMethodEnum
-from dingtalk.services.argo_workflows import ArgoWorkflowsService
+from dingtalk.services.argo_workflows_service import ArgoWorkflowsService
 
 from dingtalk.services.dingtalk_client import DingTalkClient
 from . import EchoMarkdownHandler
@@ -556,10 +556,10 @@ def workflow_test(request):
     c = workflow_instance.get_output_parameter(
         namespace=request.GET.get("namespace", "workflows"),
         name=request.GET.get("name"))
-    print(workflow_instance.duration(namespace=request.GET.get("namespace"), name=request.GET.get("name")))
+    # print(workflow_instance.duration(namespace=request.GET.get("namespace"), name=request.GET.get("name")))
     # TODO: 测试异步任务执行
     test.delay()  # 测试触发异步任务
-    return JsonResponse(c.model_dump())
+    return JsonResponse(b.model_dump(exclude_defaults=True))
 
 @csrf_exempt
 def new_notification(request):

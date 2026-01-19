@@ -16,6 +16,7 @@ from dingtalk.Models.CardRepository import CardRepository
 from dingtalk.Models.dingtalk_card_struct import DingTalkCardData, UserIdTypeModel, SpaceTypeEnum, \
     DingTalkCardPrivateDataItem, DingTalkCardParmData, DingTalkStreamDataModel
 from dingtalk.Models.request_data_model import ReqDataModel
+from dingtalk.Models.workflow_task_status_model import WorkflowTaskStatusModel
 from dingtalk.interface.AbstractIM import AbstractIMClient
 from alibabacloud_tea_openapi import models as open_api_models
 from typing import Optional, Dict, NoReturn, Callable, List, Mapping
@@ -298,6 +299,7 @@ class DingTalkClient(AbstractIMClient, DingtalkBase):
         :param callback_data: callback data
         """
         out_track_id = callback_data.outTrackId
+        # 加载历史数据
         self.__load_data_from_persistent_store(out_track_id=out_track_id)
 
         action = callback_data.value.cardPrivateData.get("params")
@@ -315,6 +317,12 @@ class DingTalkClient(AbstractIMClient, DingtalkBase):
                         f"now reject is {old_reject_value}->{self.data.card_parm_map.reject}")
         else:
             raise ValueError(f'callback data {callback_data} not supported')
+
+    def parse_workflow_task_data(self, workflow_task_status: WorkflowTaskStatusModel):
+        self.data.card_parm_map.cicd_elapse = workflow_task_status.duration
+        self.data.card_parm_map.cicd_status = workflow_task_status.status
+        # self.data.card_parm_map.
+        # pass
 
     @staticmethod
     def card_data(card_param_map: dict[str, str]) -> dingtalkcard__1__0_models.CreateAndDeliverRequestCardData:

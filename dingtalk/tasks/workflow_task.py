@@ -10,7 +10,7 @@ from httpcore import Request
 
 from dingtalk.Models.dingtalk_card_struct import SpaceTypeEnum
 from dingtalk.Models.request_data_model import ReqDataModel
-from dingtalk.services.argo_workflows import ArgoWorkflowsService
+from dingtalk.services.argo_workflows_service import ArgoWorkflowsService
 from dingtalk.services.dingtalk_client import DingTalkClient
 
 logger = logging.getLogger("dingtalk_bot")
@@ -48,7 +48,7 @@ def fetch_task_info(namespace: str, task: str) -> Dict[str, str]:
         name=task
     )
     logger.info(task_info)
-    return task_info
+    return task_info.model_dump()
 
 
 @app.task(
@@ -111,4 +111,4 @@ def create_and_update_card(req_data_dict: Dict[str, str]) -> Dict[str, str]:
     resp = notice.send()
 
     logger.info(resp.body)
-    return notice.data.card_parm_map.markdown_content
+    return notice.data.card_parm_map.model_dump()

@@ -7,7 +7,7 @@ from dingtalk_stream import AckMessage
 import logging
 import threading
 
-from Models.dingtalk_card_struct import DingTalkCardPrivateDataItem, DingTalkStreamDataModel
+from dingtalk.Models.dingtalk_card_struct import DingTalkStreamDataModel
 from dingtalk.Models.CardRepository import CardRepository
 from dingtalk.services.dingtalk_client import DingTalkClient
 

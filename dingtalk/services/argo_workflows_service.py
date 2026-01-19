@@ -1,16 +1,17 @@
-from datetime import datetime, timezone
+from datetime import datetime, timezone, timedelta
 
 from hera.workflows.models import NodeStatus
 from humanfriendly import format_timespan
 from hera.workflows import WorkflowsService
 
-from typing import Dict
+from typing import Dict, Set, List
 from django.conf import settings
 import logging
 
 from nice_duration import duration_string
 
 from dingtalk.Models.workflow_output_parameters_model import WorkflowOutputParameterModel
+from dingtalk.Models.workflow_task_status_model import WorkflowTaskStatusModel
 
 logger = logging.getLogger("dingtalk_bot")
 
@@ -24,7 +25,7 @@ class ArgoWorkflowsService:
             namespace=settings.ARGO_WORKFLOWS_WORKER_NAMESPACE,
         )
 
-    def get_result(self, namespace: str, name: str) -> dict[str, str]:
+    def get_result(self, namespace: str, name: str) -> WorkflowTaskStatusModel:
         """处理任务输出"""
         try:
             logger.debug(f"get workflow result: {namespace}/{name} ...")
@@ -38,17 +39,29 @@ class ArgoWorkflowsService:
             nodes_status = sorted([self.__node(nodes.get(node))
                                    for node in nodes
                                    if nodes.get(node).type == "Pod"], key=lambda x: x["started_at"])
-            return {
+            suspend = ret.spec.suspend
+            template_task_count = len(ret.status.stored_templates)
+            complete_task_count = len(ret.status.task_results_completion_status)
+            started_at = ret.status.started_at.__root__
+            finished_at = ret.status.finished_at.__root__ if ret.status.finished_at else datetime.now(timezone.utc)
+            wts = WorkflowTaskStatusModel.model_validate({
+                "namespace": namespace,
                 "name": name,
                 "status": status,
-                "progress": progress,
+                "suspend": suspend,
+                # "progress": progress,
+                "template_task_count": template_task_count,
+                "complete_task_count": complete_task_count,
+                "started_at": started_at,
+                "finished_at": finished_at,
                 "nodes": nodes_status
-            }
+            })
+            return wts
         except Exception as e:
             raise Exception(f"Hera 获取 workflow 任务状态失败: {e}")
 
     @staticmethod
-    def calculator_duration(node: NodeStatus) -> str:
+    def calculator_duration(node: NodeStatus) -> List[str|int]:
         """计算当前任务耗时，以可读方式输出"""
         start_at = node.started_at.__root__
         if node.phase == "Running":
@@ -56,14 +69,14 @@ class ArgoWorkflowsService:
             finished_at = datetime.now(timezone.utc)
         else:
             finished_at = node.finished_at.__root__
-        return duration_string(timedelta=(finished_at - start_at))
+        return [duration_string(timedelta=(finished_at - start_at)), (finished_at - start_at).total_seconds()]
 
     def __node(self, node: NodeStatus) -> Dict[str, str]:
         """组装node字段"""
         ret = dict()
         ret["name"] = node.template_name
         ret["status"] = node.phase
-        ret["duration"] = self.calculator_duration(node)
+        ret["duration"], ret["duration_time"]= self.calculator_duration(node)
         ret["started_at"] = node.started_at.__root__
         if node.phase != "Succeeded":
             ret["message"] = node.message
