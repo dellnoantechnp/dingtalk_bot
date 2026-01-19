@@ -12,6 +12,7 @@ from dingtalk.Models.dingtalk_card_struct import SpaceTypeEnum
 from dingtalk.Models.request_data_model import ReqDataModel
 from dingtalk.services.argo_workflows_service import ArgoWorkflowsService
 from dingtalk.services.dingtalk_client import DingTalkClient
+from utils.markdown_template import parse_user_name_from_git_log
 
 logger = logging.getLogger("dingtalk_bot")
 
@@ -98,6 +99,11 @@ def create_and_update_card(req_data_dict: Dict[str, str]) -> Dict[str, str]:
         space_type=SpaceTypeEnum.IM_GROUP
     )
     notice.parse_api_data(req_data=req_data)
+
+    users = parse_user_name_from_git_log(change_log.value)
+    logger.debug("users: {}".format(users))
+    for user in users:
+        logger.info(notice.search_userid_by_name(name=user).body)
 
     # @notice.before_send
     # def update_alert_text():
