@@ -99,6 +99,7 @@ def create_and_update_card(req_data_dict: Dict[str, str]) -> Dict[str, str]:
         space_type=SpaceTypeEnum.IM_GROUP
     )
     notice.parse_api_data(req_data=req_data)
+    notice.parse_workflow_task_data(task_data)
 
     users = parse_user_name_from_git_log(change_log.value)
     logger.debug("users: {}".format(users))

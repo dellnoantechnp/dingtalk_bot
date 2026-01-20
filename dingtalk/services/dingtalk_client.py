@@ -15,7 +15,7 @@ from urllib3.exceptions import ResponseError
 from core.redis_client import redis_hgetall, redis_hget
 from dingtalk.Models.CardRepository import CardRepository
 from dingtalk.Models.dingtalk_card_struct import DingTalkCardData, UserIdTypeModel, SpaceTypeEnum, \
-    DingTalkCardPrivateDataItem, DingTalkCardParmData, DingTalkStreamDataModel
+    DingTalkCardPrivateDataItem, DingTalkCardParmData, DingTalkStreamDataModel, DingTalkCardParmCICDStatus
 from dingtalk.Models.request_data_model import ReqDataModel
 from dingtalk.Models.workflow_task_status_model import WorkflowTaskStatusModel
 from dingtalk.interface.AbstractIM import AbstractIMClient
@@ -140,7 +140,7 @@ class DingTalkClient(AbstractIMClient, DingtalkBase):
         im_group_interactive_card_request.out_track_id = self.data.out_track_id
         im_group_interactive_card_request.callback_type = self.callback_type
         im_group_interactive_card_request.open_space_id = card_data.open_space_id
-        im_group_interactive_card_request.user_id_type = UserIdTypeModel.userId
+        im_group_interactive_card_request.user_id_type = UserIdTypeModel.userId.value
         im_group_interactive_card_request.card_data = self.card_data(self.data.card_parm_map.model_dump())
 
         # imGroupOpenSpaceModel
@@ -293,7 +293,7 @@ class DingTalkClient(AbstractIMClient, DingtalkBase):
             schema = DingTalkCardData.model_validate(data)
             # render Markdown content
             schema.card_parm_map.markdown_content = render_git_log_to_md(schema.card_parm_map.markdown_content)
-            logger.debug(f"parsed data {schema.model_dump()}")
+            logger.debug(f"parsed data {schema.model_dump_json()}")
             self.data = schema
             return True
         else:
@@ -325,7 +325,8 @@ class DingTalkClient(AbstractIMClient, DingtalkBase):
 
     def parse_workflow_task_data(self, workflow_task_status: WorkflowTaskStatusModel):
         self.data.card_parm_map.cicd_elapse = workflow_task_status.duration
-        self.data.card_parm_map.cicd_status = workflow_task_status.status
+        self.data.card_parm_map.cicd_status = DingTalkCardParmCICDStatus(label=workflow_task_status.status)
+        self.data.card_parm_map.progress = workflow_task_status.progress
         # self.data.card_parm_map.
         # pass
 
@@ -440,7 +441,4 @@ class DingTalkClient(AbstractIMClient, DingtalkBase):
             )
             return resp
         except Exception as e:
-            if not UtilClient.empty(e.code) and not UtilClient.empty(e.message):
-                pass
-            else:
-                raise RuntimeError(e)
+            raise RuntimeError(e)

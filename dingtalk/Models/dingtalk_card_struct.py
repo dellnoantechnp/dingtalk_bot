@@ -1,7 +1,7 @@
 import json
 from enum import Enum
-from typing import Generic, List, Mapping, Any, Optional, Union, Dict
-from pydantic import BaseModel, Field, HttpUrl, computed_field, model_validator, field_serializer
+from typing import Generic, List, Mapping, Any, Optional, Union, Dict, Self
+from pydantic import BaseModel, Field, HttpUrl, computed_field, model_validator, field_serializer, BeforeValidator
 import logging
 from typing_extensions import Annotated
 
@@ -19,13 +19,76 @@ class DingTalkCardPrivateDataItem(BaseModel):
 EntityUserID = Annotated[str, Field(description="DingTalk UserID, must be str")]
 
 
+def parse_json_string(v: Any) -> Any:
+    """定义解析json字符串函数"""
+    if isinstance(v, str):
+        try:
+            return json.loads(v)
+        except json.JSONDecodeError:
+            return v
+    return v
+
+
+class ColorEnum(str, Enum):
+    BLUE = "blue"
+    BLACK = "black"
+    GRAY = "gray"
+    RED = "red"
+    ORANGE = "orange"
+    GREEN = "green"
+
+
+class DingTalkCardParmTagData(BaseModel):
+    """DingTalk interactive card parm tag data"""
+    label: str = Field(default=None, description="display label name")
+    value: str = Field(default=None, description="value")
+
+
+class DingTalkCardParmCICDStatus(BaseModel):
+    """DingTalk Card parm cicd_status object model"""
+    label: Optional[str] = Field(default=None, description="display label name")
+    color: ColorEnum = Field(default=ColorEnum.BLUE, description="display color")
+    visible: bool = Field(default=True, description="display visible switch")
+
+    @model_validator(mode="after")
+    def change_color(self) -> Self:
+        if self.label == "Succeeded":
+            self.color = ColorEnum.GREEN
+        elif self.label == "Failed" or self.label == "Error":
+            self.color = ColorEnum.RED
+        elif self.label == "Running":
+            self.color = ColorEnum.BLUE
+        elif self.label == "Paused":
+            self.color = ColorEnum.ORANGE
+        elif self.label == "Pending":
+            self.color = ColorEnum.BLACK
+        else:
+            self.color = ColorEnum.GRAY
+        if not self.visible:
+            self.label = ""
+        return self
+
+    @field_serializer('color')
+    def serialize_color(self, color: ColorEnum) -> str:
+        """serializer color field to str"""
+        return color.value if isinstance(color, ColorEnum) else color
+
+    @field_serializer("visible")
+    def serialize_visible(self, visible: bool) -> str:
+        return f"{visible}".lower()
+
+
 class DingTalkCardParmData(BaseModel):
     """Card view param data
     https://open.dingtalk.com/document/orgapp/instructions-for-filling-in-api-card-data#445386b2a8qss
     根据文档说明，所有字段均为字符串。
     """
     cicd_elapse: str = Field(default=None, description="任务耗时")
-    cicd_status: str = Field(default=None, description="任务状态")
+    # load JSON string parse to dict
+    cicd_status: Annotated[
+        Optional[DingTalkCardParmCICDStatus],
+        BeforeValidator(parse_json_string)
+    ] = Field(default=None, description="任务状态")
     environment: str = Field(default=None, description="环境名称")
     commit_sha: str = Field(default=None, description="Git commit sha")
     branch: str = Field(default=None, description="Git branch")
@@ -40,7 +103,29 @@ class DingTalkCardParmData(BaseModel):
     reject: str = Field(default="0", description="当前拒绝数, must be str")
     card_title: str = Field(default=None, description="卡片通知标题")
     chart_data: str = Field(default=None, description="图表JSON体")
-    waring_text: str = Field(default=None, description="警告栏提示信息")
+    warning_text: Optional[str] = Field(default=None, description="警告栏提示信息")
+    progress: float = Field(default=0, ge=0, le=100, description="任务进度")
+    loop_tag: Optional[DingTalkCardParmTagData] = Field(default=None, description="循环渲染标签")
+
+    # 定义字段序列化器，导出时将 float 转为 str
+    @field_serializer("progress")
+    def serialize_progress(self, progress: float) -> str:
+        return f"{progress:.2f}"
+
+    @field_serializer("approve_max")
+    def serialize_approve_max(self, approve_max: int) -> str:
+        return f"{approve_max}"
+
+    @field_serializer("reject_max")
+    def serialize_reject_max(self, reject_max: int) -> str:
+        return f"{reject_max}"
+
+    @field_serializer("cicd_status")
+    def serialize_cicd_status(self, cicd_status: DingTalkCardParmCICDStatus) -> Optional[str]:
+        """serialize cicd_status field to JSON string"""
+        if cicd_status:
+            return cicd_status.model_dump_json()
+        return None
 
 
 class SpaceTypeEnum(str, Enum):
