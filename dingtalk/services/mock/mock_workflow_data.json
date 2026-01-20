@@ -81,7 +81,7 @@
       "parameters": [
         {
           "name": "GIT_REPOSITORY_URL",
-          "value": "https://gitlab.fawve.cluster.ws/fawve/finance.git"
+          "value": "https://gitlab.xxxx.xxxx.xx/fawve/finance.git"
         },
         {
           "name": "GIT_PUSH_REF",
@@ -105,7 +105,7 @@
         },
         {
           "name": "CI_REGISTRY_URL",
-          "value": "https://registry.fawve.cluster.ws"
+          "value": "https://registry.xxxx.xxxx.xx"
         },
         {
           "name": "CONTAINER_PLATFORM",
@@ -113,11 +113,11 @@
         },
         {
           "name": "GIT_DEPLOY_REPOSITORY_URL",
-          "value": "https://gitlab.fawve.cluster.ws/fawve/deploy.git"
+          "value": "https://gitlab.xxxx.xxxx.xx/fawve/deploy.git"
         },
         {
           "name": "WORKFLOWS_API_DOMAIN",
-          "value": "workflows.fawve.cluster.ws"
+          "value": "workflows.xxxx.xxxx.xx"
         },
         {
           "name": "WORKFLOWS_API_NAMESPACE",
@@ -220,7 +220,7 @@
           "parameters": [
             {
               "name": "WORKFLOWS_API_DOMAIN",
-              "value": "workflows.fawve.cluster.ws"
+              "value": "workflows.xxxx.xxxx.xx"
             },
             {
               "name": "WORKFLOWS_API_NAMESPACE",
@@ -300,7 +300,7 @@
             },
             {
               "name": "CI_REGISTRY_URL",
-              "value": "https://registry.fawve.cluster.ws"
+              "value": "https://registry.xxxx.xxxx.xx"
             },
             {
               "name": "REGISTRY_CREDENTIAL_SECRET_NAME",
@@ -375,7 +375,7 @@
           "parameters": [
             {
               "name": "WORKFLOWS_API_DOMAIN",
-              "value": "workflows.fawve.cluster.ws"
+              "value": "workflows.xxxx.xxxx.xx"
             },
             {
               "name": "WORKFLOWS_API_NAMESPACE",
@@ -395,7 +395,7 @@
             },
             {
               "name": "GIT_REPOSITORY_URL",
-              "value": "https://gitlab.fawve.cluster.ws/fawve/finance.git"
+              "value": "https://gitlab.xxxx.xxxx.xx/fawve/finance.git"
             },
             {
               "name": "GIT_PUSH_REF",
@@ -484,7 +484,7 @@
             },
             {
               "name": "CI_REGISTRY_URL",
-              "value": "https://registry.fawve.cluster.ws"
+              "value": "https://registry.xxxx.xxxx.xx"
             },
             {
               "name": "REGISTRY_CREDENTIAL_SECRET_NAME",
@@ -563,7 +563,7 @@
           "parameters": [
             {
               "name": "CHANGE_LOG",
-              "value": "From: Last10..HEAD\n- dellnoantechnp (6):\n    84b99ce (1 year, 1 month ago) dev: product 增加方法调用，测试调用链, 增加 addEvent 方法\n    aa95a87 (1 year, 1 month ago) dev: product 增加方法调用，测试调用链, 增加 addEvent 方法\n    e37f4be (1 year, 1 month ago) dev: product 增加方法调用，测试调用链, 增加 addEvent 方法\n    ebcb669 (6 months ago) feat: add liquibase-test model.\n    d9e032e (5 months ago) feat: add liquibase-test model.\n    d67ea36 (4 weeks ago) feat: update Dockerfile.dev\n\n- eric (4):\n    eb5992c (1 year, 1 month ago) dev: product 增加方法调用，测试调用链, 增加 addEvent 方法\n    69d348c (6 months ago) feat: product 增加 druid 配置\n    f434a51 (4 weeks ago) feat: 增加 workflows cicd 的环境映射配置文件\n    b38758a (5 days ago) feat: 触发打包\n",
+              "value": "From: Last10..HEAD\n- my-mock-user (6):\n    84b99ce (1 year, 1 month ago) dev: product 增加方法调用，测试调用链, 增加 addEvent 方法\n    aa95a87 (1 year, 1 month ago) dev: product 增加方法调用，测试调用链, 增加 addEvent 方法\n    e37f4be (1 year, 1 month ago) dev: product 增加方法调用，测试调用链, 增加 addEvent 方法\n    ebcb669 (6 months ago) feat: add liquibase-test model.\n    d9e032e (5 months ago) feat: add liquibase-test model.\n    d67ea36 (4 weeks ago) feat: update Dockerfile.dev\n\n- eric (4):\n    eb5992c (1 year, 1 month ago) dev: product 增加方法调用，测试调用链, 增加 addEvent 方法\n    69d348c (6 months ago) feat: product 增加 druid 配置\n    f434a51 (4 weeks ago) feat: 增加 workflows cicd 的环境映射配置文件\n    b38758a (5 days ago) feat: 触发打包\n",
               "valueFrom": {
                 "path": "/tmp/changelog.txt"
               },
@@ -625,7 +625,7 @@
             },
             {
               "name": "GIT_REPOSITORY_URL",
-              "value": "https://gitlab.fawve.cluster.ws/fawve/finance.git"
+              "value": "https://gitlab.xxxx.xxxx.xx/fawve/finance.git"
             },
             {
               "name": "GIT_PUSH_REF",
@@ -650,7 +650,7 @@
             },
             {
               "name": "NOTIFICATION_CARD_TEMPLATE_ID",
-              "value": "98a61096-31e1-4611-be4e-b1d2f6897225.schema",
+              "value": "98a61xx31e1-4611-be4e-b1dxxx7225.schema",
               "description": "互动卡片模板ID"
             },
             {
@@ -660,7 +660,7 @@
             },
             {
               "name": "CHANGE_LOG",
-              "value": "From: Last10..HEAD\n- dellnoantechnp (6):\n    84b99ce (1 year, 1 month ago) dev: product 增加方法调用，测试调用链, 增加 addEvent 方法\n    aa95a87 (1 year, 1 month ago) dev: product 增加方法调用，测试调用链, 增加 addEvent 方法\n    e37f4be (1 year, 1 month ago) dev: product 增加方法调用，测试调用链, 增加 addEvent 方法\n    ebcb669 (6 months ago) feat: add liquibase-test model.\n    d9e032e (5 months ago) feat: add liquibase-test model.\n    d67ea36 (4 weeks ago) feat: update Dockerfile.dev\n\n- eric (4):\n    eb5992c (1 year, 1 month ago) dev: product 增加方法调用，测试调用链, 增加 addEvent 方法\n    69d348c (6 months ago) feat: product 增加 druid 配置\n    f434a51 (4 weeks ago) feat: 增加 workflows cicd 的环境映射配置文件\n    b38758a (5 days ago) feat: 触发打包\n",
+              "value": "From: Last10..HEAD\n- my-mock-user (6):\n    84b99ce (1 year, 1 month ago) dev: product 增加方法调用，测试调用链, 增加 addEvent 方法\n    aa95a87 (1 year, 1 month ago) dev: product 增加方法调用，测试调用链, 增加 addEvent 方法\n    e37f4be (1 year, 1 month ago) dev: product 增加方法调用，测试调用链, 增加 addEvent 方法\n    ebcb669 (6 months ago) feat: add liquibase-test model.\n    d9e032e (5 months ago) feat: add liquibase-test model.\n    d67ea36 (4 weeks ago) feat: update Dockerfile.dev\n\n- eric (4):\n    eb5992c (1 year, 1 month ago) dev: product 增加方法调用，测试调用链, 增加 addEvent 方法\n    69d348c (6 months ago) feat: product 增加 druid 配置\n    f434a51 (4 weeks ago) feat: 增加 workflows cicd 的环境映射配置文件\n    b38758a (5 days ago) feat: 触发打包\n",
               "description": "Git Change Log"
             },
             {
@@ -816,7 +816,7 @@
             },
             {
               "name": "CI_REGISTRY_URL",
-              "value": "https://registry.fawve.cluster.ws"
+              "value": "https://registry.xxxx.xxxx.xx"
             },
             {
               "name": "REGISTRY_CREDENTIAL_SECRET_NAME",
@@ -882,7 +882,7 @@
             },
             {
               "name": "CI_REGISTRY_URL",
-              "value": "https://registry.fawve.cluster.ws"
+              "value": "https://registry.xxxx.xxxx.xx"
             },
             {
               "name": "REGISTRY_CREDENTIAL_SECRET_NAME",
@@ -1074,7 +1074,7 @@
         "metadata": {},
         "script": {
           "name": "maven-build",
-          "image": "fcr.fawve.cluster.ws/maven:3.9-eclipse-tumurin-17",
+          "image": "fcr.xxxx.xxxx.xx/maven:3.9-eclipse-tumurin-17",
           "command": [
             "bash",
             "-e"
@@ -1122,7 +1122,7 @@
               "mountPath": "/workspace/repository"
             }
           ],
-          "source": "# Debug Mode\nif [[ ${CI_DEBUG_TRACE} == true ]]; then set -x; fi\n\n# 适配多版本 jdk 编译需求\nJDK_VERSION_MAJOR=$(java --version &> /dev/stdout | grep -Po '(?<=openjdk ).*?(?=\\.)')\nMAVEN_LOCAL_REPO_DIR=${MAVEN_LOCAL_REPO_DIR}/repository-${JDK_VERSION_MAJOR}\necho \"INFO: Maven local repository dir -> ${MAVEN_LOCAL_REPO_DIR}\"\n\necho \"↓↓↓↓↓↓↓↓↓↓↓↓↓↓  maven:开始编译jar包 ↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓\"\necho \">_ mvn ${MAVEN_CLI_OPTS} clean package -U -pl $(cat ${MAVEN_BUILD_PROJECT_DIR_FILE} | awk '{print $2}' | tr \"\\n\" \",\") -am\"\nmvn ${MAVEN_CLI_OPTS} clean package -U -pl $(cat ${MAVEN_BUILD_PROJECT_DIR_FILE} | awk '{print $2}' | tr \"\\n\" \",\") -am\necho \"↑↑↑↑↑↑↑↑↑↑↑↑  maven:编译完成  ↑↑↑↑↑↑↑↑↑↑↑↑↑↑\"\n\necho \"INFO: 查找需要进入流水线打包的物料...\"\nLINE_COUNT=$(cat ${MAVEN_BUILD_PROJECT_DIR_FILE} | wc -l)\nif [[ -s ${MAVEN_BUILD_PROJECT_DIR_FILE} ]]; then\n  for line in $(cat ${MAVEN_BUILD_PROJECT_DIR_FILE} | awk '{print $2}'); do\n    find . -path \"./.m2\" -prune -o -path \"${line%/}/target/*.jar\" -print\n  done\nfi\necho \"INFO: 查找物料结束.\"\n\nwhile read -r line; do\n  module_path=$(echo $line | awk '{print $2}')\n\n  jar_path=$(find $module_path -path \"*/target/*\" -name \"*.jar\")\n  line_number=$(grep -n \"${module_path}\" ${MAVEN_BUILD_PROJECT_DIR_FILE} | awk -F: '{print $1}')\n  ## 字段： maven模块名称     模块在project的相对路径    jar包文件在project的相对路径\n  sed -i \"${line_number}s&$&\\ ${jar_path}&\" ${MAVEN_BUILD_PROJECT_DIR_FILE}\n\n  ## 在字段中最后一个字段添加app_name名称 (命名规则:只能包含小写字母、数字，以及 '-' 和 '.')\n  if [[ -f ${module_path%/}/.appname ]]; then\n    # 取首行为模块名称，转换为小写字符\n    appname=$(head -1 ${module_path%/}/.appname | tr '[:upper:]' '[:lower:]')\n    echo \"INFO: 检测到模块路径 [${module_path%/}/.appname] 中存在模块名定义   appname -> ${appname#*/}\"\n  else\n    # 取项目目录的名称作为模块名\n    appname=$(echo ${module_path%/} | tr '[:upper:]' '[:lower:]')\n    echo \"INFO: 未指定模块名称，使用 [./${module_path%/}] 作为模块名      appname -> ${appname#*/}\"\n  fi\n  sed -i \"${line_number}s&$&\\ ${appname#*/}&\" ${MAVEN_BUILD_PROJECT_DIR_FILE}\ndone < ${MAVEN_BUILD_PROJECT_DIR_FILE}\ncat ${MAVEN_BUILD_PROJECT_DIR_FILE}\n\n#for module in $(cat ${MAVEN_BUILD_PROJECT_DIR_FILE}); do\n#  ## 构造 grep -e 命令行参数\n#  NEED_RECEIVE_JAR=\"${NEED_RECEIVE_JAR} -e $module\"\n#done\n#for file in $(find . -path \"*/target/*\" -name \"*.jar\"); do\n#    CODE=$(echo $file | grep -c ${NEED_RECEIVE_JAR}) || true\n#    if [[ $CODE -eq 0 ]]; then   ## 如果不需要保留制品\n#      echo \"INFO: 清理无用的依赖包 $file ...\" && rm -rf $file\n#    else\n#      continue\n#    fi\n#done\n#echo \"INFO: 清理任务完成，输出需要进入流水线的制品物料包\"\n#find . -path \"./.m2\" -prune -o -path \"*/target/*.jar\" -print); do\n"
+          "source": "# Debug Mode\nif [[ ${CI_DEBUG_TRACE} == true ]]; xxxx"
         }
       },
       "namespaced/ci-java-jagat/change-log": {
@@ -1166,13 +1166,13 @@
         "metadata": {},
         "container": {
           "name": "commit-logs",
-          "image": "fcr.fawve.cluster.ws/bitnami/git@sha256:c01f7167dcd8d680a5bef264cc8213e1648e247ec739d6b15ee98ef5a1b0a467",
+          "image": "fcr.xxxx.xxxx.xx/bitnami/git@sha256:c01f7167dcd8d680a5bef264cc8213e1648e247ec739d6b15ee98ef5a1b0a467",
           "command": [
             "bash",
             "-ec"
           ],
           "args": [
-            "set -x\n## 开始处理分支与环境的对应关系\n## eg:\n##  >_ cat ${project-root:-.}/environment-mapping.txt\n##  # branch   environment\n##  master     beta\n##  production prod\nif [[ -f environment-mapping.txt ]]; then\n  echo \"INFO: 检测到 environment-mapping.txt 项目环境配置文件\"\n  CI_ENVIRONMENT_NAME=$(awk \"/^${GIT_PUSH_REF#refs/heads/}/{print \\$2}\" environment-mapping.txt)\nelse\n  echo \"INFO: 未检测到 environment-mapping.txt 项目环境配置文件，环境名称将默认采用 branch 名称.\"\n  CI_ENVIRONMENT_NAME=${GIT_PUSH_REF#refs/heads/}\nfi\necho \"${CI_ENVIRONMENT_NAME}\" > /tmp/CI_ENVIRONMENT_NAME.txt\n\nfunction get_change_log(){\n  if [[ \"${PREVIOUS_CHECKOUT_SHA}\" != \"0000000000000000000000000000000000000000\" ]]; then\n    echo \"From: ${PREVIOUS_CHECKOUT_SHA:0:8}..HEAD\"\n    git shortlog ${PREVIOUS_CHECKOUT_SHA}..HEAD --pretty=format:\"%h %s\" --no-merges --group=format:'- %an' -w76,4 | uniq\n  else\n    echo \"From: Last10..HEAD\"\n    git shortlog -10 HEAD --pretty=format:\"%h (%cr) %s\" --no-merges --group=format:'- %an' -w98,4 | uniq\n  fi\n}\nget_change_log | tee -a '/tmp/changelog.txt'\n"
+            "set -x\n## 开始处理分支与环境的对应关xxxxx"
           ],
           "workingDir": "/workspace",
           "env": [
@@ -1265,13 +1265,13 @@
         "metadata": {},
         "container": {
           "name": "git",
-          "image": "fcr.fawve.cluster.ws/bitnami/git@sha256:c01f7167dcd8d680a5bef264cc8213e1648e247ec739d6b15ee98ef5a1b0a467",
+          "image": "fcr.xxxx.xxxx.xx/bitnami/git@sha256:c01f7167dcd8d680a5bef264cc8213e1648e247ec739d6b15ee98ef5a1b0a467",
           "command": [
             "bash",
             "-euc"
           ],
           "args": [
-            "## Login settings\ncase \"${GIT_CREDENTIAL_TYPE}\" in\n  SSH|ssh)\n    echo \"INFO: git clone method by [SSH]\"\n    (umask 077 ; echo \"${GIT_SSH_PRIVATEKEY}\" > /git_key)\n    git config --global core.sshCommand 'ssh -i /git_key -o StrictHostKeyChecking=false'\n  ;;\n  *)\n    # https://git-scm.com/docs/gitcredentials store password\n    echo \"INFO: git clone method by [HTTPS]\"\n    git config --global credential.\"{{inputs.parameters.GIT_REPOSITORY_URL}}\".username \"${GIT_USER}\"\n    git config --global credential.\"{{inputs.parameters.GIT_REPOSITORY_URL}}\".helper '!p(){ echo \"password=\"${GIT_PASSWORD}\"\";}; p'\n  ;;\nesac\necho \">_ git clone --branch ${GIT_PUSH_REF#refs/heads/} ${GIT_REPOSITORY_URL} --single-branch .\"\nrm -rf * && git clone --branch \"${GIT_PUSH_REF#refs/heads/}\" \"${GIT_REPOSITORY_URL}\" --single-branch .\ngit reset --hard {{inputs.parameters.GIT_CHECKOUT_SHA}}\n\n# get some parameters\ngit rev-parse --short HEAD > /tmp/CI_COMMIT_SHORT_SHA     # 当前分支短Commit_SHA\ngit log -1 --pretty=%B > /tmp/CI_COMMIT_MESSAGE           # 当前提交的 log message\n"
+            "## Login settings\ncase xxxxx"
           ],
           "workingDir": "/workspace",
           "env": [
@@ -1293,11 +1293,11 @@
               }
             },
             {
-              "name": "GIT_PASSWORD",
+              "name": "GIT_pawwwword",
               "valueFrom": {
                 "secretKeyRef": {
                   "name": "git-repository-credential",
-                  "key": "GIT_PASSWORD"
+                  "key": "GIT_pawwwword"
                 }
               }
             },
@@ -1372,7 +1372,7 @@
             "-ec"
           ],
           "args": [
-            "## 这个任务的 stdout 必须为一个有效 JSON 序列，所以需要将其他 stdout 全部重定向至 stderr \nREPO_NAME=${CI_REGISTRY_URL%/}/${APPNAME}\nTAG_NAME=${CI_ENVIRONMENT_NAME}-${CI_COMMIT_SHORT_SHA}\nIMAGE_NAME=\"${REPO_NAME}:${TAG_NAME}\"\nIMAGE_NAME=$(echo ${IMAGE_NAME} | tr '[:upper:]' '[:lower:]')     # 合规小写字符 lowercase\nIMAGE_NAME=${IMAGE_NAME#*//}                                      # truncate  http://  https:// \necho -e \"\\x1b[36mINFO\\x1b[0m: 开始使用 ${CONTEXT_ROOT}/Dockerfile.${CI_ENVIRONMENT_NAME} build images ${IMAGE_NAME} \\x1b[90m...\\x1b[0m\" > /dev/stderr 2>&1\npodman build --tag \"${IMAGE_NAME}\" --platform \"${CONTAINER_PLATFORM}\" --iidfile iid.txt --file  Dockerfile.${CI_ENVIRONMENT_NAME} \"${CONTEXT_ROOT}\" > /dev/stderr 2>&1 && \\\npodman push \"${IMAGE_NAME}\" --digestfile pushdigest.txt > /dev/stderr 2>&1 && \\\nIMAGE_NAME_DIGEST=\"${IMAGE_NAME}@$(cat pushdigest.txt)\" \\\n#/kaniko/executor --context \"${CONTEXT_ROOT}\" --dockerfile Dockerfile.${CI_ENVIRONMENT_NAME} \\\n#  --image-download-retry 3 \\\n#  --push-retry 3 \\\n#  --destination \"${IMAGE_NAME}\"  \\\n#  --reproducible \\\n#  --cache=true \\\n#  --cache-ttl=72h \\\n#  --cache-repo=${IMAGE_NAME%%/*}/kaniko_caches \\\n#  --push-retry=\"${PUSH_RETRY}\" \\\n#  --custom-platform=\"${CONTAINER_PLATFORM}\"\n\nif [[ $(podman images -n ${IMAGE_NAME} | wc -l) -ge 1 ]]; then\n  echo \"INFO: Image build & push complete.\" > /dev/stderr 2>&1\n  podman images ${IMAGE_NAME} > /dev/stderr 2>&1\n  cat <<EOF\n{\n  \"APPNAME\": \"${APPNAME}\",\n  \"CONTEXT_ROOT\": \"${CONTEXT_ROOT}\",\n  \"CI_ENVIRONMENT_NAME\": \"${CI_ENVIRONMENT_NAME}\",\n  \"IMAGE_NAME\": \"${IMAGE_NAME}\",\n  \"IMAGE_NAME_DIGEST\": \"${IMAGE_NAME_DIGEST}\",\n  \"CI_COMMIT_SHORT_SHA\": \"${CI_COMMIT_SHORT_SHA}\",\n  \"Container_platform\": \"${CONTAINER_PLATFORM}\"\n}\nEOF\nelse\n  echo \"ERROR: Image build failed.\"\n  false\nfi\n"
+            "## 这个任务的 stdout 必须为一个有效 JSON 序列，xxxxx"
           ],
           "workingDir": "/workspace",
           "env": [
@@ -1414,11 +1414,11 @@
               }
             },
             {
-              "name": "REGISTRY_PASSWORD",
+              "name": "REGISTRY_pawwwword",
               "valueFrom": {
                 "secretKeyRef": {
                   "name": "{{inputs.parameters.REGISTRY_CREDENTIAL_SECRET_NAME}}",
-                  "key": "REGISTRY_PASSWORD"
+                  "key": "REGISTRY_pawwwword"
                 }
               }
             }
@@ -1462,7 +1462,7 @@
               "-ec"
             ],
             "args": [
-              "docker login --username ${REGISTRY_USER} --password ${REGISTRY_PASSWORD} {{inputs.parameters.CI_REGISTRY_URL}}\ncp /root/.docker/config.json /run/containers/0/auth.json\n"
+              "docker login --username ${REGISTRY_USER} xxxxx"
             ],
             "env": [
               {
@@ -1475,11 +1475,11 @@
                 }
               },
               {
-                "name": "REGISTRY_PASSWORD",
+                "name": "REGISTRY_pawwwword",
                 "valueFrom": {
                   "secretKeyRef": {
                     "name": "{{inputs.parameters.REGISTRY_CREDENTIAL_SECRET_NAME}}",
-                    "key": "REGISTRY_PASSWORD"
+                    "key": "REGISTRY_pawwwword"
                   }
                 }
               }
@@ -1537,13 +1537,13 @@
         "metadata": {},
         "container": {
           "name": "workflow-previous-commit-sha",
-          "image": "dellnoantechnp/git-yq:2.44",
+          "image": "my-mock-user/git-yq:2.44",
           "command": [
             "bash",
             "-c"
           ],
           "args": [
-            "echo \"INFO: Starting get last previous checkout sha by API [{{inputs.parameters.WORKFLOWS_API_DOMAIN}}] ....\"\ncurl -s --location \"https://{{inputs.parameters.WORKFLOWS_API_DOMAIN}}/api/v1/workflows/{{inputs.parameters.WORKFLOWS_API_NAMESPACE}}?\\\nlistOptions.labelSelector=\\\nproject_id={{inputs.parameters.WORKFLOWS_API_PROJECT_ID}},\\\nrepository={{inputs.parameters.WORKFLOWS_API_REPOSITORY}},\\\nbranch={{inputs.parameters.WORKFLOWS_API_BRANCH}}&\\\nfields=items.metadata.annotations,items.status.phase\" \\\n--header \"Authorization: Bearer $(cat /var/run/kubernetes/argo-workflows-token)\" | \\\njq -r 'limit(1; .items[] | select(.status.phase==\"Succeeded\") | select(.metadata.annotations.\"trigger.workflows.job/CHECKOUT_SHA\"!=\"{{inputs.parameters.CURRENT_GIT_CHECKOUT_SHA}}\")) | .metadata.annotations.\"'${ANNOTATION_CHECKOUT_SHA_NAME}'\"' | \\\ntee {{inputs.parameters.PREVIOUS_CHECKOUT_SHA}}\n\nif [[ -s {{inputs.parameters.PREVIOUS_CHECKOUT_SHA}} ]]; then\n  echo -e \"\\x1b[32mINFO\\x1b[0m: Finished to get last previous checkout sha by API.\"\nelse\n  echo \"0000000000000000000000000000000000000000\" > {{inputs.parameters.PREVIOUS_CHECKOUT_SHA}}\n  echo -e \"\\x1b[31mERROR\\x1b[0m: Failed to get last previous checkout sha by API, Set previous sha 0000000000000000000000000000000000000000\"\nfi\n"
+            "echo \"INFO: Starting get last previous checkout sha by API xxxxx"
           ],
           "workingDir": "/workspace",
           "env": [
@@ -1921,13 +1921,13 @@
         "metadata": {},
         "container": {
           "name": "commit-logs",
-          "image": "fcr.fawve.cluster.ws/bitnami/git@sha256:c01f7167dcd8d680a5bef264cc8213e1648e247ec739d6b15ee98ef5a1b0a467",
+          "image": "fcr.xxxx.xxxx.xx/bitnami/git@sha256:c01f7167dcd8d680a5bef264cc8213e1648e247ec739d6b15ee98ef5a1b0a467",
           "command": [
             "bash",
             "-ec"
           ],
           "args": [
-            "set -x\nfunction post_notification(){\n  local job_url\n  ns=$(cat /var/run/secrets/kubernetes.io/serviceaccount/namespace)\n  job_name=${ARGO_NODE_ID%-*}\n  card_ref_link=\"https://workflows.fawve.jagat.io/workflows/${ns}/${job_name}\"\n  trigger_workflows_job_author=${TRIGGER_WORKFLOWS_JOB_AUTHOR}\n  environment_name=${CI_ENVIRONMENT_NAME}\n  curl -XPOST {{ inputs.parameters.NOTIFICATION_DINGTALK_BOT_ADDR }}/customRobot/test4 -H \"Content-Type: application/x-www-form-urlencoded\" \\\n    -H \"x-card-template-id: ${NOTIFICATION_CARD_TEMPLATE_ID}\" \\\n    -H \"x-open-conversation-id: ${NOTIFICATION_OPEN_CONVERSATION_ID}\" \\\n    --data-urlencode \"markdown_content={{ inputs.parameters.CHANGE_LOG }}\" \\\n    --data-urlencode \"card_ref_link=${card_ref_link}\" \\\n    --data-urlencode \"commit_sha=${GIT_CHECKOUT_SHA}\" \\\n    --data-urlencode \"task_name=${job_name}\" \\\n    --data-urlencode \"repository={{ inputs.parameters.GIT_REPOSITORY_NAME }}\" \\\n    --data-urlencode \"project_id={{ inputs.parameters.PROJECT_ID }}\" \\\n    --data-urlencode \"author=${TRIGGER_WORKFLOWS_JOB_AUTHOR}\" \\\n    --data-urlencode \"branch=${GIT_PUSH_REF#refs/heads/}\" \\\n    --data-urlencode \"environment={{ inputs.parameters.CI_ENVIRONMENT_NAME }}\" \\\n    --data-urlencode \"card_template_id=${NOTIFICATION_CARD_TEMPLATE_ID}\" \\\n    --data-urlencode \"open_conversation_id=${NOTIFICATION_OPEN_CONVERSATION_ID}\"\n  echo \"INFO: 通知发送成功.\"\n}\npost_notification\n\n# debug hook\nif [[ ${TRIGGER_WORKFLOWS_JOB_AUTHOR} == \"中文\" ]]; then\n  sleep 1800\nfi\n"
+            "set -x\nfunction post_notification()xxxxx"
           ],
           "workingDir": "/workspace",
           "env": [
@@ -2029,13 +2029,13 @@
         "metadata": {},
         "container": {
           "name": "",
-          "image": "fcr.fawve.cluster.ws/maven:3.9-eclipse-tumurin-17",
+          "image": "fcr.xxxx.xxxx.xx/maven:3.9-eclipse-tumurin-17",
           "command": [
             "bash",
             "-c"
           ],
           "args": [
-            "# 日志函数\nlog_info() { echo \"[INFO] $1\"; }\nlog_error() { echo \"[ERROR] $1\" >&2; }\nlog_debug() { [[ \"${CI_DEBUG_TRACE:-false}\" == \"true\" ]] && echo \"[DEBUG] $1\"; }\n\n# Debug Mode\nif [[ ${CI_DEBUG_TRACE} == true ]]; then set -x; fi\nif [[ \"${_MANUAL_}\" == true ]]; then echo \"INFO:\\ 手动触发作业!\"; fi\necho \"INFO: 查找需要编译发布的模块列表 ....\"\necho \"INFO: GIT_CHECKOUT_SHA:{{inputs.parameters.GIT_CHECKOUT_SHA}} \n      GIT_BEFORE_SHA:{{inputs.parameters.GIT_BEFORE_SHA}}\"\necho -e \"${CI_COMMIT_MESSAGE}\\n\\n\"\n\n# 适配多版本 jdk 编译需求\nJDK_VERSION_MAJOR=$(java --version &> /dev/stdout | grep -Po '(?<=openjdk ).*?(?=\\.)')\nMAVEN_LOCAL_REPO_DIR=${MAVEN_LOCAL_REPO_DIR}/repository-${JDK_VERSION_MAJOR}\necho \"INFO: Maven local repository dir -> ${MAVEN_LOCAL_REPO_DIR}\"\n\nif [[ \"{{inputs.parameters.PROJECT_DEPENDENCY_INCLUDE_GROUP_NAME}}\" ]]; then\n  echo \"INFO: 获取到预定义 PROJECT_DEPENDENCY_INCLUDE_GROUP_NAME 为 {{inputs.parameters.PROJECT_DEPENDENCY_INCLUDE_GROUP_NAME}}\"\nelse\n  echo -e \"INFO: 开始自动获取 Project Dependency Group Name \\x1b[;5m....\\x1b[0m\"\n  mvn -Dmaven.test.skip=true --batch-mode --no-transfer-progress --settings /workspace/settings.xml --fail-at-end -X verify | tee /tmp/verify_out.log\n  grep -Po '(?<=< ).*(?= >)' /tmp/verify_out.log > /tmp/group.log\n  PROJECT_DEPENDENCY_INCLUDE_GROUP_NAME=$(cat /tmp/group.log | awk -F: '{print $1}' | sort | uniq | paste -sd,)\n  echo -e \"INFO: 获取到当前 PROJECT_DEPENDENCY_INCLUDE_GROUP_NAME 为 \\x1b[32m${PROJECT_DEPENDENCY_INCLUDE_GROUP_NAME}\\x1b[0m\"\nfi\n\n## 开始处理分支与环境的对应关系\n## eg:\n##  >_ cat ${project-root:-.}/environment-mapping.txt\n##  # branch   environment\n##  master     beta\n##  production prod\nif [[ -f environment-mapping.txt ]]; then\n  echo \"INFO: 检测到 environment-mapping.txt 项目环境配置文件\"\n  CI_ENVIRONMENT_NAME=$(awk \"/^${GIT_PUSH_REF#refs/heads/}/{print \\$2}\" environment-mapping.txt)\nelse\n  echo \"INFO: 未检测到 environment-mapping.txt 项目环境配置文件，环境名称将默认采用 branch 名称.\"\n  CI_ENVIRONMENT_NAME=${GIT_PUSH_REF#refs/heads/}\nfi\necho ${CI_ENVIRONMENT_NAME} > /tmp/CI_ENVIRONMENT_NAME\necho \"INFO: 环境名称 ${CI_ENVIRONMENT_NAME}\"\n\n# 获取 monorepo 项目的子父模块依赖关系\necho \"INFO: 获取 monorepo 项目的模块依赖关系\"\nmvn ${MAVEN_CLI_OPTS} dependency:tree -Dincludes=\"${PROJECT_DEPENDENCY_INCLUDE_GROUP_NAME}\" | tee \"${MVN_LOG_FILE}\"\nPROJECT_DEPENDENCY_INCLUDE_GROUP_NAME_ON_SHELL=$(echo ${PROJECT_DEPENDENCY_INCLUDE_GROUP_NAME} | sed 's/,/\\|/g')\necho \"DEBUG: PROJECT_DEPENDENCY_INCLUDE_GROUP_NAME_ON_SHELL value is ${PROJECT_DEPENDENCY_INCLUDE_GROUP_NAME_ON_SHELL}\"\n\ncat \"${MVN_LOG_FILE}\" | sed -En '/^\\[INFO\\]\\s'${PROJECT_DEPENDENCY_INCLUDE_GROUP_NAME_ON_SHELL}':.*:jar:/,/^\\[INFO\\]\\s?[-]*$/p' | \\\n  grep -E '^\\[INFO\\]' | \\\n  sed -E 's/^\\[INFO\\]\\s-+$/\\[INFO\\] /' \\\n  > ${PROJECT_DEPENDENCY_TREE_FILE}\nif [[ $(cat ${PROJECT_DEPENDENCY_TREE_FILE} | wc -l) -gt 1 ]]; then\n  echo \"DEBUG: PROJECT_DEPENDENCY_TREE_FILE 文件 ${PROJECT_DEPENDENCY_TREE_FILE} 结果如下\"\n  cat ${PROJECT_DEPENDENCY_TREE_FILE}\nelse\n  echo \"ERROR: PROJECT_DEPENDENCY_TREE_FILE 文件 ${PROJECT_DEPENDENCY_TREE_FILE} 为空行.\"\n  exit 1\nfi\n\n# 获取 Maven 反应堆输出的模块 pom.xml 文件路径与module对应关系\nREACTOR_PROJECT_MAPPING_FILE=reactorProject_mapping.txt\n# [TODO] 检查 \"${MVN_LOG_FILE}\" 文件是否正常\n# 注意：maven-dependency-plugin 插件版本在 3.7.x 及以上版本中，DEBUG 输出中不再包含 \n# \"project = MavenProject: io.jagat:notify-server:2.1.0-SNAPSHOT @ D:\\IDEA-Projects\\utown\\notify-server\\pom.xml\" 信息，\n# 会导致无法产生 reactorProject 与 pom.xml 的对应关系.\ncat \"${MVN_LOG_FILE}\" | sed -En '/\\[DEBUG\\]\\s+\\(f\\)\\sproject\\s=\\sMavenProject:/p' > \"${REACTOR_PROJECT_MAPPING_FILE}\"\nif [[ \"$(stat -c %s ${REACTOR_PROJECT_MAPPING_FILE})\" -le 1 ]]; then\n  echo \"ERROR: REACTOR_PROJECT_MAPPING_FILE 文件 ${REACTOR_PROJECT_MAPPING_FILE} 大小为空，无法获取 reactorProject 与 pom.xml 文件的对应关系.\"\n  rm -rf ${REACTOR_PROJECT_MAPPING_FILE}\nfi\n\n# 检查输入文件是否存在\nif [ ! -f \"${PROJECT_DEPENDENCY_TREE_FILE}\" ] || [ ! -f \"${REACTOR_PROJECT_MAPPING_FILE}\" ]; then\n  echo \"错误：缺少必要的依赖关系文件\"\n  exit 1\nfi\n\nARTIFACT_INDICATORS=(\"Dockerfile.${CI_ENVIRONMENT_NAME}\" \"run.sh\" \"env.sh\")      # 用于识别需要构建制品的模块的标志文件\n\n# 声明关联数组\ndeclare -A MODULE_PATHS      # 存储模块的路径\ndeclare -A DEPENDENCIES      # 存储模块的依赖关系\ndeclare -A AFFECTED_MODULES  # 存储受影响的模块\ndeclare -A ARTIFACT_MODULES  # 存储需要构建制品的模块\n\n# 检查目录是否包含制品标志文件\nis_artifact_module() {\n  local module_path=\"$1\"\n  for indicator in \"${ARTIFACT_INDICATORS[@]}\"; do\n    if [[ -f \"${module_path}/${indicator}\" ]]; then\n      return 0\n    fi\n  done\n  return 1\n}\n\n# 解析模块路径\nparse_module_paths() {\n  while IFS= read -r line; do\n  if [[ $line =~ MavenProject:\\ ([^:]+):([^:]+):([^\\ @]+)\\ @\\ (/.+)pom.xml ]]; then\n    local group_id=\"${BASH_REMATCH[1]}\"\n    local artifact_id=\"${BASH_REMATCH[2]}\"\n    local version=\"${BASH_REMATCH[3]}\"\n    local path=\"${BASH_REMATCH[4]}\"\n    local module_key=\"${group_id}:${artifact_id}:${version}\"\n    path=${path#$PWD/}\n    [[ $path == \"\" ]] && continue     # 忽略顶级pom.xml\n\n    MODULE_PATHS[\"$module_key\"]=\"$path\"\n\n    # 检查是否为制品模块\n    if is_artifact_module \"$path\"; then\n        ARTIFACT_MODULES[\"$module_key\"]=1\n        log_debug \"发现制品模块: $module_key at $path\"\n    fi\n  fi\n  done < \"${REACTOR_PROJECT_MAPPING_FILE}\"\n}\n\n# 解析依赖关系\nparse_dependencies() {\n  local current_module=\"\"\n  while IFS= read -r line; do\n    # 检测模块声明行\n    if [[ $line =~ \\[INFO\\]\\ ([^:\\\\+|]+):([^:]+):(jar|pom):([^\\ ]+) ]]; then\n      current_module=\"${BASH_REMATCH[1]}:${BASH_REMATCH[2]}:${BASH_REMATCH[4]}\"\n      DEPENDENCIES[\"$current_module\"]=\"\"\n    # 检测依赖行\n    elif [[ $line =~ \\[INFO\\]\\ [+\\\\|-]+-\\ ([^:]+):([^:]+):jar:([^:]+) ]] && [ ! -z \"$current_module\" ]; then\n      local dep=\"${BASH_REMATCH[1]}:${BASH_REMATCH[2]}:${BASH_REMATCH[3]}\"\n      DEPENDENCIES[\"$current_module\"]+=\"$dep \"\n    fi\n  done < \"${PROJECT_DEPENDENCY_TREE_FILE}\"\n}\n\n# 递归查找依赖此模块的所有模块\nfind_dependent_modules() {\n  local target_module=\"$1\"\n  for module in \"${!DEPENDENCIES[@]}\"; do\n    local deps=\"${DEPENDENCIES[$module]}\"\n    if [[ $deps =~ $target_module ]]; then\n      AFFECTED_MODULES[\"$module\"]=1\n      find_dependent_modules \"$module\"\n  fi\n  done\n}\n\n# 检查变更的目录并确定受影响的模块\ncheck_changes() {\n  local changed_path=\"$1\"\n  # 查找变更路径对应的模块\n  for module in \"${!MODULE_PATHS[@]}\"; do\n    local path=\"${MODULE_PATHS[$module]}\"\n    if [[ \"$changed_path\" == \"$path\"* ]]; then\n      AFFECTED_MODULES[\"$module\"]=1\n      find_dependent_modules \"$module\"\n    break\n  fi\n  done\n}\n\n# 输出结果\nprint_results() {\n  for module in \"${!ARTIFACT_MODULES[@]}\"; do\n    echo \"  - $module (${MODULE_PATHS[$module]})\"\n  done\n\n  log_info \"需要重新构建的模块:\"\n  local found_artifact=false\n  for module in \"${!AFFECTED_MODULES[@]}\"; do\n    if [[ -n \"${ARTIFACT_MODULES[$module]}\" ]]; then\n      echo \"  - $module (${MODULE_PATHS[$module]})\"\n      found_artifact=true\n    fi\n  done\n  [[ \"$found_artifact\" == \"false\" ]] && echo \"  没有需要重建的制品模块\"\n}\nparse_module_paths\nparse_dependencies\n\n## tools functions\nfunction get_pom_path_by_artifactId(){\n  local artifact_id\n  if [[ -z $1 ]]; then\n    return\n  else\n    artifact_id=\"$1\"\n  fi\n  awk -F'@ ' -v pwd=\"$PWD/\" -v artifact=$artifact_id '$0 ~ artifact{gsub(pwd, \"\", $2);print $2}' \"${REACTOR_PROJECT_MAPPING_FILE}\"\n}\nfunction get_artifactId_by_pom_path(){\n  # 根据 pom 路径获取子模块的 artifactId\n  local pom_path\n  if [[ -z $1 ]]; then\n    return\n  else\n    pom_path=\"$1\"\n  fi\n  awk -v pom=$pom_path '$0 ~ pom{print $6}' \"${REACTOR_PROJECT_MAPPING_FILE}\" | awk -F: '{print $1\":\"$2\":\"}'\n}\n\n### 在 dependency:tree 日志中过滤项目模块依赖关系, 逻辑待定\n#while read -r line; do\n#  C_NAME=$(echo $line | grep -cP '(?<=^\\[INFO\\]\\ '${PROJECT_DEPENDENCY_INCLUDE_GROUP_NAME}':).*(?=:jar:.*$)')\n#  if [[ $C_NAME -eq 1 ]]; then\n#    # 取出首行模块名称，模块的依赖不会被匹配，所以 app_artifact_id 在一个依赖树中不会被覆盖\n#    app_artifact_id=$(echo $line | grep -oP '(?<=^\\[INFO\\]\\ )'${PROJECT_DEPENDENCY_INCLUDE_GROUP_NAME}':.*:(?=jar:.*$)')\n#  fi\n#  C_END=$(echo $line | grep -Ec '^\\[INFO\\]\\ ?$')\n#  if [[ $C_END -ne 0 ]]; then\n#    ## 进入结尾步骤\n#    mv /tmp/temp.txt /tmp/split_${app_artifact_id}.txt\n#  else\n#    ## 继续向下匹配\n#    if [[ x${CI_DEBUG_TRACE} == \"xtrue\" ]]; then echo \"DEBUG: 继续遍历 ${app_artifact_id} 的依赖包\"; fi\n#    echo $line >> /tmp/temp.txt\n#  fi\n#done < ${PROJECT_DEPENDENCY_TREE_FILE}\n#\n#if [[ x${CI_DEBUG_TRACE} == \"xtrue\" ]]; then ls -lh /tmp/split_*.txt; fi\n\n## 根据 tag 和分支的上一次成功流水线，对比与当前commit的提交记录变更，获取变更文件列表\nif [[ $CI_COMMIT_TAG != \"\" ]]; then\n  ## tag 创建的时候，GIT_BEFORE_SHA 始终为 000...000，因此需要检测是否有上一次 tag 提交\n  while read -r line; do \n    # 取上一次 tag 名称\n    echo $line\n    if [[ $line != ${CI_COMMIT_TAG} ]]; then \n      LAST_TAG=$line \n    fi\n  done < <(git tag --sort=-v:refname | grep -A 1 ${CI_COMMIT_TAG})\n  if [[ $LAST_TAG != \"\" ]]; then\n  # 根据上一次tag名称取上一次tag的commit id\n    GIT_BEFORE_SHA=$(git rev-list -n 1 ${LAST_TAG})\n  else\n  # 否则进行全量发布\n    _MANUAL_=true\n  fi\nelse\n  echo \"INFO: 取上一次 ${GIT_PUSH_REF} 分支流水线成功的 commitID\"\n  ## Gitlab API\n  #PREVIOUS_HASH=$(curl -s -H \"PRIVATE-TOKEN:${GITLAB_TOKEN}\" \"${CI_API_V4_URL}/projects/${CI_PROJECT_ID}/pipelines?ref=${GIT_PUSH_REF}&status=success&per_page=1\")\n  ## Argo-Workflows\n  PREVIOUS_HASH={{inputs.parameters.PREVIOUS_CHECKOUT_SHA}}\n  C=$(echo ${PREVIOUS_HASH} | grep -cE '[0-9a-f]{40}') || true    ## return: 1 or 0\n  if [[ $C -eq 1 ]]; then\n    PREV_HASH=$(echo ${PREVIOUS_HASH} | grep -oE '[0-9a-f]{40}')\n    echo \"INFO: 从 CI 流水线历史中发现上次成功执行流水线的CommitID为 [${PREV_HASH}]\"\n    is_Commit_EXISTS=$(git cat-file -t ${PREV_HASH})   ## output: \"commit\"\n    if [[ ${is_Commit_EXISTS} == \"commit\" ]]; then\n      echo \"DEBUG: 从本地Git库中检测到 [${PREV_HASH}] 的存在\"\n      GIT_BEFORE_SHA=\"${PREV_HASH}\"\n    else\n      echo \"WARN: 从本地库中未检测到 [${PREV_HASH}] 的存在，执行保底策略，从本地rev-list的初始提交开始拉取变更....\"\n      GIT_BEFORE_SHA=$(git rev-list --max-parents=0 HEAD)\n      echo \"INFO: 初始CommitID为 [$GIT_BEFORE_SHA]\"\n    fi\n  else\n    echo \"WARN: 未探测到上次成功执行的流水线，开始执行全量编译.\"\n    _MANUAL_=true\n  fi\nfi\n\n> ${MAVEN_BUILD_PROJECT_DIR_FILE}      # 初始化空文件\n\n## 当触发合并提交时，Gitlab CI_COMMIT_BEFORE_SHA 值为 000000，此时需要重新获取上一次本分支提交的 Commit ID\necho \"INFO: 进入本地提交变更检测阶段，检测项目顶级 pom.xml 是否变更，对比 $GIT_CHECKOUT_SHA --> $GIT_BEFORE_SHA 的提交变更...\"\nfor dir in $(git diff --name-only $GIT_CHECKOUT_SHA $GIT_BEFORE_SHA | awk -F'(/src/|/Dockerfile.'${CI_ENVIRONMENT_NAME}'|/pom.xml|/env.sh|/run.sh$)' '{print $1}' | sort -u); do \n    if [[ \"${dir}\" == \"pom.xml\" ]]; then \n      echo \"INFO: 检测到顶级 pom.xml 发生变更，开始执行全量编译.\"\n      _MANUAL_=true\n    fi\ndone\n\n## 全量发布逻辑\nif [[ \"$_MANUAL_\" == \"true\" ]]; then\n  ## 手动触发流水线埋入变量 _MANUAL_  值置为 true 即为触发全量发布\n  if [[ x$CI_DEBUG_TRACE == \"xtrue\" ]]; then ls -lh; fi\n  echo \"INFO: 检测到全量发布新分支.\"\n  echo \"INFO: 将要全量编译的模块...\"\n  ## 获取所有模块列表，${MAVEN_BUILD_PROJECT_DIR_FILE} 文件内容为 --> 模块group:artifact:名称   pom_dir\n  grep -oP '(?<=\\[INFO\\]\\s)[a-z].*$' ${PROJECT_DEPENDENCY_TREE_FILE} > /tmp/all_modules.txt\n  while read -r line; do\n    module=$(echo $line | awk -F: '{print $1\":\"$2\":\"}')\n    pom_dir=$(dirname $(get_pom_path_by_artifactId \"$module\"))\n    if [[ -f ${pom_dir}/Dockerfile.${CI_ENVIRONMENT_NAME} ]]; then\n      printf \"%10s 模块:\\x1b[32m%30s\\x1b[0m 目录位于:%-50s\\n\"  \"$Indent\" \"[${module}]\" \"${pom_dir}\"\n      echo \"${module}\" \"${pom_dir}\" >> ${MAVEN_BUILD_PROJECT_DIR_FILE}\n    else\n      printf \"\\x1b[90m%10s 模块:%30s 无需发布, %s\\x1b[0m\\n\" \"$Indent\" \"[${module}]\" \"未找到${pom_dir}/Dockerfile.${CI_ENVIRONMENT_NAME}文件.\"\n    fi\n  done < /tmp/all_modules.txt\nelif [[ \"$_MANUAL_\" != \"true\" ]]; then\n  # 进入探测 Git 变更部分编译阶段\n  if [[ \"${CI_COMMIT_BEFORE_SHA}\" == \"0000000000000000000000000000000000000000\" ]]; then \n    echo \"INFO: 执行最近上一次提交的变更探测...\"\n    CI_COMMIT_BEFORE_SHA=$(git rev-parse HEAD~1)\n  fi\n  ## 当触发合并提交时，Gitlab CI_COMMIT_BEFORE_SHA 值为 000000，此时需要重新获取上一次本分支提交的 Commit ID\n  echo \"INFO: 进入本地提交变更检测阶段，对比 $GIT_CHECKOUT_SHA --> $GIT_BEFORE_SHA 的提交变更...\"\n  echo \"INFO: command [git diff --name-only $GIT_CHECKOUT_SHA $GIT_BEFORE_SHA]\"\n  for dir in $(git diff --name-only $GIT_CHECKOUT_SHA $GIT_BEFORE_SHA | awk -F'(/src/|/Dockerfile.'${CI_ENVIRONMENT_NAME}'|/pom.xml|/env.sh|/run.sh$)' '{print $1}' | sort -u); do \n    if [[ ! -d ${dir} ]]; then \n      ## 如果不是目录，则跳过\n      continue\n    fi\n    if [[ ! -f ${dir}/Dockerfile.${CI_ENVIRONMENT_NAME} ]]; then\n      check_changes \"${dir}/\"\n      for module in \"${!AFFECTED_MODULES[@]}\"; do\n        if [[ -n \"${ARTIFACT_MODULES[$module]}\" ]]; then\n          echo \"INFO: 探测到依赖变更，需要打包的Maven模块 [${module}] 目录位于 ${MODULE_PATHS[$module]}\"\n          if grep -q \"${MODULE_PATHS[$module]}\" ${MAVEN_BUILD_PROJECT_DIR_FILE}; then\n            echo \"INFO: 已存在${module},跳过本轮探测..\"\n          else\n            echo \"$module ${MODULE_PATHS[$module]}\" >> \"$MAVEN_BUILD_PROJECT_DIR_FILE\"\n            found_artifact=true\n          fi\n        fi\n      done\n    #  ## 如果没有 Dockerfile，可能为依赖模块，走依赖判定流程\n    #  # 查找所有具有依赖关系的模块名称\n    #  artifact=$(get_artifactId_by_pom_path ${dir})\n    #  ARTIFACTID_IDs=$(grep \"${artifact}\" /tmp/split_*.txt | grep -oP '(?<=split_).*(?=.txt)') || true\n    #  if [[ ${ARTIFACTID_IDs} != \"\" ]]; then\n    #    for module in ${ARTIFACTID_IDs}; do\n    #      pom_dir=$(dirname $(get_pom_path_by_artifactId ${module}))\n    #      if [[ -f ${pom_dir}/Dockerfile.${CI_ENVIRONMENT_NAME} ]]; then\n    #        is_module_dir_exists=$(cat ${MAVEN_BUILD_PROJECT_DIR_FILE} | grep -c ${pom_dir}) || true  ## Count\n    #        if [[ ${is_module_dir_exists} -lt 1 ]]; then\n    #          echo \"INFO: 探测到依赖变更，需要打包的Maven模块 [${module}] 目录位于 ${pom_dir}\"\n    #          echo \"${module}\" \"${pom_dir}\" >> ${MAVEN_BUILD_PROJECT_DIR_FILE}\n    #        fi\n    #      fi\n    #    done\n    #  fi\n      ## 进行下一轮探测,跳出本轮循环\n      continue\n    fi\n    module=$(get_artifactId_by_pom_path ${dir})   # 获取模块的 artifact 名称\n    if [[ $(grep -c $module $MAVEN_BUILD_PROJECT_DIR_FILE) -lt 1 ]]; then\n      echo \"INFO: 将要编译打包模块 [${module%:}] 目录位于 ${dir}/ ...\"\n      if grep -q \"${dir}/\" ${MAVEN_BUILD_PROJECT_DIR_FILE}; then\n        echo \"INFO: 已存在${dir}/,跳过本轮探测..\"\n      else\n        echo \"${module}\" \"${dir}/\" >> $MAVEN_BUILD_PROJECT_DIR_FILE\n      fi\n    fi\n  done\nfi\nif [[ $(cat $MAVEN_BUILD_PROJECT_DIR_FILE | wc -l) -ge 1 ]]; then\n  echo \"INFO: ↓↓↓↓↓↓ 需要编译的模块列表 ↓↓↓↓↓↓\"\n  cat $MAVEN_BUILD_PROJECT_DIR_FILE\n  echo \"INFO: 请稍后确认 CI 流程maven编译阶段是否成功运行\"\nelse\n  echo -e \"\\e[33;5mWARN:\\e[0m 未找到需要编译的模块列表，请确认 commit:$GIT_CHECKOUT_SHA 的代码变更在流水线检测范围内。\"\n  false\nfi\n"
+            "# 日志函数\nlog_info() {xxxxxxxx"
           ],
           "workingDir": "/workspace",
           "env": [
@@ -2116,7 +2116,7 @@
         "metadata": {},
         "script": {
           "name": "regular-to-json",
-          "image": "dellnoantechnp/git-yq:2.42",
+          "image": "my-mock-user/git-yq:2.42",
           "command": [
             "bash",
             "-e"
@@ -2159,7 +2159,7 @@
         "metadata": {},
         "script": {
           "name": "git-yq",
-          "image": "dellnoantechnp/git-yq:2.44",
+          "image": "my-mock-user/git-yq:2.44",
           "command": [
             "bash",
             "-e"
@@ -2180,11 +2180,11 @@
               }
             },
             {
-              "name": "GIT_PASSWORD",
+              "name": "GIT_pawwwword",
               "valueFrom": {
                 "secretKeyRef": {
                   "name": "git-deploy-repository-credential",
-                  "key": "GIT_PASSWORD"
+                  "key": "GIT_pawwwword"
                 }
               }
             },
@@ -2215,7 +2215,7 @@
               "mountPath": "/workspace"
             }
           ],
-          "source": "## Login settings\ncase \"${GIT_CREDENTIAL_TYPE}\" in\n  SSH|ssh)\n    echo \"INFO: git clone method by [SSH]\"\n    (umask 077 ; echo \"${GIT_SSH_PRIVATEKEY}\" > /git_key)\n    git config --global core.sshCommand 'ssh -i /git_key -o StrictHostKeyChecking=false'\n  ;;\n  *)\n    # https://git-scm.com/docs/gitcredentials store password\n    echo \"INFO: git clone method by [HTTPS]\"\n    git config --global credential.\"{{inputs.parameters.GIT_DEPLOY_REPOSITORY_URL}}\".username \"${GIT_USER}\"\n    git config --global credential.\"{{inputs.parameters.GIT_DEPLOY_REPOSITORY_URL}}\".helper '!p(){ echo \"password=\"${GIT_PASSWORD}\"\";}; p'\n  ;;\nesac\ngit config --global user.name Robot\ngit config --global user.email robot@lerjin.com\n# 清理 deploy 目录，避免冲突\n[[ -d deploy ]] && rm -rf deploy\necho \">_ git clone --branch \"{{inputs.parameters.GIT_DEPLOY_BRANCH_NAME}}\" \"{{inputs.parameters.GIT_DEPLOY_REPOSITORY_URL}}\" deploy\"\ngit clone --branch \"{{inputs.parameters.GIT_DEPLOY_BRANCH_NAME}}\" \"{{inputs.parameters.GIT_DEPLOY_REPOSITORY_URL}}\" deploy\n\n_jq() {\n  ## jq 获取指定字段值\n  echo ${row} | base64 -d | jq -r ${1}\n}\n_sc() {\n  ## console 输出文字颜色标注\n  local regex_pattern=\"$1\"\n  sed \"s@\\(${regex_pattern}\\)@\\x1b[31m\\1\\x1b[0m@\" $2\n}\ncd deploy/\nfor row in $(echo '{{inputs.parameters.aggregate-results}}' | jq -r '.[] | @base64'); do\n  APPNAME=$(_jq '.APPNAME')\n  CONTEXT_ROOT=$(_jq '.CONTEXT_ROOT')\n  CI_ENVIRONMENT_NAME=$(_jq '.CI_ENVIRONMENT_NAME')\n  IMAGE_NAME=$(_jq '.IMAGE_NAME')\n  IMAGE_NAME_DIGEST=$(_jq '.IMAGE_NAME_DIGEST')\n  CI_COMMIT_SHORT_SHA=$(_jq '.CI_COMMIT_SHORT_SHA')\n  #APP_RESOURCE_DEFINE_FILE_PATH=\"overlays/${CI_ENVIRONMENT_NAME}/deploy/${APPNAME}.yaml\"\n  APP_RESOURCE_DEFINE_FILE_PATH=\"overlays/${CI_ENVIRONMENT_NAME}/${APPNAME}.yaml\"\n  yq -i '(select(.kind == \"Deployment\") | .spec.template.spec.containers[] | select(.name == \"'${APPNAME}'\")) .image = \"'${IMAGE_NAME_DIGEST}'\"' ${APP_RESOURCE_DEFINE_FILE_PATH}\n  yq -i '(select(.kind == \"Deployment\") | .spec.template.metadata.labels.version) = \"'${CI_COMMIT_SHORT_SHA}'\"' ${APP_RESOURCE_DEFINE_FILE_PATH}\n  _sc \"${IMAGE_NAME}\" ${APP_RESOURCE_DEFINE_FILE_PATH}\n  grep \"${IMAGE_NAME}\" ${APP_RESOURCE_DEFINE_FILE_PATH} > /dev/null 2>&1 && CURRENT_STAT=\"${CURRENT_STAT}./${CONTEXT_ROOT} -> ${APPNAME} \\x1b[32mSuccess\\x1b[0m\\n\" || CURRENT_STAT=\"${CURRENT_STAT}./${CONTEXT_ROOT} -> ${APPNAME} \\x1b[31mFailed\\x1b[0m\\n\" \n  printf \"\\n%-40s\\n\" \"=\"|sed \"s/ /=/g\"\ndone\n\necho \"======= sync-deploy information ========\"\necho -e \"${CURRENT_STAT}\" | column -t\n\ngit commit -sa -m \"[WorkflowRobot]: Push back from {{inputs.parameters.GIT_REPOSITORY_URL}}\" && \\\ngit pull --rebase=true && git push && \\\ngit credential-cache exit\n"
+          "source": "## Login settings\ncase xxxxx"
         }
       }
     },
@@ -2243,7 +2243,7 @@
         },
         {
           "name": "CHANGE_LOG",
-          "value": "From: Last10..HEAD\n- dellnoantechnp (6):\n    84b99ce (1 year, 1 month ago) dev: product 增加方法调用，测试调用链, 增加 addEvent 方法\n    aa95a87 (1 year, 1 month ago) dev: product 增加方法调用，测试调用链, 增加 addEvent 方法\n    e37f4be (1 year, 1 month ago) dev: product 增加方法调用，测试调用链, 增加 addEvent 方法\n    ebcb669 (6 months ago) feat: add liquibase-test model.\n    d9e032e (5 months ago) feat: add liquibase-test model.\n    d67ea36 (4 weeks ago) feat: update Dockerfile.dev\n\n- eric (4):\n    eb5992c (1 year, 1 month ago) dev: product 增加方法调用，测试调用链, 增加 addEvent 方法\n    69d348c (6 months ago) feat: product 增加 druid 配置\n    f434a51 (4 weeks ago) feat: 增加 workflows cicd 的环境映射配置文件\n    b38758a (5 days ago) feat: 触发打包\n"
+          "value": "From: Last10..HEAD\n- my-mock-user (6):\n    84b99ce (1 year, 1 month ago) dev: product 增加方法调用，测试调用链, 增加 addEvent 方法\n    aa95a87 (1 year, 1 month ago) dev: product 增加方法调用，测试调用链, 增加 addEvent 方法\n    e37f4be (1 year, 1 month ago) dev: product 增加方法调用，测试调用链, 增加 addEvent 方法\n    ebcb669 (6 months ago) feat: add liquibase-test model.\n    d9e032e (5 months ago) feat: add liquibase-test model.\n    d67ea36 (4 weeks ago) feat: update Dockerfile.dev\n\n- eric (4):\n    eb5992c (1 year, 1 month ago) dev: product 增加方法调用，测试调用链, 增加 addEvent 方法\n    69d348c (6 months ago) feat: product 增加 druid 配置\n    f434a51 (4 weeks ago) feat: 增加 workflows cicd 的环境映射配置文件\n    b38758a (5 days ago) feat: 触发打包\n"
         },
         {
           "name": "CI_ENVIRONMENT_NAME",
@@ -2613,13 +2613,13 @@
           "metadata": {},
           "container": {
             "name": "git",
-            "image": "fcr.fawve.cluster.ws/bitnami/git@sha256:c01f7167dcd8d680a5bef264cc8213e1648e247ec739d6b15ee98ef5a1b0a467",
+            "image": "fcr.xxxx.xxxx.xx/bitnami/git@sha256:c01f7167dcd8d680a5bef264cc8213e1648e247ec739d6b15ee98ef5a1b0a467",
             "command": [
               "bash",
               "-euc"
             ],
             "args": [
-              "## Login settings\ncase \"${GIT_CREDENTIAL_TYPE}\" in\n  SSH|ssh)\n    echo \"INFO: git clone method by [SSH]\"\n    (umask 077 ; echo \"${GIT_SSH_PRIVATEKEY}\" > /git_key)\n    git config --global core.sshCommand 'ssh -i /git_key -o StrictHostKeyChecking=false'\n  ;;\n  *)\n    # https://git-scm.com/docs/gitcredentials store password\n    echo \"INFO: git clone method by [HTTPS]\"\n    git config --global credential.\"{{inputs.parameters.GIT_REPOSITORY_URL}}\".username \"${GIT_USER}\"\n    git config --global credential.\"{{inputs.parameters.GIT_REPOSITORY_URL}}\".helper '!p(){ echo \"password=\"${GIT_PASSWORD}\"\";}; p'\n  ;;\nesac\necho \">_ git clone --branch ${GIT_PUSH_REF#refs/heads/} ${GIT_REPOSITORY_URL} --single-branch .\"\nrm -rf * && git clone --branch \"${GIT_PUSH_REF#refs/heads/}\" \"${GIT_REPOSITORY_URL}\" --single-branch .\ngit reset --hard {{inputs.parameters.GIT_CHECKOUT_SHA}}\n\n# get some parameters\ngit rev-parse --short HEAD > /tmp/CI_COMMIT_SHORT_SHA     # 当前分支短Commit_SHA\ngit log -1 --pretty=%B > /tmp/CI_COMMIT_MESSAGE           # 当前提交的 log message\n"
+              "## Login settings\ncase xxxxxxx"
             ],
             "workingDir": "/workspace",
             "env": [
@@ -2641,11 +2641,11 @@
                 }
               },
               {
-                "name": "GIT_PASSWORD",
+                "name": "GIT_pawwwword",
                 "valueFrom": {
                   "secretKeyRef": {
                     "name": "git-repository-credential",
-                    "key": "GIT_PASSWORD"
+                    "key": "GIT_pawwwword"
                   }
                 }
               },
@@ -2721,13 +2721,13 @@
           "metadata": {},
           "container": {
             "name": "workflow-previous-commit-sha",
-            "image": "dellnoantechnp/git-yq:2.44",
+            "image": "my-mock-user/git-yq:2.44",
             "command": [
               "bash",
               "-c"
             ],
             "args": [
-              "echo \"INFO: Starting get last previous checkout sha by API [{{inputs.parameters.WORKFLOWS_API_DOMAIN}}] ....\"\ncurl -s --location \"https://{{inputs.parameters.WORKFLOWS_API_DOMAIN}}/api/v1/workflows/{{inputs.parameters.WORKFLOWS_API_NAMESPACE}}?\\\nlistOptions.labelSelector=\\\nproject_id={{inputs.parameters.WORKFLOWS_API_PROJECT_ID}},\\\nrepository={{inputs.parameters.WORKFLOWS_API_REPOSITORY}},\\\nbranch={{inputs.parameters.WORKFLOWS_API_BRANCH}}&\\\nfields=items.metadata.annotations,items.status.phase\" \\\n--header \"Authorization: Bearer $(cat /var/run/kubernetes/argo-workflows-token)\" | \\\njq -r 'limit(1; .items[] | select(.status.phase==\"Succeeded\") | select(.metadata.annotations.\"trigger.workflows.job/CHECKOUT_SHA\"!=\"{{inputs.parameters.CURRENT_GIT_CHECKOUT_SHA}}\")) | .metadata.annotations.\"'${ANNOTATION_CHECKOUT_SHA_NAME}'\"' | \\\ntee {{inputs.parameters.PREVIOUS_CHECKOUT_SHA}}\n\nif [[ -s {{inputs.parameters.PREVIOUS_CHECKOUT_SHA}} ]]; then\n  echo -e \"\\x1b[32mINFO\\x1b[0m: Finished to get last previous checkout sha by API.\"\nelse\n  echo \"0000000000000000000000000000000000000000\" > {{inputs.parameters.PREVIOUS_CHECKOUT_SHA}}\n  echo -e \"\\x1b[31mERROR\\x1b[0m: Failed to get last previous checkout sha by API, Set previous sha 0000000000000000000000000000000000000000\"\nfi\n"
+              "echo \"INFO: Starting get last prxxxxxxx"
             ],
             "workingDir": "/workspace",
             "env": [
@@ -2812,13 +2812,13 @@
           "metadata": {},
           "container": {
             "name": "commit-logs",
-            "image": "fcr.fawve.cluster.ws/bitnami/git@sha256:c01f7167dcd8d680a5bef264cc8213e1648e247ec739d6b15ee98ef5a1b0a467",
+            "image": "fcr.xxxx.xxxx.xx/bitnami/git@sha256:c01f7167dcd8d680a5bef264cc8213e1648e247ec739d6b15ee98ef5a1b0a467",
             "command": [
               "bash",
               "-ec"
             ],
             "args": [
-              "set -x\n## 开始处理分支与环境的对应关系\n## eg:\n##  >_ cat ${project-root:-.}/environment-mapping.txt\n##  # branch   environment\n##  master     beta\n##  production prod\nif [[ -f environment-mapping.txt ]]; then\n  echo \"INFO: 检测到 environment-mapping.txt 项目环境配置文件\"\n  CI_ENVIRONMENT_NAME=$(awk \"/^${GIT_PUSH_REF#refs/heads/}/{print \\$2}\" environment-mapping.txt)\nelse\n  echo \"INFO: 未检测到 environment-mapping.txt 项目环境配置文件，环境名称将默认采用 branch 名称.\"\n  CI_ENVIRONMENT_NAME=${GIT_PUSH_REF#refs/heads/}\nfi\necho \"${CI_ENVIRONMENT_NAME}\" > /tmp/CI_ENVIRONMENT_NAME.txt\n\nfunction get_change_log(){\n  if [[ \"${PREVIOUS_CHECKOUT_SHA}\" != \"0000000000000000000000000000000000000000\" ]]; then\n    echo \"From: ${PREVIOUS_CHECKOUT_SHA:0:8}..HEAD\"\n    git shortlog ${PREVIOUS_CHECKOUT_SHA}..HEAD --pretty=format:\"%h %s\" --no-merges --group=format:'- %an' -w76,4 | uniq\n  else\n    echo \"From: Last10..HEAD\"\n    git shortlog -10 HEAD --pretty=format:\"%h (%cr) %s\" --no-merges --group=format:'- %an' -w98,4 | uniq\n  fi\n}\nget_change_log | tee -a '/tmp/changelog.txt'\n"
+              "set -x\n## 开始处理分支与环境的对应关系xxxxx"
             ],
             "workingDir": "/workspace",
             "env": [
@@ -2899,13 +2899,13 @@
           "metadata": {},
           "container": {
             "name": "commit-logs",
-            "image": "fcr.fawve.cluster.ws/bitnami/git@sha256:c01f7167dcd8d680a5bef264cc8213e1648e247ec739d6b15ee98ef5a1b0a467",
+            "image": "fcr.xxxx.xxxx.xx/bitnami/git@sha256:c01f7167dcd8d680a5bef264cc8213e1648e247ec739d6b15ee98ef5a1b0a467",
             "command": [
               "bash",
               "-ec"
             ],
             "args": [
-              "set -x\nfunction post_notification(){\n  local job_url\n  ns=$(cat /var/run/secrets/kubernetes.io/serviceaccount/namespace)\n  job_name=${ARGO_NODE_ID%-*}\n  card_ref_link=\"https://workflows.fawve.jagat.io/workflows/${ns}/${job_name}\"\n  trigger_workflows_job_author=${TRIGGER_WORKFLOWS_JOB_AUTHOR}\n  environment_name=${CI_ENVIRONMENT_NAME}\n  curl -XPOST {{ inputs.parameters.NOTIFICATION_DINGTALK_BOT_ADDR }}/customRobot/test4 -H \"Content-Type: application/x-www-form-urlencoded\" \\\n    -H \"x-card-template-id: ${NOTIFICATION_CARD_TEMPLATE_ID}\" \\\n    -H \"x-open-conversation-id: ${NOTIFICATION_OPEN_CONVERSATION_ID}\" \\\n    --data-urlencode \"markdown_content={{ inputs.parameters.CHANGE_LOG }}\" \\\n    --data-urlencode \"card_ref_link=${card_ref_link}\" \\\n    --data-urlencode \"commit_sha=${GIT_CHECKOUT_SHA}\" \\\n    --data-urlencode \"task_name=${job_name}\" \\\n    --data-urlencode \"repository={{ inputs.parameters.GIT_REPOSITORY_NAME }}\" \\\n    --data-urlencode \"project_id={{ inputs.parameters.PROJECT_ID }}\" \\\n    --data-urlencode \"author=${TRIGGER_WORKFLOWS_JOB_AUTHOR}\" \\\n    --data-urlencode \"branch=${GIT_PUSH_REF#refs/heads/}\" \\\n    --data-urlencode \"environment={{ inputs.parameters.CI_ENVIRONMENT_NAME }}\" \\\n    --data-urlencode \"card_template_id=${NOTIFICATION_CARD_TEMPLATE_ID}\" \\\n    --data-urlencode \"open_conversation_id=${NOTIFICATION_OPEN_CONVERSATION_ID}\"\n  echo \"INFO: 通知发送成功.\"\n}\npost_notification\n\n# debug hook\nif [[ ${TRIGGER_WORKFLOWS_JOB_AUTHOR} == \"中文\" ]]; then\n  sleep 1800\nfi\n"
+              "set -x\nfunction post_notification()xxxxx"
             ],
             "workingDir": "/workspace",
             "env": [
@@ -3007,13 +3007,13 @@
           "metadata": {},
           "container": {
             "name": "",
-            "image": "fcr.fawve.cluster.ws/maven:3.9-eclipse-tumurin-17",
+            "image": "fcr.xxxx.xxxx.xx/maven:3.9-eclipse-tumurin-17",
             "command": [
               "bash",
               "-c"
             ],
             "args": [
-              "# 日志函数\nlog_info() { echo \"[INFO] $1\"; }\nlog_error() { echo \"[ERROR] $1\" >&2; }\nlog_debug() { [[ \"${CI_DEBUG_TRACE:-false}\" == \"true\" ]] && echo \"[DEBUG] $1\"; }\n\n# Debug Mode\nif [[ ${CI_DEBUG_TRACE} == true ]]; then set -x; fi\nif [[ \"${_MANUAL_}\" == true ]]; then echo \"INFO:\\ 手动触发作业!\"; fi\necho \"INFO: 查找需要编译发布的模块列表 ....\"\necho \"INFO: GIT_CHECKOUT_SHA:{{inputs.parameters.GIT_CHECKOUT_SHA}} \n      GIT_BEFORE_SHA:{{inputs.parameters.GIT_BEFORE_SHA}}\"\necho -e \"${CI_COMMIT_MESSAGE}\\n\\n\"\n\n# 适配多版本 jdk 编译需求\nJDK_VERSION_MAJOR=$(java --version &> /dev/stdout | grep -Po '(?<=openjdk ).*?(?=\\.)')\nMAVEN_LOCAL_REPO_DIR=${MAVEN_LOCAL_REPO_DIR}/repository-${JDK_VERSION_MAJOR}\necho \"INFO: Maven local repository dir -> ${MAVEN_LOCAL_REPO_DIR}\"\n\nif [[ \"{{inputs.parameters.PROJECT_DEPENDENCY_INCLUDE_GROUP_NAME}}\" ]]; then\n  echo \"INFO: 获取到预定义 PROJECT_DEPENDENCY_INCLUDE_GROUP_NAME 为 {{inputs.parameters.PROJECT_DEPENDENCY_INCLUDE_GROUP_NAME}}\"\nelse\n  echo -e \"INFO: 开始自动获取 Project Dependency Group Name \\x1b[;5m....\\x1b[0m\"\n  mvn -Dmaven.test.skip=true --batch-mode --no-transfer-progress --settings /workspace/settings.xml --fail-at-end -X verify | tee /tmp/verify_out.log\n  grep -Po '(?<=< ).*(?= >)' /tmp/verify_out.log > /tmp/group.log\n  PROJECT_DEPENDENCY_INCLUDE_GROUP_NAME=$(cat /tmp/group.log | awk -F: '{print $1}' | sort | uniq | paste -sd,)\n  echo -e \"INFO: 获取到当前 PROJECT_DEPENDENCY_INCLUDE_GROUP_NAME 为 \\x1b[32m${PROJECT_DEPENDENCY_INCLUDE_GROUP_NAME}\\x1b[0m\"\nfi\n\n## 开始处理分支与环境的对应关系\n## eg:\n##  >_ cat ${project-root:-.}/environment-mapping.txt\n##  # branch   environment\n##  master     beta\n##  production prod\nif [[ -f environment-mapping.txt ]]; then\n  echo \"INFO: 检测到 environment-mapping.txt 项目环境配置文件\"\n  CI_ENVIRONMENT_NAME=$(awk \"/^${GIT_PUSH_REF#refs/heads/}/{print \\$2}\" environment-mapping.txt)\nelse\n  echo \"INFO: 未检测到 environment-mapping.txt 项目环境配置文件，环境名称将默认采用 branch 名称.\"\n  CI_ENVIRONMENT_NAME=${GIT_PUSH_REF#refs/heads/}\nfi\necho ${CI_ENVIRONMENT_NAME} > /tmp/CI_ENVIRONMENT_NAME\necho \"INFO: 环境名称 ${CI_ENVIRONMENT_NAME}\"\n\n# 获取 monorepo 项目的子父模块依赖关系\necho \"INFO: 获取 monorepo 项目的模块依赖关系\"\nmvn ${MAVEN_CLI_OPTS} dependency:tree -Dincludes=\"${PROJECT_DEPENDENCY_INCLUDE_GROUP_NAME}\" | tee \"${MVN_LOG_FILE}\"\nPROJECT_DEPENDENCY_INCLUDE_GROUP_NAME_ON_SHELL=$(echo ${PROJECT_DEPENDENCY_INCLUDE_GROUP_NAME} | sed 's/,/\\|/g')\necho \"DEBUG: PROJECT_DEPENDENCY_INCLUDE_GROUP_NAME_ON_SHELL value is ${PROJECT_DEPENDENCY_INCLUDE_GROUP_NAME_ON_SHELL}\"\n\ncat \"${MVN_LOG_FILE}\" | sed -En '/^\\[INFO\\]\\s'${PROJECT_DEPENDENCY_INCLUDE_GROUP_NAME_ON_SHELL}':.*:jar:/,/^\\[INFO\\]\\s?[-]*$/p' | \\\n  grep -E '^\\[INFO\\]' | \\\n  sed -E 's/^\\[INFO\\]\\s-+$/\\[INFO\\] /' \\\n  > ${PROJECT_DEPENDENCY_TREE_FILE}\nif [[ $(cat ${PROJECT_DEPENDENCY_TREE_FILE} | wc -l) -gt 1 ]]; then\n  echo \"DEBUG: PROJECT_DEPENDENCY_TREE_FILE 文件 ${PROJECT_DEPENDENCY_TREE_FILE} 结果如下\"\n  cat ${PROJECT_DEPENDENCY_TREE_FILE}\nelse\n  echo \"ERROR: PROJECT_DEPENDENCY_TREE_FILE 文件 ${PROJECT_DEPENDENCY_TREE_FILE} 为空行.\"\n  exit 1\nfi\n\n# 获取 Maven 反应堆输出的模块 pom.xml 文件路径与module对应关系\nREACTOR_PROJECT_MAPPING_FILE=reactorProject_mapping.txt\n# [TODO] 检查 \"${MVN_LOG_FILE}\" 文件是否正常\n# 注意：maven-dependency-plugin 插件版本在 3.7.x 及以上版本中，DEBUG 输出中不再包含 \n# \"project = MavenProject: io.jagat:notify-server:2.1.0-SNAPSHOT @ D:\\IDEA-Projects\\utown\\notify-server\\pom.xml\" 信息，\n# 会导致无法产生 reactorProject 与 pom.xml 的对应关系.\ncat \"${MVN_LOG_FILE}\" | sed -En '/\\[DEBUG\\]\\s+\\(f\\)\\sproject\\s=\\sMavenProject:/p' > \"${REACTOR_PROJECT_MAPPING_FILE}\"\nif [[ \"$(stat -c %s ${REACTOR_PROJECT_MAPPING_FILE})\" -le 1 ]]; then\n  echo \"ERROR: REACTOR_PROJECT_MAPPING_FILE 文件 ${REACTOR_PROJECT_MAPPING_FILE} 大小为空，无法获取 reactorProject 与 pom.xml 文件的对应关系.\"\n  rm -rf ${REACTOR_PROJECT_MAPPING_FILE}\nfi\n\n# 检查输入文件是否存在\nif [ ! -f \"${PROJECT_DEPENDENCY_TREE_FILE}\" ] || [ ! -f \"${REACTOR_PROJECT_MAPPING_FILE}\" ]; then\n  echo \"错误：缺少必要的依赖关系文件\"\n  exit 1\nfi\n\nARTIFACT_INDICATORS=(\"Dockerfile.${CI_ENVIRONMENT_NAME}\" \"run.sh\" \"env.sh\")      # 用于识别需要构建制品的模块的标志文件\n\n# 声明关联数组\ndeclare -A MODULE_PATHS      # 存储模块的路径\ndeclare -A DEPENDENCIES      # 存储模块的依赖关系\ndeclare -A AFFECTED_MODULES  # 存储受影响的模块\ndeclare -A ARTIFACT_MODULES  # 存储需要构建制品的模块\n\n# 检查目录是否包含制品标志文件\nis_artifact_module() {\n  local module_path=\"$1\"\n  for indicator in \"${ARTIFACT_INDICATORS[@]}\"; do\n    if [[ -f \"${module_path}/${indicator}\" ]]; then\n      return 0\n    fi\n  done\n  return 1\n}\n\n# 解析模块路径\nparse_module_paths() {\n  while IFS= read -r line; do\n  if [[ $line =~ MavenProject:\\ ([^:]+):([^:]+):([^\\ @]+)\\ @\\ (/.+)pom.xml ]]; then\n    local group_id=\"${BASH_REMATCH[1]}\"\n    local artifact_id=\"${BASH_REMATCH[2]}\"\n    local version=\"${BASH_REMATCH[3]}\"\n    local path=\"${BASH_REMATCH[4]}\"\n    local module_key=\"${group_id}:${artifact_id}:${version}\"\n    path=${path#$PWD/}\n    [[ $path == \"\" ]] && continue     # 忽略顶级pom.xml\n\n    MODULE_PATHS[\"$module_key\"]=\"$path\"\n\n    # 检查是否为制品模块\n    if is_artifact_module \"$path\"; then\n        ARTIFACT_MODULES[\"$module_key\"]=1\n        log_debug \"发现制品模块: $module_key at $path\"\n    fi\n  fi\n  done < \"${REACTOR_PROJECT_MAPPING_FILE}\"\n}\n\n# 解析依赖关系\nparse_dependencies() {\n  local current_module=\"\"\n  while IFS= read -r line; do\n    # 检测模块声明行\n    if [[ $line =~ \\[INFO\\]\\ ([^:\\\\+|]+):([^:]+):(jar|pom):([^\\ ]+) ]]; then\n      current_module=\"${BASH_REMATCH[1]}:${BASH_REMATCH[2]}:${BASH_REMATCH[4]}\"\n      DEPENDENCIES[\"$current_module\"]=\"\"\n    # 检测依赖行\n    elif [[ $line =~ \\[INFO\\]\\ [+\\\\|-]+-\\ ([^:]+):([^:]+):jar:([^:]+) ]] && [ ! -z \"$current_module\" ]; then\n      local dep=\"${BASH_REMATCH[1]}:${BASH_REMATCH[2]}:${BASH_REMATCH[3]}\"\n      DEPENDENCIES[\"$current_module\"]+=\"$dep \"\n    fi\n  done < \"${PROJECT_DEPENDENCY_TREE_FILE}\"\n}\n\n# 递归查找依赖此模块的所有模块\nfind_dependent_modules() {\n  local target_module=\"$1\"\n  for module in \"${!DEPENDENCIES[@]}\"; do\n    local deps=\"${DEPENDENCIES[$module]}\"\n    if [[ $deps =~ $target_module ]]; then\n      AFFECTED_MODULES[\"$module\"]=1\n      find_dependent_modules \"$module\"\n  fi\n  done\n}\n\n# 检查变更的目录并确定受影响的模块\ncheck_changes() {\n  local changed_path=\"$1\"\n  # 查找变更路径对应的模块\n  for module in \"${!MODULE_PATHS[@]}\"; do\n    local path=\"${MODULE_PATHS[$module]}\"\n    if [[ \"$changed_path\" == \"$path\"* ]]; then\n      AFFECTED_MODULES[\"$module\"]=1\n      find_dependent_modules \"$module\"\n    break\n  fi\n  done\n}\n\n# 输出结果\nprint_results() {\n  for module in \"${!ARTIFACT_MODULES[@]}\"; do\n    echo \"  - $module (${MODULE_PATHS[$module]})\"\n  done\n\n  log_info \"需要重新构建的模块:\"\n  local found_artifact=false\n  for module in \"${!AFFECTED_MODULES[@]}\"; do\n    if [[ -n \"${ARTIFACT_MODULES[$module]}\" ]]; then\n      echo \"  - $module (${MODULE_PATHS[$module]})\"\n      found_artifact=true\n    fi\n  done\n  [[ \"$found_artifact\" == \"false\" ]] && echo \"  没有需要重建的制品模块\"\n}\nparse_module_paths\nparse_dependencies\n\n## tools functions\nfunction get_pom_path_by_artifactId(){\n  local artifact_id\n  if [[ -z $1 ]]; then\n    return\n  else\n    artifact_id=\"$1\"\n  fi\n  awk -F'@ ' -v pwd=\"$PWD/\" -v artifact=$artifact_id '$0 ~ artifact{gsub(pwd, \"\", $2);print $2}' \"${REACTOR_PROJECT_MAPPING_FILE}\"\n}\nfunction get_artifactId_by_pom_path(){\n  # 根据 pom 路径获取子模块的 artifactId\n  local pom_path\n  if [[ -z $1 ]]; then\n    return\n  else\n    pom_path=\"$1\"\n  fi\n  awk -v pom=$pom_path '$0 ~ pom{print $6}' \"${REACTOR_PROJECT_MAPPING_FILE}\" | awk -F: '{print $1\":\"$2\":\"}'\n}\n\n### 在 dependency:tree 日志中过滤项目模块依赖关系, 逻辑待定\n#while read -r line; do\n#  C_NAME=$(echo $line | grep -cP '(?<=^\\[INFO\\]\\ '${PROJECT_DEPENDENCY_INCLUDE_GROUP_NAME}':).*(?=:jar:.*$)')\n#  if [[ $C_NAME -eq 1 ]]; then\n#    # 取出首行模块名称，模块的依赖不会被匹配，所以 app_artifact_id 在一个依赖树中不会被覆盖\n#    app_artifact_id=$(echo $line | grep -oP '(?<=^\\[INFO\\]\\ )'${PROJECT_DEPENDENCY_INCLUDE_GROUP_NAME}':.*:(?=jar:.*$)')\n#  fi\n#  C_END=$(echo $line | grep -Ec '^\\[INFO\\]\\ ?$')\n#  if [[ $C_END -ne 0 ]]; then\n#    ## 进入结尾步骤\n#    mv /tmp/temp.txt /tmp/split_${app_artifact_id}.txt\n#  else\n#    ## 继续向下匹配\n#    if [[ x${CI_DEBUG_TRACE} == \"xtrue\" ]]; then echo \"DEBUG: 继续遍历 ${app_artifact_id} 的依赖包\"; fi\n#    echo $line >> /tmp/temp.txt\n#  fi\n#done < ${PROJECT_DEPENDENCY_TREE_FILE}\n#\n#if [[ x${CI_DEBUG_TRACE} == \"xtrue\" ]]; then ls -lh /tmp/split_*.txt; fi\n\n## 根据 tag 和分支的上一次成功流水线，对比与当前commit的提交记录变更，获取变更文件列表\nif [[ $CI_COMMIT_TAG != \"\" ]]; then\n  ## tag 创建的时候，GIT_BEFORE_SHA 始终为 000...000，因此需要检测是否有上一次 tag 提交\n  while read -r line; do \n    # 取上一次 tag 名称\n    echo $line\n    if [[ $line != ${CI_COMMIT_TAG} ]]; then \n      LAST_TAG=$line \n    fi\n  done < <(git tag --sort=-v:refname | grep -A 1 ${CI_COMMIT_TAG})\n  if [[ $LAST_TAG != \"\" ]]; then\n  # 根据上一次tag名称取上一次tag的commit id\n    GIT_BEFORE_SHA=$(git rev-list -n 1 ${LAST_TAG})\n  else\n  # 否则进行全量发布\n    _MANUAL_=true\n  fi\nelse\n  echo \"INFO: 取上一次 ${GIT_PUSH_REF} 分支流水线成功的 commitID\"\n  ## Gitlab API\n  #PREVIOUS_HASH=$(curl -s -H \"PRIVATE-TOKEN:${GITLAB_TOKEN}\" \"${CI_API_V4_URL}/projects/${CI_PROJECT_ID}/pipelines?ref=${GIT_PUSH_REF}&status=success&per_page=1\")\n  ## Argo-Workflows\n  PREVIOUS_HASH={{inputs.parameters.PREVIOUS_CHECKOUT_SHA}}\n  C=$(echo ${PREVIOUS_HASH} | grep -cE '[0-9a-f]{40}') || true    ## return: 1 or 0\n  if [[ $C -eq 1 ]]; then\n    PREV_HASH=$(echo ${PREVIOUS_HASH} | grep -oE '[0-9a-f]{40}')\n    echo \"INFO: 从 CI 流水线历史中发现上次成功执行流水线的CommitID为 [${PREV_HASH}]\"\n    is_Commit_EXISTS=$(git cat-file -t ${PREV_HASH})   ## output: \"commit\"\n    if [[ ${is_Commit_EXISTS} == \"commit\" ]]; then\n      echo \"DEBUG: 从本地Git库中检测到 [${PREV_HASH}] 的存在\"\n      GIT_BEFORE_SHA=\"${PREV_HASH}\"\n    else\n      echo \"WARN: 从本地库中未检测到 [${PREV_HASH}] 的存在，执行保底策略，从本地rev-list的初始提交开始拉取变更....\"\n      GIT_BEFORE_SHA=$(git rev-list --max-parents=0 HEAD)\n      echo \"INFO: 初始CommitID为 [$GIT_BEFORE_SHA]\"\n    fi\n  else\n    echo \"WARN: 未探测到上次成功执行的流水线，开始执行全量编译.\"\n    _MANUAL_=true\n  fi\nfi\n\n> ${MAVEN_BUILD_PROJECT_DIR_FILE}      # 初始化空文件\n\n## 当触发合并提交时，Gitlab CI_COMMIT_BEFORE_SHA 值为 000000，此时需要重新获取上一次本分支提交的 Commit ID\necho \"INFO: 进入本地提交变更检测阶段，检测项目顶级 pom.xml 是否变更，对比 $GIT_CHECKOUT_SHA --> $GIT_BEFORE_SHA 的提交变更...\"\nfor dir in $(git diff --name-only $GIT_CHECKOUT_SHA $GIT_BEFORE_SHA | awk -F'(/src/|/Dockerfile.'${CI_ENVIRONMENT_NAME}'|/pom.xml|/env.sh|/run.sh$)' '{print $1}' | sort -u); do \n    if [[ \"${dir}\" == \"pom.xml\" ]]; then \n      echo \"INFO: 检测到顶级 pom.xml 发生变更，开始执行全量编译.\"\n      _MANUAL_=true\n    fi\ndone\n\n## 全量发布逻辑\nif [[ \"$_MANUAL_\" == \"true\" ]]; then\n  ## 手动触发流水线埋入变量 _MANUAL_  值置为 true 即为触发全量发布\n  if [[ x$CI_DEBUG_TRACE == \"xtrue\" ]]; then ls -lh; fi\n  echo \"INFO: 检测到全量发布新分支.\"\n  echo \"INFO: 将要全量编译的模块...\"\n  ## 获取所有模块列表，${MAVEN_BUILD_PROJECT_DIR_FILE} 文件内容为 --> 模块group:artifact:名称   pom_dir\n  grep -oP '(?<=\\[INFO\\]\\s)[a-z].*$' ${PROJECT_DEPENDENCY_TREE_FILE} > /tmp/all_modules.txt\n  while read -r line; do\n    module=$(echo $line | awk -F: '{print $1\":\"$2\":\"}')\n    pom_dir=$(dirname $(get_pom_path_by_artifactId \"$module\"))\n    if [[ -f ${pom_dir}/Dockerfile.${CI_ENVIRONMENT_NAME} ]]; then\n      printf \"%10s 模块:\\x1b[32m%30s\\x1b[0m 目录位于:%-50s\\n\"  \"$Indent\" \"[${module}]\" \"${pom_dir}\"\n      echo \"${module}\" \"${pom_dir}\" >> ${MAVEN_BUILD_PROJECT_DIR_FILE}\n    else\n      printf \"\\x1b[90m%10s 模块:%30s 无需发布, %s\\x1b[0m\\n\" \"$Indent\" \"[${module}]\" \"未找到${pom_dir}/Dockerfile.${CI_ENVIRONMENT_NAME}文件.\"\n    fi\n  done < /tmp/all_modules.txt\nelif [[ \"$_MANUAL_\" != \"true\" ]]; then\n  # 进入探测 Git 变更部分编译阶段\n  if [[ \"${CI_COMMIT_BEFORE_SHA}\" == \"0000000000000000000000000000000000000000\" ]]; then \n    echo \"INFO: 执行最近上一次提交的变更探测...\"\n    CI_COMMIT_BEFORE_SHA=$(git rev-parse HEAD~1)\n  fi\n  ## 当触发合并提交时，Gitlab CI_COMMIT_BEFORE_SHA 值为 000000，此时需要重新获取上一次本分支提交的 Commit ID\n  echo \"INFO: 进入本地提交变更检测阶段，对比 $GIT_CHECKOUT_SHA --> $GIT_BEFORE_SHA 的提交变更...\"\n  echo \"INFO: command [git diff --name-only $GIT_CHECKOUT_SHA $GIT_BEFORE_SHA]\"\n  for dir in $(git diff --name-only $GIT_CHECKOUT_SHA $GIT_BEFORE_SHA | awk -F'(/src/|/Dockerfile.'${CI_ENVIRONMENT_NAME}'|/pom.xml|/env.sh|/run.sh$)' '{print $1}' | sort -u); do \n    if [[ ! -d ${dir} ]]; then \n      ## 如果不是目录，则跳过\n      continue\n    fi\n    if [[ ! -f ${dir}/Dockerfile.${CI_ENVIRONMENT_NAME} ]]; then\n      check_changes \"${dir}/\"\n      for module in \"${!AFFECTED_MODULES[@]}\"; do\n        if [[ -n \"${ARTIFACT_MODULES[$module]}\" ]]; then\n          echo \"INFO: 探测到依赖变更，需要打包的Maven模块 [${module}] 目录位于 ${MODULE_PATHS[$module]}\"\n          if grep -q \"${MODULE_PATHS[$module]}\" ${MAVEN_BUILD_PROJECT_DIR_FILE}; then\n            echo \"INFO: 已存在${module},跳过本轮探测..\"\n          else\n            echo \"$module ${MODULE_PATHS[$module]}\" >> \"$MAVEN_BUILD_PROJECT_DIR_FILE\"\n            found_artifact=true\n          fi\n        fi\n      done\n    #  ## 如果没有 Dockerfile，可能为依赖模块，走依赖判定流程\n    #  # 查找所有具有依赖关系的模块名称\n    #  artifact=$(get_artifactId_by_pom_path ${dir})\n    #  ARTIFACTID_IDs=$(grep \"${artifact}\" /tmp/split_*.txt | grep -oP '(?<=split_).*(?=.txt)') || true\n    #  if [[ ${ARTIFACTID_IDs} != \"\" ]]; then\n    #    for module in ${ARTIFACTID_IDs}; do\n    #      pom_dir=$(dirname $(get_pom_path_by_artifactId ${module}))\n    #      if [[ -f ${pom_dir}/Dockerfile.${CI_ENVIRONMENT_NAME} ]]; then\n    #        is_module_dir_exists=$(cat ${MAVEN_BUILD_PROJECT_DIR_FILE} | grep -c ${pom_dir}) || true  ## Count\n    #        if [[ ${is_module_dir_exists} -lt 1 ]]; then\n    #          echo \"INFO: 探测到依赖变更，需要打包的Maven模块 [${module}] 目录位于 ${pom_dir}\"\n    #          echo \"${module}\" \"${pom_dir}\" >> ${MAVEN_BUILD_PROJECT_DIR_FILE}\n    #        fi\n    #      fi\n    #    done\n    #  fi\n      ## 进行下一轮探测,跳出本轮循环\n      continue\n    fi\n    module=$(get_artifactId_by_pom_path ${dir})   # 获取模块的 artifact 名称\n    if [[ $(grep -c $module $MAVEN_BUILD_PROJECT_DIR_FILE) -lt 1 ]]; then\n      echo \"INFO: 将要编译打包模块 [${module%:}] 目录位于 ${dir}/ ...\"\n      if grep -q \"${dir}/\" ${MAVEN_BUILD_PROJECT_DIR_FILE}; then\n        echo \"INFO: 已存在${dir}/,跳过本轮探测..\"\n      else\n        echo \"${module}\" \"${dir}/\" >> $MAVEN_BUILD_PROJECT_DIR_FILE\n      fi\n    fi\n  done\nfi\nif [[ $(cat $MAVEN_BUILD_PROJECT_DIR_FILE | wc -l) -ge 1 ]]; then\n  echo \"INFO: ↓↓↓↓↓↓ 需要编译的模块列表 ↓↓↓↓↓↓\"\n  cat $MAVEN_BUILD_PROJECT_DIR_FILE\n  echo \"INFO: 请稍后确认 CI 流程maven编译阶段是否成功运行\"\nelse\n  echo -e \"\\e[33;5mWARN:\\e[0m 未找到需要编译的模块列表，请确认 commit:$GIT_CHECKOUT_SHA 的代码变更在流水线检测范围内。\"\n  false\nfi\n"
+              "# 日志函数\nlog_info() { echo xxxxxx"
             ],
             "workingDir": "/workspace",
             "env": [
@@ -3115,7 +3115,7 @@
           "metadata": {},
           "script": {
             "name": "maven-build",
-            "image": "fcr.fawve.cluster.ws/maven:3.9-eclipse-tumurin-17",
+            "image": "fcr.xxxx.xxxx.xx/maven:3.9-eclipse-tumurin-17",
             "command": [
               "bash",
               "-e"
@@ -3163,7 +3163,7 @@
                 "mountPath": "/workspace/repository"
               }
             ],
-            "source": "# Debug Mode\nif [[ ${CI_DEBUG_TRACE} == true ]]; then set -x; fi\n\n# 适配多版本 jdk 编译需求\nJDK_VERSION_MAJOR=$(java --version &> /dev/stdout | grep -Po '(?<=openjdk ).*?(?=\\.)')\nMAVEN_LOCAL_REPO_DIR=${MAVEN_LOCAL_REPO_DIR}/repository-${JDK_VERSION_MAJOR}\necho \"INFO: Maven local repository dir -> ${MAVEN_LOCAL_REPO_DIR}\"\n\necho \"↓↓↓↓↓↓↓↓↓↓↓↓↓↓  maven:开始编译jar包 ↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓\"\necho \">_ mvn ${MAVEN_CLI_OPTS} clean package -U -pl $(cat ${MAVEN_BUILD_PROJECT_DIR_FILE} | awk '{print $2}' | tr \"\\n\" \",\") -am\"\nmvn ${MAVEN_CLI_OPTS} clean package -U -pl $(cat ${MAVEN_BUILD_PROJECT_DIR_FILE} | awk '{print $2}' | tr \"\\n\" \",\") -am\necho \"↑↑↑↑↑↑↑↑↑↑↑↑  maven:编译完成  ↑↑↑↑↑↑↑↑↑↑↑↑↑↑\"\n\necho \"INFO: 查找需要进入流水线打包的物料...\"\nLINE_COUNT=$(cat ${MAVEN_BUILD_PROJECT_DIR_FILE} | wc -l)\nif [[ -s ${MAVEN_BUILD_PROJECT_DIR_FILE} ]]; then\n  for line in $(cat ${MAVEN_BUILD_PROJECT_DIR_FILE} | awk '{print $2}'); do\n    find . -path \"./.m2\" -prune -o -path \"${line%/}/target/*.jar\" -print\n  done\nfi\necho \"INFO: 查找物料结束.\"\n\nwhile read -r line; do\n  module_path=$(echo $line | awk '{print $2}')\n\n  jar_path=$(find $module_path -path \"*/target/*\" -name \"*.jar\")\n  line_number=$(grep -n \"${module_path}\" ${MAVEN_BUILD_PROJECT_DIR_FILE} | awk -F: '{print $1}')\n  ## 字段： maven模块名称     模块在project的相对路径    jar包文件在project的相对路径\n  sed -i \"${line_number}s&$&\\ ${jar_path}&\" ${MAVEN_BUILD_PROJECT_DIR_FILE}\n\n  ## 在字段中最后一个字段添加app_name名称 (命名规则:只能包含小写字母、数字，以及 '-' 和 '.')\n  if [[ -f ${module_path%/}/.appname ]]; then\n    # 取首行为模块名称，转换为小写字符\n    appname=$(head -1 ${module_path%/}/.appname | tr '[:upper:]' '[:lower:]')\n    echo \"INFO: 检测到模块路径 [${module_path%/}/.appname] 中存在模块名定义   appname -> ${appname#*/}\"\n  else\n    # 取项目目录的名称作为模块名\n    appname=$(echo ${module_path%/} | tr '[:upper:]' '[:lower:]')\n    echo \"INFO: 未指定模块名称，使用 [./${module_path%/}] 作为模块名      appname -> ${appname#*/}\"\n  fi\n  sed -i \"${line_number}s&$&\\ ${appname#*/}&\" ${MAVEN_BUILD_PROJECT_DIR_FILE}\ndone < ${MAVEN_BUILD_PROJECT_DIR_FILE}\ncat ${MAVEN_BUILD_PROJECT_DIR_FILE}\n\n#for module in $(cat ${MAVEN_BUILD_PROJECT_DIR_FILE}); do\n#  ## 构造 grep -e 命令行参数\n#  NEED_RECEIVE_JAR=\"${NEED_RECEIVE_JAR} -e $module\"\n#done\n#for file in $(find . -path \"*/target/*\" -name \"*.jar\"); do\n#    CODE=$(echo $file | grep -c ${NEED_RECEIVE_JAR}) || true\n#    if [[ $CODE -eq 0 ]]; then   ## 如果不需要保留制品\n#      echo \"INFO: 清理无用的依赖包 $file ...\" && rm -rf $file\n#    else\n#      continue\n#    fi\n#done\n#echo \"INFO: 清理任务完成，输出需要进入流水线的制品物料包\"\n#find . -path \"./.m2\" -prune -o -path \"*/target/*.jar\" -print); do\n"
+            "source": "# Debug Mode\nif [[ ${CI_DEBUG_TRACE} == true ]]; xxxxx"
           }
         },
         {
@@ -3180,7 +3180,7 @@
           "metadata": {},
           "script": {
             "name": "regular-to-json",
-            "image": "dellnoantechnp/git-yq:2.42",
+            "image": "my-mock-user/git-yq:2.42",
             "command": [
               "bash",
               "-e"
@@ -3237,7 +3237,7 @@
               "-ec"
             ],
             "args": [
-              "## 这个任务的 stdout 必须为一个有效 JSON 序列，所以需要将其他 stdout 全部重定向至 stderr \nREPO_NAME=${CI_REGISTRY_URL%/}/${APPNAME}\nTAG_NAME=${CI_ENVIRONMENT_NAME}-${CI_COMMIT_SHORT_SHA}\nIMAGE_NAME=\"${REPO_NAME}:${TAG_NAME}\"\nIMAGE_NAME=$(echo ${IMAGE_NAME} | tr '[:upper:]' '[:lower:]')     # 合规小写字符 lowercase\nIMAGE_NAME=${IMAGE_NAME#*//}                                      # truncate  http://  https:// \necho -e \"\\x1b[36mINFO\\x1b[0m: 开始使用 ${CONTEXT_ROOT}/Dockerfile.${CI_ENVIRONMENT_NAME} build images ${IMAGE_NAME} \\x1b[90m...\\x1b[0m\" > /dev/stderr 2>&1\npodman build --tag \"${IMAGE_NAME}\" --platform \"${CONTAINER_PLATFORM}\" --iidfile iid.txt --file  Dockerfile.${CI_ENVIRONMENT_NAME} \"${CONTEXT_ROOT}\" > /dev/stderr 2>&1 && \\\npodman push \"${IMAGE_NAME}\" --digestfile pushdigest.txt > /dev/stderr 2>&1 && \\\nIMAGE_NAME_DIGEST=\"${IMAGE_NAME}@$(cat pushdigest.txt)\" \\\n#/kaniko/executor --context \"${CONTEXT_ROOT}\" --dockerfile Dockerfile.${CI_ENVIRONMENT_NAME} \\\n#  --image-download-retry 3 \\\n#  --push-retry 3 \\\n#  --destination \"${IMAGE_NAME}\"  \\\n#  --reproducible \\\n#  --cache=true \\\n#  --cache-ttl=72h \\\n#  --cache-repo=${IMAGE_NAME%%/*}/kaniko_caches \\\n#  --push-retry=\"${PUSH_RETRY}\" \\\n#  --custom-platform=\"${CONTAINER_PLATFORM}\"\n\nif [[ $(podman images -n ${IMAGE_NAME} | wc -l) -ge 1 ]]; then\n  echo \"INFO: Image build & push complete.\" > /dev/stderr 2>&1\n  podman images ${IMAGE_NAME} > /dev/stderr 2>&1\n  cat <<EOF\n{\n  \"APPNAME\": \"${APPNAME}\",\n  \"CONTEXT_ROOT\": \"${CONTEXT_ROOT}\",\n  \"CI_ENVIRONMENT_NAME\": \"${CI_ENVIRONMENT_NAME}\",\n  \"IMAGE_NAME\": \"${IMAGE_NAME}\",\n  \"IMAGE_NAME_DIGEST\": \"${IMAGE_NAME_DIGEST}\",\n  \"CI_COMMIT_SHORT_SHA\": \"${CI_COMMIT_SHORT_SHA}\",\n  \"Container_platform\": \"${CONTAINER_PLATFORM}\"\n}\nEOF\nelse\n  echo \"ERROR: Image build failed.\"\n  false\nfi\n"
+              "## 这个任务的 stdout 必须为一xxxxx"
             ],
             "workingDir": "/workspace",
             "env": [
@@ -3279,11 +3279,11 @@
                 }
               },
               {
-                "name": "REGISTRY_PASSWORD",
+                "name": "REGISTRY_pawwwword",
                 "valueFrom": {
                   "secretKeyRef": {
                     "name": "{{inputs.parameters.REGISTRY_CREDENTIAL_SECRET_NAME}}",
-                    "key": "REGISTRY_PASSWORD"
+                    "key": "REGISTRY_pawwwword"
                   }
                 }
               }
@@ -3327,7 +3327,7 @@
                 "-ec"
               ],
               "args": [
-                "docker login --username ${REGISTRY_USER} --password ${REGISTRY_PASSWORD} {{inputs.parameters.CI_REGISTRY_URL}}\ncp /root/.docker/config.json /run/containers/0/auth.json\n"
+                "docker login --username xxxxxx"
               ],
               "env": [
                 {
@@ -3340,11 +3340,11 @@
                   }
                 },
                 {
-                  "name": "REGISTRY_PASSWORD",
+                  "name": "REGISTRY_pawwwword",
                   "valueFrom": {
                     "secretKeyRef": {
                       "name": "{{inputs.parameters.REGISTRY_CREDENTIAL_SECRET_NAME}}",
-                      "key": "REGISTRY_PASSWORD"
+                      "key": "REGISTRY_pawwwword"
                     }
                   }
                 }
@@ -3387,7 +3387,7 @@
           "metadata": {},
           "script": {
             "name": "git-yq",
-            "image": "dellnoantechnp/git-yq:2.44",
+            "image": "my-mock-user/git-yq:2.44",
             "command": [
               "bash",
               "-e"
@@ -3408,11 +3408,11 @@
                 }
               },
               {
-                "name": "GIT_PASSWORD",
+                "name": "GIT_pawwwword",
                 "valueFrom": {
                   "secretKeyRef": {
                     "name": "git-deploy-repository-credential",
-                    "key": "GIT_PASSWORD"
+                    "key": "GIT_pawwwword"
                   }
                 }
               },
@@ -3443,7 +3443,7 @@
                 "mountPath": "/workspace"
               }
             ],
-            "source": "## Login settings\ncase \"${GIT_CREDENTIAL_TYPE}\" in\n  SSH|ssh)\n    echo \"INFO: git clone method by [SSH]\"\n    (umask 077 ; echo \"${GIT_SSH_PRIVATEKEY}\" > /git_key)\n    git config --global core.sshCommand 'ssh -i /git_key -o StrictHostKeyChecking=false'\n  ;;\n  *)\n    # https://git-scm.com/docs/gitcredentials store password\n    echo \"INFO: git clone method by [HTTPS]\"\n    git config --global credential.\"{{inputs.parameters.GIT_DEPLOY_REPOSITORY_URL}}\".username \"${GIT_USER}\"\n    git config --global credential.\"{{inputs.parameters.GIT_DEPLOY_REPOSITORY_URL}}\".helper '!p(){ echo \"password=\"${GIT_PASSWORD}\"\";}; p'\n  ;;\nesac\ngit config --global user.name Robot\ngit config --global user.email robot@lerjin.com\n# 清理 deploy 目录，避免冲突\n[[ -d deploy ]] && rm -rf deploy\necho \">_ git clone --branch \"{{inputs.parameters.GIT_DEPLOY_BRANCH_NAME}}\" \"{{inputs.parameters.GIT_DEPLOY_REPOSITORY_URL}}\" deploy\"\ngit clone --branch \"{{inputs.parameters.GIT_DEPLOY_BRANCH_NAME}}\" \"{{inputs.parameters.GIT_DEPLOY_REPOSITORY_URL}}\" deploy\n\n_jq() {\n  ## jq 获取指定字段值\n  echo ${row} | base64 -d | jq -r ${1}\n}\n_sc() {\n  ## console 输出文字颜色标注\n  local regex_pattern=\"$1\"\n  sed \"s@\\(${regex_pattern}\\)@\\x1b[31m\\1\\x1b[0m@\" $2\n}\ncd deploy/\nfor row in $(echo '{{inputs.parameters.aggregate-results}}' | jq -r '.[] | @base64'); do\n  APPNAME=$(_jq '.APPNAME')\n  CONTEXT_ROOT=$(_jq '.CONTEXT_ROOT')\n  CI_ENVIRONMENT_NAME=$(_jq '.CI_ENVIRONMENT_NAME')\n  IMAGE_NAME=$(_jq '.IMAGE_NAME')\n  IMAGE_NAME_DIGEST=$(_jq '.IMAGE_NAME_DIGEST')\n  CI_COMMIT_SHORT_SHA=$(_jq '.CI_COMMIT_SHORT_SHA')\n  #APP_RESOURCE_DEFINE_FILE_PATH=\"overlays/${CI_ENVIRONMENT_NAME}/deploy/${APPNAME}.yaml\"\n  APP_RESOURCE_DEFINE_FILE_PATH=\"overlays/${CI_ENVIRONMENT_NAME}/${APPNAME}.yaml\"\n  yq -i '(select(.kind == \"Deployment\") | .spec.template.spec.containers[] | select(.name == \"'${APPNAME}'\")) .image = \"'${IMAGE_NAME_DIGEST}'\"' ${APP_RESOURCE_DEFINE_FILE_PATH}\n  yq -i '(select(.kind == \"Deployment\") | .spec.template.metadata.labels.version) = \"'${CI_COMMIT_SHORT_SHA}'\"' ${APP_RESOURCE_DEFINE_FILE_PATH}\n  _sc \"${IMAGE_NAME}\" ${APP_RESOURCE_DEFINE_FILE_PATH}\n  grep \"${IMAGE_NAME}\" ${APP_RESOURCE_DEFINE_FILE_PATH} > /dev/null 2>&1 && CURRENT_STAT=\"${CURRENT_STAT}./${CONTEXT_ROOT} -> ${APPNAME} \\x1b[32mSuccess\\x1b[0m\\n\" || CURRENT_STAT=\"${CURRENT_STAT}./${CONTEXT_ROOT} -> ${APPNAME} \\x1b[31mFailed\\x1b[0m\\n\" \n  printf \"\\n%-40s\\n\" \"=\"|sed \"s/ /=/g\"\ndone\n\necho \"======= sync-deploy information ========\"\necho -e \"${CURRENT_STAT}\" | column -t\n\ngit commit -sa -m \"[WorkflowRobot]: Push back from {{inputs.parameters.GIT_REPOSITORY_URL}}\" && \\\ngit pull --rebase=true && git push && \\\ngit credential-cache exit\n"
+            "source": "## Login settings\ncase \"${GIT_CREDENTIAL_TYPE}\" xxxxxx"
           }
         }
       ],
@@ -3457,7 +3457,7 @@
           },
           {
             "name": "GIT_REPOSITORY_URL",
-            "value": "https://gitlab.fawve.cluster.ws/fawve/finance.git",
+            "value": "https://gitlab.xxxx.xxxx.xx/fawve/finance.git",
             "description": "源码仓库地址,此值通过sensor进行注入"
           },
           {
@@ -3502,7 +3502,7 @@
           },
           {
             "name": "CI_REGISTRY_URL",
-            "value": "https://registry.fawve.cluster.ws",
+            "value": "https://registry.xxxx.xxxx.xx",
             "description": "容器镜像 Registry URL"
           },
           {
@@ -3517,12 +3517,12 @@
           },
           {
             "name": "GIT_DEPLOY_REPOSITORY_URL",
-            "value": "https://gitlab.fawve.cluster.ws/fawve/deploy.git",
+            "value": "https://gitlab.xxxx.xxxx.xx/fawve/deploy.git",
             "description": "发布仓库"
           },
           {
             "name": "WORKFLOWS_API_DOMAIN",
-            "value": "workflows.fawve.cluster.ws",
+            "value": "workflows.xxxx.xxxx.xx",
             "description": "workflows server 外部域名"
           },
           {
