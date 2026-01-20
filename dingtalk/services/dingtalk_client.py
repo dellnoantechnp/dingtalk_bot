@@ -1,18 +1,13 @@
 import time
 
-from alibabacloud_dingtalk.card_1_0.models import (CreateAndDeliverRequestImGroupOpenDeliverModel,
-                                                   CreateCardRequestImGroupOpenSpaceModelNotification,
+from alibabacloud_dingtalk.card_1_0.models import (CreateCardRequestImGroupOpenSpaceModelNotification,
                                                    CreateAndDeliverRequestImGroupOpenSpaceModel,
                                                    CreateCardRequestImGroupOpenSpaceModelSearchSupport)
 from alibabacloud_dingtalk.contact_1_0.models import SearchUserResponse
 from darabonba.policy.retry import RetryOptions, RetryCondition
 from django.conf import settings
-from django.core.handlers.asgi import ASGIRequest
-from django.http import HttpRequest
 from httpx import RequestError
-from urllib3.exceptions import ResponseError
 
-from core.redis_client import redis_hgetall, redis_hget
 from dingtalk.Models.CardRepository import CardRepository
 from dingtalk.Models.dingtalk_card_struct import DingTalkCardData, UserIdTypeModel, SpaceTypeEnum, \
     DingTalkCardPrivateDataItem, DingTalkCardParmData, DingTalkStreamDataModel, DingTalkCardParmCICDStatus
@@ -20,7 +15,7 @@ from dingtalk.Models.request_data_model import ReqDataModel
 from dingtalk.Models.workflow_task_status_model import WorkflowTaskStatusModel
 from dingtalk.interface.AbstractIM import AbstractIMClient
 from alibabacloud_tea_openapi import models as open_api_models
-from typing import Optional, Dict, NoReturn, Callable, List, Mapping
+from typing import Optional, Dict, Callable, List
 from dingtalk.services.dingtalk_base import DingtalkBase
 from alibabacloud_dingtalk.card_1_0 import models as dingtalkcard__1__0_models
 from alibabacloud_dingtalk.card_1_0.client import Client as dingtalkcard_1_0Client
@@ -28,7 +23,6 @@ from alibabacloud_dingtalk.card_1_0.client import Client as dingtalkcard_1_0Clie
 from alibabacloud_dingtalk.contact_1_0.client import Client as dingtalkcontact_1_0Client
 from alibabacloud_dingtalk.contact_1_0 import models as dingtalkcontact__1__0_models
 from alibabacloud_tea_util import models as util_models
-from alibabacloud_tea_util.client import Client as UtilClient
 import logging
 
 from dingtalk.type.types import TeaType, T

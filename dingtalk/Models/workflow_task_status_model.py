@@ -1,6 +1,6 @@
 import math
 from datetime import datetime
-from typing import List, Self
+from typing import List, Self, Optional
 
 from nice_duration import duration_string
 from pydantic import BaseModel, Field, model_validator
@@ -9,24 +9,25 @@ from pydantic import BaseModel, Field, model_validator
 class WorkflowTaskNodeStatus(BaseModel):
     name: str = Field(description="The name of the workflow task")
     status: str = Field(default=None, description="The status of the task")
-    duration_time: int = Field(default=None, description="The duration of the task", exclude=True)
+    duration_time: float = Field(default=None, description="The duration of the task", exclude=True)
     duration: str = Field(default=None, description="The duration of the workflow task")
     started_at: datetime = Field(default=None, description="The time the workflow was started")
-    message: str = Field(default=None, description="The message of the workflow task")
+    message: Optional[str] = Field(default=None, description="The message of the workflow task")
 
 
 class WorkflowTaskStatusModel(BaseModel):
     namespace: str = Field(description="The namespace of the workflow task")
     name: str = Field(description="The name of the task")
     status: str = Field(default=None, description='Phase a simple, high-level summary of where the workflow is in its '
-                                                 'lifecycle. Will be "" (Unknown), "Pending", or "Running" before the '
-                                                 'workflow is completed, and "Succeeded", "Failed" or "Error" once the '
-                                                 'workflow has completed.')
-    suspend: bool = Field(default=False, description="Suspend will suspend the workflow and prevent execution of any "
-                                                     "future steps in the workflow")
+                                                  'lifecycle. Will be "" (Unknown), "Pending", or "Running" before the '
+                                                  'workflow is completed, and "Succeeded", "Failed" or "Error" once the'
+                                                  'workflow has completed.')
+    suspend: Optional[bool] = Field(default=False, description="Suspend will suspend the workflow and prevent "
+                                                               "execution of any"
+                                                               "future steps in the workflow")
     progress: float = Field(default=None, description="Progress to completion")
-    template_task_count: int = Field(default=None, description="The number of tasks in the workflow template")
-    complete_task_count: int = Field(default=None, description="The number of tasks in the workflow complete")
+    template_task_count: int = Field(default=1, description="The number of tasks in the workflow template")
+    complete_task_count: int = Field(default=0, description="The number of tasks in the workflow complete")
     started_at: datetime = Field(default=None, description="The time the workflow was started")
     finished_at: datetime = Field(default=None, description="The time the workflow was finished")
     duration: str = Field(default=None, description="The duration of the workflow task")

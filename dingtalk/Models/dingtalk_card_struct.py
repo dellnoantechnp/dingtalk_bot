@@ -83,7 +83,7 @@ class DingTalkCardParmData(BaseModel):
     https://open.dingtalk.com/document/orgapp/instructions-for-filling-in-api-card-data#445386b2a8qss
     根据文档说明，所有字段均为字符串。
     """
-    cicd_elapse: str = Field(default=None, description="任务耗时")
+    cicd_elapse: Optional[str] = Field(default=None, description="任务耗时")
     # load JSON string parse to dict
     cicd_status: Annotated[
         Optional[DingTalkCardParmCICDStatus],
