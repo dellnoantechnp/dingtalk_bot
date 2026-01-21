@@ -415,7 +415,7 @@ class DingTalkClient(AbstractIMClient, DingtalkBase):
 
     def search_userid_by_name(self, name: str) -> SearchUserResponse:
         """search userid by name
-        :param name: user name
+        :param name: username
         :return: SearchUserResponse
         """
         search_user_header = dingtalkcontact__1__0_models.SearchUserHeaders()

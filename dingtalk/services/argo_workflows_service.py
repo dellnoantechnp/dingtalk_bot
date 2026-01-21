@@ -1,10 +1,7 @@
-from datetime import datetime, timezone, timedelta
-
+from datetime import datetime, timezone
 from hera.workflows.models import NodeStatus
-from humanfriendly import format_timespan
 from hera.workflows import WorkflowsService
-
-from typing import Dict, Set, List
+from typing import Dict, List
 from django.conf import settings
 import logging
 
@@ -12,12 +9,16 @@ from nice_duration import duration_string
 
 from dingtalk.Models.workflow_output_parameters_model import WorkflowOutputParameterModel
 from dingtalk.Models.workflow_task_status_model import WorkflowTaskStatusModel
+from dingtalk.services.test_argo_workflow import test_argo_workflow_service
 
 logger = logging.getLogger("dingtalk_bot")
 
 
 class ArgoWorkflowsService:
     def __init__(self):
+        if settings.DEBUG:
+            # mock data
+            self.service = test_argo_workflow_service
         self.service = WorkflowsService(
             host=settings.ARGO_WORKFLOWS_DOMAIN,
             verify_ssl=True,
