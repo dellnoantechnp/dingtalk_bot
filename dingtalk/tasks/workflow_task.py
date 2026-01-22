@@ -2,6 +2,7 @@ import logging
 import os
 from typing import Dict
 
+from alibabacloud_dingtalk.card_1_0.models import CreateAndDeliverResponseBody
 from celery import Celery, shared_task
 from django.conf import settings
 from django.core.handlers.asgi import ASGIRequest
@@ -121,4 +122,4 @@ def create_and_update_card(req_data_dict: Dict[str, str]) -> Dict[str, str]:
     resp = notice.send()
 
     logger.info(resp.body)
-    return notice.data.card_parm_map.model_dump()
+    return resp.to_map()

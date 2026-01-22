@@ -7,6 +7,7 @@ from alibabacloud_dingtalk.contact_1_0.models import SearchUserResponse
 from darabonba.policy.retry import RetryOptions, RetryCondition
 from django.conf import settings
 from httpx import RequestError
+from pydantic import ValidationError
 
 from dingtalk.Models.CardRepository import CardRepository
 from dingtalk.Models.dingtalk_card_struct import DingTalkCardData, UserIdTypeModel, SpaceTypeEnum, \
@@ -276,19 +277,27 @@ class DingTalkClient(AbstractIMClient, DingtalkBase):
             self._card_template_id = card_template_id
             open_conversation_id = req_data.headers.get("x-open-conversation-id")
             task_name = req_data.POST.get("task_name")
-            body = dict(req_data.POST)
-            data = {"card_template_id": card_template_id,
+            # card_parm_map data
+            card_parm_map_data = dict(req_data.POST)
+
+            card_data = {"card_template_id": card_template_id,
                     "open_conversation_id": open_conversation_id,
                     "task_name": task_name,
-                    "card_parm_map": body,
+                    "card_parm_map": card_parm_map_data,
                     "robot_code": settings.DINGTALK_ROBOT_CODE,
                     "out_track_id": self.out_track_id
                     }
-            schema = DingTalkCardData.model_validate(data)
+            try:
+                schema = DingTalkCardData.model_validate(card_data)
+            except ValidationError as err:
+                logger.error(f"DingTalkCardData.model_validate(card_data) was wrong !!!")
+                raise err
+
             # render Markdown content
             if schema.card_parm_map.markdown_content:
+                logger.info(f"ready render markdown text: {schema.card_parm_map.markdown_content}")
                 schema.card_parm_map.markdown_content = render_git_log_to_md(schema.card_parm_map.markdown_content)
-            logger.debug(f"parsed data {schema.model_dump_json()}")
+            logger.info(f"parsed data is: {schema.model_dump_json()}")
             self.data = schema
             return True
         else:
@@ -343,7 +352,7 @@ class DingTalkClient(AbstractIMClient, DingtalkBase):
         config.protocol = "https"
         config.region_id = "central"
         retry_option = RetryOptions(
-            options={"retryCondition": [RetryCondition(condition={"maxAttempts": 5})]}
+            options={"retryCondition": [RetryCondition(condition={"maxAttempts": 3})]}
         )
         config.retry_options = retry_option
         return dingtalkcard_1_0Client(config)
