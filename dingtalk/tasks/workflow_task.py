@@ -75,11 +75,15 @@ def create_and_update_card(req_data_dict: Dict[str, str]) -> Dict[str, str]:
         namespace=namespace,
         name=task_name
     )
+
+    # 获取output输出
     change_log = workflow_instance.get_output_parameter(
         namespace=namespace,
         name=task_name
     )
     req_data.POST["markdown_content"] = change_log.value
+
+    # 获取output输出
     environment = workflow_instance.get_output_parameter(
         namespace=namespace,
         name=task_name,
@@ -88,12 +92,9 @@ def create_and_update_card(req_data_dict: Dict[str, str]) -> Dict[str, str]:
     )
     req_data.POST["environment"] = environment.value
 
-    task_duration = workflow_instance.duration(
-        namespace=namespace,
-        name=task_name
-    )
-    req_data.POST["cicd_elapse"] = task_duration
+    req_data.POST["cicd_elapse"] = task_data.duration
 
+    # 创建通知对象
     notice = DingTalkClient(
         task_name=task_name,
         space_type=SpaceTypeEnum.IM_GROUP
