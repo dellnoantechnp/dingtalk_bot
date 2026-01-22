@@ -101,10 +101,12 @@ def create_and_update_card(req_data_dict: Dict[str, str]) -> Dict[str, str]:
     notice.parse_api_data(req_data=req_data)
     notice.parse_workflow_task_data(task_data)
 
-    users = parse_user_name_from_git_log(change_log.value)
-    logger.debug("users: {}".format(users))
-    for user in users:
-        logger.info(notice.search_userid_by_name(name=user).body)
+    if change_log.value:
+        # 如果获取到了 change_log 对象
+        users = parse_user_name_from_git_log(change_log.value)
+        logger.debug("users: {}".format(users))
+        for user in users:
+            logger.info(notice.search_userid_by_name(name=user).body)
 
     # @notice.before_send
     # def update_alert_text():

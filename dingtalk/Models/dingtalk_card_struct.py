@@ -89,7 +89,7 @@ class DingTalkCardParmData(BaseModel):
         Optional[DingTalkCardParmCICDStatus],
         BeforeValidator(parse_json_string)
     ] = Field(default=None, description="任务状态")
-    environment: str = Field(default=None, description="环境名称")
+    environment: Optional[str] = Field(default=None, description="环境名称")
     commit_sha: str = Field(default=None, description="Git commit sha")
     branch: str = Field(default=None, description="Git branch")
     author: str = Field(default=None, description="CICD action author")
@@ -98,7 +98,7 @@ class DingTalkCardParmData(BaseModel):
     card_ref_link: str = HttpUrl
     approve_max: str = Field(default="10", description="投票上限, must be str")
     reject_max: str = Field(default="2", description="拒绝上限, must be str")
-    markdown_content: str = Field(default=None, description="消息内容markdown")
+    markdown_content: Optional[str] = Field(default=None, description="消息内容markdown")
     approve: str = Field(default="0", description="当前投票数, must be str")
     reject: str = Field(default="0", description="当前拒绝数, must be str")
     card_title: str = Field(default=None, description="卡片通知标题")

@@ -9,16 +9,12 @@ from nice_duration import duration_string
 
 from dingtalk.Models.workflow_output_parameters_model import WorkflowOutputParameterModel
 from dingtalk.Models.workflow_task_status_model import WorkflowTaskStatusModel
-from dingtalk.services.test_argo_workflow import test_argo_workflow_service
 
 logger = logging.getLogger("dingtalk_bot")
 
 
 class ArgoWorkflowsService:
     def __init__(self):
-        if settings.DEBUG:
-            # mock data
-            self.service = test_argo_workflow_service
         self.service = WorkflowsService(
             host=settings.ARGO_WORKFLOWS_DOMAIN,
             verify_ssl=True,
@@ -34,6 +30,8 @@ class ArgoWorkflowsService:
 
             status = ret.status.phase
             progress = ret.status.progress
+            namespace = ret.metadata.namespace
+            name = ret.metadata.name
             logger.debug(f"get workflow result: {namespace}/{name}, status={status}, progress={progress}")
 
             nodes = ret.status.nodes if ret.status.nodes else {}
@@ -41,8 +39,9 @@ class ArgoWorkflowsService:
                                    for node in nodes
                                    if nodes.get(node).type == "Pod"], key=lambda x: x["started_at"])
             suspend = ret.spec.suspend
-            template_task_count = len(ret.status.stored_templates)
-            complete_task_count = len(ret.status.task_results_completion_status)
+            total_task_count = len([id for id in ret.status.nodes if ret.status.nodes[id].type in ["Pod", "Skipped"]])
+            complete_task_count = len([id for id in ret.status.nodes
+                                       if ret.status.nodes[id].type == "Pod" and ret.status.nodes[id].phase == "Succeeded"])
             started_at = ret.status.started_at.__root__
             finished_at = ret.status.finished_at.__root__ if ret.status.finished_at else datetime.now(timezone.utc)
             wts = WorkflowTaskStatusModel.model_validate({
@@ -51,7 +50,7 @@ class ArgoWorkflowsService:
                 "status": status,
                 "suspend": suspend,
                 # "progress": progress,
-                "template_task_count": template_task_count,
+                "total_task_count": total_task_count,
                 "complete_task_count": complete_task_count,
                 "started_at": started_at,
                 "finished_at": finished_at,
@@ -65,7 +64,7 @@ class ArgoWorkflowsService:
     def calculator_duration(node: NodeStatus) -> List[str|int]:
         """计算当前任务耗时，以可读方式输出"""
         start_at = node.started_at.__root__
-        if node.phase == "Running":
+        if not node.finished_at:
             logger.debug(f"node {node.name} is running ...")
             finished_at = datetime.now(timezone.utc)
         else:

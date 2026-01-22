@@ -286,7 +286,8 @@ class DingTalkClient(AbstractIMClient, DingtalkBase):
                     }
             schema = DingTalkCardData.model_validate(data)
             # render Markdown content
-            schema.card_parm_map.markdown_content = render_git_log_to_md(schema.card_parm_map.markdown_content)
+            if schema.card_parm_map.markdown_content:
+                schema.card_parm_map.markdown_content = render_git_log_to_md(schema.card_parm_map.markdown_content)
             logger.debug(f"parsed data {schema.model_dump_json()}")
             self.data = schema
             return True
