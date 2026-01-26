@@ -6,6 +6,7 @@ from django.conf import settings
 import logging
 
 from nice_duration import duration_string
+from pyasn1.type.univ import Null
 
 from dingtalk.Models.workflow_output_parameters_model import WorkflowOutputParameterModel
 from dingtalk.Models.workflow_task_status_model import WorkflowTaskStatusModel
@@ -44,6 +45,17 @@ class ArgoWorkflowsService:
                                        if ret.status.nodes[id].type == "Pod" and ret.status.nodes[id].phase == "Succeeded"])
             started_at = ret.status.started_at.__root__
             finished_at = ret.status.finished_at.__root__ if ret.status.finished_at else datetime.now(timezone.utc)
+
+            # output parameters
+            change_log = self.get_output_parameter(namespace=namespace, name=name,
+                                                   template_name="change-log", output_parameter="CHANGE_LOG")
+            environment = self.get_output_parameter(namespace=namespace, name=name,
+                                      template_name="change-log", output_parameter="CI_ENVIRONMENT_NAME")
+            if change_log.value and environment.value:
+                output_parameter = [change_log, environment]
+            else:
+                output_parameter = Null
+
             wts = WorkflowTaskStatusModel.model_validate({
                 "namespace": namespace,
                 "name": name,
@@ -54,7 +66,8 @@ class ArgoWorkflowsService:
                 "complete_task_count": complete_task_count,
                 "started_at": started_at,
                 "finished_at": finished_at,
-                "nodes": nodes_status
+                "nodes": nodes_status,
+                "outputs": output_parameter
             })
             return wts
         except Exception as e:

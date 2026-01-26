@@ -5,6 +5,8 @@ from typing import List, Self, Optional
 from nice_duration import duration_string
 from pydantic import BaseModel, Field, model_validator
 
+from dingtalk.Models.workflow_output_parameters_model import WorkflowOutputParameterModel
+
 
 class WorkflowTaskNodeStatus(BaseModel):
     name: str = Field(description="The name of the workflow task")
@@ -32,6 +34,7 @@ class WorkflowTaskStatusModel(BaseModel):
     finished_at: datetime = Field(default=None, description="The time the workflow was finished")
     duration: Optional[str] = Field(default=None, description="The duration of the workflow task")
     nodes: List[WorkflowTaskNodeStatus] = Field(default=None, description="The status of the workflow nodes")
+    outputs: Optional[List[WorkflowOutputParameterModel]] = Field(default=None, description="The status of the workflow outputs")
 
     @model_validator(mode="after")
     def check_status(self) -> Self:
