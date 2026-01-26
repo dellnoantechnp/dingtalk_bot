@@ -24,13 +24,20 @@ DINGTALK_CLIENT_ID = os.environ.get("DINGTALK_CLIENT_ID")
 
 DINGTALK_CLIENT_SECRET= os.environ.get("DINGTALK_CLIENT_SECRET")
 
-REDIS_ADDR = os.environ.get("REDIS_ADDR", "127.0.0.1:6379")
+REDIS_HOST = os.environ.get("REDIS_HOST", "127.0.0.1")
 
-REDIS_URL = os.getenv("REDIS_URL", "redis://:password@127.0.0.1:6379")
+REDIS_PORT = os.environ.get("REDIS_PORT", "6379")
 
-REDIS_DATABASE_NUM = os.environ.get("REDIS_DATABASE_NUM", "0")
+# REDIS_URL = os.getenv("REDIS_URL", "redis://:password@127.0.0.1:6379")
+
+REDIS_DB = os.environ.get("REDIS_DB", "0")
 
 REDIS_PASSWORD = os.environ.get("REDIS_PASSWORD", "")
+
+if REDIS_PASSWORD:
+    REDIS_LOCATION = f"redis://:{REDIS_PASSWORD}@{REDIS_HOST}:{REDIS_PORT}/{REDIS_DB}"
+else:
+    REDIS_LOCATION = f"redis://{REDIS_HOST}:{REDIS_PORT}/{REDIS_DB}"
 
 ARGO_WORKFLOWS_DOMAIN = os.environ.get("ARGO_WORKFLOWS_DOMAIN", "https://workflows.example.com")
 
@@ -241,7 +248,7 @@ LOGGING = {
 CACHES = {
     "default": {
         "BACKEND": "django_redis.cache.RedisCache",
-        "LOCATION": REDIS_URL,
+        "LOCATION": REDIS_LOCATION,
         "OPTIONS": {
             # "REDIS_CLIENT_CLASS": "redis.cluster.RedisCluster",  # 连接类
             "CLIENT_CLASS": "django_redis.client.DefaultClient",
@@ -261,7 +268,7 @@ CACHES = {
             #     # # "password": REDIS_PASSWORD,
                 'read_from_replicas': True,        # 是否允许从 replica 节点读取
                 "retry_on_timeout": True,
-                "health_check_interval": 30,       # 健康检查，自动重连
+                "health_check_interval": 10,       # 健康检查，自动重连
                 "max_connections": 10
             },
             "SERIALIZER": "django_redis.serializers.json.JSONSerializer",
@@ -273,33 +280,15 @@ CACHES = {
     }
 }
 
-Q_CLUSTER = {
-    'name': 'project',
-    'workers': 4,
-    # 'recycle': 500,
-    'timeout': 60,
-    # 'compress': True,
-    # 'cpu_affinity': 1,
-    # 'save_limit': 250,
-    # 'queue_limit': 500,
-    # 'label': 'DjangoQ',
-    # "django_redis": "default"
-    "redis": {
-        "host": REDIS_ADDR.split(":")[0],
-        "port": REDIS_ADDR.split(":")[1],
-        "db": REDIS_DATABASE_NUM,
-        "password": REDIS_PASSWORD
-    }
-}
 
 # Deprecated
 ## 设置 redis-cluster 任意节点地址
-REDIS_CLUSTER_NODES = [
-    {"host": REDIS_ADDR.split(":")[0], "port": REDIS_ADDR.split(":")[1]},
-]
+# REDIS_CLUSTER_NODES = [
+#     {"host": REDIS_ADDR.split(":")[0], "port": REDIS_ADDR.split(":")[1]},
+# ]
 
 # 设置存储 Celery 任务队列的 Redis 数据库
-CELERY_BROKER_URL = REDIS_URL
+CELERY_BROKER_URL = REDIS_LOCATION
 CELERY_ACCEPT_CONTENT = ['json']
 CELERY_TASK_SERIALIZER = 'json'
 
@@ -307,7 +296,7 @@ CELERY_TASK_SERIALIZER = 'json'
 # CELERY_WORKER_SEND_TASK_EVENTS = False
 # CELERY_WORKER_ENABLE_REMOTE_CONTROL = False
 # 设置存储 Celery 任务结果的数据库
-CELERY_RESULT_BACKEND = REDIS_URL
+CELERY_RESULT_BACKEND = REDIS_LOCATION
 # celery-task-meta-* 过期时间默认 1day
 CELERY_RESULT_EXPIRES = timedelta(weeks=1)
 

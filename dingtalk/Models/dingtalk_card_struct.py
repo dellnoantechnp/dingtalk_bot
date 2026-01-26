@@ -12,11 +12,19 @@ logger = logging.getLogger("dingtalk_bot")
 
 class DingTalkCardPrivateDataItem(BaseModel):
     """DingTalk interactive card private data"""
-    approve_action: str = Field(default="false", description="var approve_action, must be str")
-    reject_action: str = Field(default="false", description="var reject_action, must be str")
+    approve_action: bool = Field(default=False, description="var approve_action")
+    reject_action: bool = Field(default=False, description="var reject_action")
+
+    @field_serializer("approve_action")
+    def serialize_approve_action(self, approve_action: bool) -> str:
+        return f"{approve_action}".lower()
+
+    @field_serializer("reject_action")
+    def serialize_reject_action(self, reject_action: bool) -> str:
+        return f"{reject_action}".lower()
 
 
-EntityUserID = Annotated[str, Field(description="DingTalk UserID, must be str")]
+EntityUserID = Annotated[str, Field(description="DingTalk UserID")]
 
 
 def parse_json_string(v: Any) -> Any:
@@ -78,6 +86,12 @@ class DingTalkCardParmCICDStatus(BaseModel):
         return f"{visible}".lower()
 
 
+class DingTalkCardParmLoopTagsModel(BaseModel):
+    label: str = Field(default=None, description="display label name")
+    color: ColorEnum = Field(default=ColorEnum.BLUE, description="display color")
+    idx: int = Field(default=0, description="tag index number")
+
+
 class DingTalkCardParmData(BaseModel):
     """Card view param data
     https://open.dingtalk.com/document/orgapp/instructions-for-filling-in-api-card-data#445386b2a8qss
@@ -96,16 +110,16 @@ class DingTalkCardParmData(BaseModel):
     project_id: str = Field(default=None, description="工程项目id")
     repository: str = Field(default=None, description="工程项目名称")
     card_ref_link: str = HttpUrl
-    approve_max: str = Field(default="10", description="投票上限, must be str")
-    reject_max: str = Field(default="2", description="拒绝上限, must be str")
+    approve_max: int = Field(default=10, description="投票上限")
+    reject_max: int = Field(default=2, description="拒绝上限")
     markdown_content: Optional[str] = Field(default=None, description="消息内容markdown")
-    approve: str = Field(default="0", description="当前投票数, must be str")
-    reject: str = Field(default="0", description="当前拒绝数, must be str")
+    approve: int = Field(default=0, description="当前投票数")
+    reject: int = Field(default=0, description="当前拒绝数")
     card_title: str = Field(default=None, description="卡片通知标题")
     chart_data: str = Field(default=None, description="图表JSON体")
     warning_text: Optional[str] = Field(default=None, description="警告栏提示信息")
     progress: float = Field(default=0, ge=0, le=100, description="任务进度")
-    loop_tag: Optional[DingTalkCardParmTagData] = Field(default=None, description="循环渲染标签")
+    loop_tag: Optional[DingTalkCardParmLoopTagsModel] = Field(default=None, description="循环渲染标签")
 
     # 定义字段序列化器，导出时将 float 转为 str
     @field_serializer("progress")
@@ -126,6 +140,14 @@ class DingTalkCardParmData(BaseModel):
         if cicd_status:
             return cicd_status.model_dump_json()
         return None
+
+    @field_serializer("approve")
+    def serialize_approve(self, approve: int) -> str:
+        return f"{approve}"
+
+    @field_serializer("reject")
+    def serialize_reject(self, reject: int) -> str:
+        return f"{reject}"
 
 
 class SpaceTypeEnum(str, Enum):

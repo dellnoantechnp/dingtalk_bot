@@ -4,6 +4,7 @@ from typing import Dict
 
 from alibabacloud_dingtalk.card_1_0.models import CreateAndDeliverResponseBody
 from celery import Celery, shared_task
+from celery.exceptions import MaxRetriesExceededError
 from django.conf import settings
 from django.core.handlers.asgi import ASGIRequest
 from django.utils.duration import duration_string
@@ -116,10 +117,43 @@ def create_and_update_card(req_data_dict: Dict[str, str]) -> Dict[str, str]:
 
     # notice._alert_content = notice.data.card_parm_map.repository
 
-
+    monitor_workflow_status.delay(namespace=namespace, task_name=task_name, out_track_id=notice.data.out_track_id)
 
     # @notice.before_send([test1])
     resp = notice.send()
 
     logger.info(resp.body)
     return resp.to_map()
+
+
+@app.task(bind=True, retry_kwargs={'max_retries': 30})
+def monitor_workflow_status(self, namespace: str, task_name: str, out_track_id: str):
+    """
+    任务 B：只负责更新，不负责创建
+    """
+    service = ArgoWorkflowsService()
+
+    try:
+        # 1. 查状态
+        task_data = service.get_result(namespace, task_name)
+
+        # 2. 更新卡片 (Update)
+        # 这里只做更新操作
+        update_notice = DingTalkClient(out_track_id=out_track_id)
+        update_notice.parse_workflow_task_data(task_data)
+        update_notice.update(user_id=None)
+
+        # 3. 递归判断
+        if task_data.status in ["Succeeded", "Failed", "Error"]:
+            return f"Finished: {task_data.status}"
+
+        # 4. 继续轮询
+        raise self.retry(countdown=5)
+
+    except MaxRetriesExceededError:
+        # 处理重试次数耗尽的情况
+        return "Max retries exceeded"
+
+    except Exception as exc:
+        # 这里的异常处理只针对轮询过程
+        raise self.retry(exc=exc, countdown=10)

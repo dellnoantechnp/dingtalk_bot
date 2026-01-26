@@ -30,13 +30,13 @@ def get_redis_cluster() -> Redis:
     if _redis is None:
         try:
             _pool = ConnectionPool.from_url(
-                url=settings.REDIS_URL,
+                url=settings.REDIS_LOCATION,
                 decode_responses=True,
                 #require_full_coverage=True,
                 max_connections=10,
             )
             _redis = redis.Redis.from_pool(connection_pool=_pool)
-            logger.info(f"Redis client initialized successfully with URL: {settings.REDIS_URL}, "
+            logger.info(f"Redis client initialized successfully with URL: {settings.REDIS_LOCATION}, "
                         f"pool size is {_redis.connection_pool._created_connections}/{_pool.max_connections}")
         except Exception as e:
             logger.error(msg=f"Redis client initialized failed with exception: {e}")

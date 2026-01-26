@@ -1,4 +1,5 @@
 from abc import ABC, abstractmethod
+from typing import Optional
 
 
 class AbstractIMClient(ABC):
@@ -7,5 +8,5 @@ class AbstractIMClient(ABC):
         pass
 
     @abstractmethod
-    def update(self, user_id: str):
+    def update(self, user_id: Optional[str]):
         pass

@@ -16,7 +16,7 @@ from dingtalk.Models.request_data_model import ReqDataModel
 from dingtalk.Models.workflow_task_status_model import WorkflowTaskStatusModel
 from dingtalk.interface.AbstractIM import AbstractIMClient
 from alibabacloud_tea_openapi import models as open_api_models
-from typing import Optional, Dict, Callable, List
+from typing import Optional, Dict, Callable, List, Mapping
 from dingtalk.services.dingtalk_base import DingtalkBase
 from alibabacloud_dingtalk.card_1_0 import models as dingtalkcard__1__0_models
 from alibabacloud_dingtalk.card_1_0.client import Client as dingtalkcard_1_0Client
@@ -178,8 +178,8 @@ class DingTalkClient(AbstractIMClient, DingtalkBase):
         return ret
 
     def __update_interactive_card_req(self, card_parm_data: DingTalkCardParmData,
-                                      user_id: str,
-                                      private_param_data: DingTalkCardPrivateDataItem) -> Dict[str, TeaType]:
+                                      user_id: Optional[str],
+                                      private_param_data: Optional[Mapping[str, DingTalkCardPrivateDataItem]]) -> Dict[str, TeaType]:
         """准备 update card 底层数据模型"""
         ret = dict()
         update_card_headers = dingtalkcard__1__0_models.UpdateCardHeaders()
@@ -197,11 +197,16 @@ class DingTalkClient(AbstractIMClient, DingtalkBase):
         card_data = dingtalkcard__1__0_models.UpdateCardRequestCardData(
             card_param_map=card_parm_data.model_dump(mode='json')
         )
-        user_private_data = private_param_data.get(user_id)
-        private_data_value_key = dingtalkcard__1__0_models.PrivateDataValue(
-            card_param_map=user_private_data.model_dump(mode='json')
-        )
-        private_data = {user_id: private_data_value_key}
+
+        if user_id:
+            # 添加 private 逻辑
+            user_private_data = private_param_data.get(user_id)
+            private_data_value_key = dingtalkcard__1__0_models.PrivateDataValue(
+                card_param_map=user_private_data.model_dump(mode='json')
+            )
+            private_data = {user_id: private_data_value_key}
+        else:
+            private_data = self.data.private_data
 
         update_card_request = dingtalkcard__1__0_models.UpdateCardRequest(
             out_track_id=self.data.out_track_id,
@@ -311,17 +316,20 @@ class DingTalkClient(AbstractIMClient, DingtalkBase):
         # 加载历史数据
         self.__load_data_from_persistent_store(out_track_id=out_track_id)
 
+        # 获取回调操作
         action = callback_data.value.cardPrivateData.get("params")
+
+        # old public variable
+        old_approve_value = self.data.card_parm_map.approve
+        old_reject_value = self.data.card_parm_map.reject
         if "approve" in action:
-            old_approve_value = self.data.card_parm_map.approve
-            self.data.card_parm_map.approve = str(int(old_approve_value) + 1)
-            self.data.private_data.update({callback_data.userId: DingTalkCardPrivateDataItem(approve_action="true")})
+            self.data.card_parm_map.approve = old_approve_value + 1
+            self.data.private_data.update({callback_data.userId: DingTalkCardPrivateDataItem(approve_action=True)})
             logger.info(f"receive approve vote on userId {callback_data.userId}, "
                         f"now approve is {old_approve_value}->{self.data.card_parm_map.approve}")
         elif "reject" in action:
-            old_reject_value = self.data.card_parm_map.reject
-            self.data.card_parm_map.reject = str(int(old_reject_value) + 1)
-            self.data.private_data.update({callback_data.userId: DingTalkCardPrivateDataItem(reject_action="true")})
+            self.data.card_parm_map.reject = old_reject_value + 1
+            self.data.private_data.update({callback_data.userId: DingTalkCardPrivateDataItem(reject_action=True)})
             logger.info(f"receive reject vote on userId {callback_data.userId}, "
                         f"now reject is {old_reject_value}->{self.data.card_parm_map.reject}")
         else:
@@ -399,7 +407,7 @@ class DingTalkClient(AbstractIMClient, DingtalkBase):
         else:
             raise RuntimeError(resp)
 
-    def update(self, user_id: str):
+    def update(self, user_id: Optional[str]):
         """更新卡片"""
         req = self.__update_interactive_card_req(card_parm_data=self.data.card_parm_map, user_id=user_id,
                                                  private_param_data=self.data.private_data)
