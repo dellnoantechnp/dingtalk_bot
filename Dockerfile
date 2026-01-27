@@ -1,5 +1,11 @@
 FROM --platform=$TARGETPLATFORM python:3.13
 
+## Port
+# api
+EXPOSE 8000
+# metrics
+EXPOSE 8100
+
 WORKDIR /dingtalk_bot
 
 RUN pip config set global.index-url https://mirrors.tuna.tsinghua.edu.cn/pypi/web/simple

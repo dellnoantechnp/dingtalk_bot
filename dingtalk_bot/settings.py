@@ -82,9 +82,11 @@ INSTALLED_APPS = [
     'health_check',
     'health_check.cache',
     'health_check.contrib.celery_ping',
+    'django_prometheus',
 ]
 
 MIDDLEWARE = [
+    'django_prometheus.middleware.PrometheusBeforeMiddleware',  # first
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.locale.LocaleMiddleware',
@@ -95,6 +97,7 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'django.middleware.http.ConditionalGetMiddleware',
+    'django_prometheus.middleware.PrometheusAfterMiddleware',   # last
 ]
 
 ROOT_URLCONF = 'dingtalk_bot.urls'
@@ -248,8 +251,10 @@ LOGGING = {
 
 CACHES = {
     "default": {
-        "BACKEND": "django_redis.cache.RedisCache",
-        "LOCATION": REDIS_LOCATION,
+        # "BACKEND": "django_redis.cache.RedisCache",
+        "BACKEND": "django_prometheus.cache.backends.filebased.FileBasedCache",
+        # "LOCATION": REDIS_LOCATION,
+        "LOCATION": '/var/tmp/django_cache',
         "OPTIONS": {
             # "REDIS_CLIENT_CLASS": "redis.cluster.RedisCluster",  # 连接类
             "CLIENT_CLASS": "django_redis.client.DefaultClient",
@@ -304,3 +309,7 @@ CELERY_RESULT_EXPIRES = timedelta(weeks=1)
 # 设置定时任务相关配置
 # CELERY_ENABLE_UTC = False
 # CELERY_BEAT_SCHEDULER = 'django_celery_beat.schedulers:DatabaseScheduler'
+
+# Prometheus
+PROMETHEUS_METRICS_EXPORT_PORT = 8100
+PROMETHEUS_METRICS_EXPORT_ADDRESS = '0.0.0.0'
