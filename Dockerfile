@@ -38,4 +38,6 @@ ENV PATH="/dingtalk_bot/.venv/bin:$PATH"
 
 COPY . .
 
+RUN rm -rf .git/
+
 CMD supervisord
