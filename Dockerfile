@@ -19,23 +19,22 @@ ENV PYTHONDONTWRITEBYTECODE=1 \
 # Set working directory
 WORKDIR /dingtalk_bot
 
+## Port
+# api
+EXPOSE 8000
+# metrics
+EXPOSE 8100
+
+COPY server_config/supervisord.conf /etc/supervisord.conf
+
 # Install supervisord
 RUN apt-get update \
  && apt-get install -y --no-install-recommends supervisor \
  && rm -rf /var/lib/apt/lists/*
 
 # 拷贝 site-packages
-COPY --from=builder /usr/local/lib/python3.13/site-packages \
-                    /usr/local/lib/python3.13/site-packages
-COPY --from=builder /usr/local/bin /usr/local/bin
-
-COPY server_config/supervisord.conf /etc/supervisord.conf
-
-## Port
-# api
-EXPOSE 8000
-# metrics
-EXPOSE 8100
+COPY --from=builder /dingtalk_bot/.venv /dingtalk_bot/.venv
+ENV PATH="/dingtalk_bot/.venv/bin:$PATH"
 
 COPY . .
 
