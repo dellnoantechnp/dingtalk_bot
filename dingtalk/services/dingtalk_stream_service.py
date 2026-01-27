@@ -1,14 +1,11 @@
-import json
 import os
 
 import dingtalk_stream
-import requests
 from dingtalk_stream import AckMessage
 import logging
 import threading
 
 from dingtalk.Models.dingtalk_card_struct import DingTalkStreamDataModel
-from dingtalk.Models.CardRepository import CardRepository
 from dingtalk.services.dingtalk_client import DingTalkClient
 
 logger = logging.getLogger("dingtalk_bot")
@@ -31,6 +28,39 @@ def run():
         logger.info(f"start {t.name} thread ...")
         t.start()
         t.join()
+
+
+class EchoMarkdownHandler(dingtalk_stream.ChatbotHandler):
+
+    def __init__(self):
+        super().__init__()
+
+    async def process(self, callback: dingtalk_stream.CallbackMessage):
+        """
+        Docs: https://open.dingtalk.com/document/orgapp/event-callback-card  事件回调的content
+        """
+        incoming_message = dingtalk_stream.ChatbotMessage.from_dict(callback.data)
+
+        # 调用接口请求，处理卡片数据，更新卡片内容
+        logger.debug(f"call back raw_data: {incoming_message.to_dict()}")
+        # 获取STREAM回调数据
+        post_data = DingTalkStreamDataModel.model_validate(incoming_message.to_dict())
+        # 获取 out_track_id
+        out_track_id = post_data.outTrackId
+
+        update_notice = DingTalkClient(out_track_id=out_track_id)
+        update_notice.parse_stream_callback_data(post_data)
+        # 进行回调更新
+        resp = update_notice.update(post_data.userId)
+        try:
+            if resp.status_code >= 500:
+                return AckMessage.STATUS_SYSTEM_EXCEPTION, "INTERNAL ERROR"
+            elif resp.status_code == 400:
+                return AckMessage.STATUS_BAD_REQUEST, "Bad Request"
+            elif resp.status_code == 200:
+                return AckMessage.STATUS_OK, 'OK'
+        except Exception as e:
+            raise Exception(f"Call back api response error, {e}")
 
 
 # class CustomRobotConfig(AppConfig):
@@ -62,42 +92,3 @@ def run():
 #         # result = loop.run_until_complete(client.start())
 #         # loop.close()
 
-
-class EchoMarkdownHandler(dingtalk_stream.ChatbotHandler):
-
-    def __init__(self):
-        super().__init__()
-
-    async def process(self, callback: dingtalk_stream.CallbackMessage):
-        """
-        Docs: https://open.dingtalk.com/document/orgapp/event-callback-card  事件回调的content
-        """
-        incoming_message = dingtalk_stream.ChatbotMessage.from_dict(callback.data)
-        # print(incoming_message.extensions["content"])
-        # text = 'echo received message:\n'
-        # text += '\n'.join(['> 1. %s' % i for i in incoming_message.text.content.strip().split('\n')])
-        # 回复一个 markdown 卡片消息
-        # self.reply_markdown('dingtalk-tutorial-python', text, incoming_message)
-        # 回复一个普通文本消息
-        # self.reply_text(text=text, incoming_message=incoming_message)
-        # return AckMessage.STATUS_OK, 'OK'
-
-        # 调用接口请求，处理卡片数据，更新卡片内容
-        logger.debug(f"call back raw_data: {incoming_message.to_dict()}")
-        # 获取STREAM回调数据
-        post_data = DingTalkStreamDataModel.model_validate(incoming_message.to_dict())
-        out_track_id = post_data.outTrackId
-        persistent_data = CardRepository.load(out_track_id)
-        update_notice = DingTalkClient(out_track_id=out_track_id)
-        update_notice.parse_stream_callback_data(post_data)
-        resp = update_notice.update(post_data.userId)
-        try:
-            # resp = requests.post("http://localhost:8000/customRobot/test5", data=post_data)
-            if resp.status_code >= 500:
-                return AckMessage.STATUS_SYSTEM_EXCEPTION, "INTERNAL ERROR"
-            elif resp.status_code == 400:
-                return AckMessage.STATUS_BAD_REQUEST, "Bad Request"
-            elif resp.status_code == 200:
-                return AckMessage.STATUS_OK, 'OK'
-        except Exception as e:
-            raise Exception(f"Call back api response error, {e}")

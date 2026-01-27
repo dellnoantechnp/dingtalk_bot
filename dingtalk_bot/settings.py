@@ -28,8 +28,6 @@ REDIS_HOST = os.environ.get("REDIS_HOST", "127.0.0.1")
 
 REDIS_PORT = os.environ.get("REDIS_PORT", "6379")
 
-# REDIS_URL = os.getenv("REDIS_URL", "redis://:password@127.0.0.1:6379")
-
 REDIS_DB = os.environ.get("REDIS_DB", "0")
 
 REDIS_PASSWORD = os.environ.get("REDIS_PASSWORD", "")
@@ -80,7 +78,10 @@ INSTALLED_APPS = [
     # "background_task"
     # 'django_q',
     'django_celery_beat',
-    'django_celery_results'
+    'django_celery_results',
+    'health_check',
+    'health_check.cache',
+    'health_check.contrib.celery_ping',
 ]
 
 MIDDLEWARE = [
@@ -264,9 +265,9 @@ CACHES = {
             #     "startup_nodes": [
             #         {"host": REDIS_ADDR.split(':')[0], "port": int(REDIS_ADDR.split(':')[1])}
             #     ],
-                "decode_responses": True,
+            #     "decode_responses": True,
             #     # # "password": REDIS_PASSWORD,
-                'read_from_replicas': True,        # 是否允许从 replica 节点读取
+            #     'read_from_replicas': True,        # 是否允许从 replica 节点读取
                 "retry_on_timeout": True,
                 "health_check_interval": 10,       # 健康检查，自动重连
                 "max_connections": 10

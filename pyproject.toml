@@ -13,6 +13,7 @@ dependencies = [
     "django~=5.2.9",
     "django-celery-beat~=2.8.1",
     "django-celery-results~=2.6.0",
+    "django-health-check==3.20.8",
     "django-redis==6.0.0",
     "eventlet~=0.40.4",
     "gevent==25.9.1",
