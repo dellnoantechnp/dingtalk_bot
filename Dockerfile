@@ -1,6 +1,7 @@
 FROM --platform=$TARGETPLATFORM ghcr.io/astral-sh/uv:python3.13-bookworm-slim AS builder
 
-ENV UV_LINK_MODE=copy
+ENV UV_LINK_MODE=copy \
+    UV_SYSTEM_PYTHON=1
 
 # Set working directory
 WORKDIR /dingtalk_bot
