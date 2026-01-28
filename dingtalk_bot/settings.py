@@ -176,7 +176,7 @@ STATIC_URL = 'static/'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 LOG_PATH = os.path.join(BASE_DIR, "logs")
-if not os.path.exists(LOG_PATH):
+if not os.path.exists(LOG_PATH) and os.getuid() == 0:
     os.makedirs(LOG_PATH, exist_ok=True)
 
 LOGGING = {
