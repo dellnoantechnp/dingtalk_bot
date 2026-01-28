@@ -126,12 +126,12 @@ ASGI_APPLICATION = "dingtalk_bot.asgi.application"
 # Database
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
-    }
-}
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.sqlite3',
+#         'NAME': BASE_DIR / 'db.sqlite3',
+#     }
+# }
 
 
 # Password validation
@@ -254,7 +254,7 @@ CACHES = {
         # "BACKEND": "django_redis.cache.RedisCache",
         "BACKEND": "django_prometheus.cache.backends.filebased.FileBasedCache",
         # "LOCATION": REDIS_LOCATION,
-        "LOCATION": '/var/tmp/django_cache',
+        "LOCATION": '/tmp/django_cache',
         "OPTIONS": {
             # "REDIS_CLIENT_CLASS": "redis.cluster.RedisCluster",  # 连接类
             "CLIENT_CLASS": "django_redis.client.DefaultClient",
