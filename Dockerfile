@@ -27,11 +27,6 @@ EXPOSE 8100
 
 COPY server_config/supervisord.conf /etc/supervisord.conf
 
-# Install supervisord
-RUN apt-get update \
- && apt-get install -y --no-install-recommends supervisor \
- && rm -rf /var/lib/apt/lists/*
-
 # 拷贝 site-packages
 COPY --from=builder /dingtalk_bot/.venv /dingtalk_bot/.venv
 ENV PATH="/dingtalk_bot/.venv/bin:$PATH"
