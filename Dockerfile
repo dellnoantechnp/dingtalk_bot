@@ -25,7 +25,7 @@ EXPOSE 8000
 # metrics
 EXPOSE 8100
 
-COPY server_config/supervisord.conf /etc/supervisord.conf
+COPY scripts/supervisord.conf /etc/supervisord.conf
 
 # 拷贝 site-packages
 COPY --from=builder /dingtalk_bot/.venv /dingtalk_bot/.venv
