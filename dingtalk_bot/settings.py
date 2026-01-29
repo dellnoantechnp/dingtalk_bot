@@ -239,7 +239,7 @@ LOGGING = {
         },
         'dingtalk_bot': {
             'handlers': ['console'],
-            'level': 'DEBUG',
+            'level': 'ERROR',
             'propagate': False,  # 是否向上传递日志流
         },
         'django.request': {
@@ -247,10 +247,10 @@ LOGGING = {
             'level': 'ERROR',
             'propagate': False,
         },
-        'django-q': {
+        'daphne.access': {
             'handlers': ['console'],
-            'level': 'DEBUG',
-            'propagate': False,  # 是否向上传递日志流
+            'level': 'INFO',
+            'propagate': False,
         },
     }
 }
