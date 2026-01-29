@@ -1,4 +1,7 @@
-class IgnoreHealthCheckFilter:
+import logging
+
+
+class IgnoreHealthCheckFilter(logging.Filter):
     def filter(self, record):
         msg = record.getMessage()
         return not (

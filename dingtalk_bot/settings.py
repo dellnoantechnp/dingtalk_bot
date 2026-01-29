@@ -201,7 +201,7 @@ LOGGING = {
             '()': 'django.utils.log.RequireDebugTrue',
         },
         'ignore_healthcheck_log': {
-            '()', "core.ignore_health_log_filter.IgnoreHealthCheckFilter",
+            '()': "core.ignore_health_log_filter.IgnoreHealthCheckFilter",
         },
     },
     'handlers': {
