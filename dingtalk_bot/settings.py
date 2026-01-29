@@ -13,6 +13,8 @@ from datetime import timedelta
 from pathlib import Path
 import os
 
+import core.ignore_health_log_filter
+
 
 def env_to_bool(env, default):
     str_val = os.environ.get(env)
@@ -198,6 +200,9 @@ LOGGING = {
         'require_debug_true': {
             '()': 'django.utils.log.RequireDebugTrue',
         },
+        'ignore_healthcheck_log': {
+            '()', "core.ignore_health_log_filter.IgnoreHealthCheckFilter",
+        },
     },
     'handlers': {
         'log_file': {
@@ -213,6 +218,7 @@ LOGGING = {
         'console': {
             'level': 'DEBUG',
             #'filters': ['require_debug_true'], # filter为require_debug_true时表示只有当DEBUG,即DJANGO_DEBUG为True时该handler才会工作
+            'filters': ['ignore_healthcheck_log'],
             'class': 'logging.StreamHandler',
             'formatter': 'verbose'
         },
