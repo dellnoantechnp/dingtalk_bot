@@ -146,14 +146,14 @@ def monitor_workflow_status(self, namespace: str, task_name: str, out_track_id: 
 
         # 3. 递归判断
         if task_data.status in ["Succeeded", "Failed", "Error"]:
-            return f"Finished: {task_data.status} on {task_id}"
+            return f"Finished: {task_data.status} on task {task_id}"
 
         # 4. 继续轮询
         raise self.retry(countdown=10)
 
     except MaxRetriesExceededError:
         # 处理重试次数耗尽的情况
-        return f"Max retries exceeded on {task_id}"
+        return f"Max retries exceeded on task {task_id}"
 
     except Exception as exc:
         # 这里的异常处理只针对轮询过程
