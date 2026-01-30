@@ -148,7 +148,7 @@ def monitor_workflow_status(self, namespace: str, task_name: str, out_track_id: 
             return f"Finished: {task_data.status}"
 
         # 4. 继续轮询
-        raise self.retry(countdown=5)
+        raise self.retry(countdown=10)
 
     except MaxRetriesExceededError:
         # 处理重试次数耗尽的情况
@@ -156,4 +156,4 @@ def monitor_workflow_status(self, namespace: str, task_name: str, out_track_id: 
 
     except Exception as exc:
         # 这里的异常处理只针对轮询过程
-        raise self.retry(exc=exc, countdown=10)
+        raise self.retry(exc=exc, countdown=20)
