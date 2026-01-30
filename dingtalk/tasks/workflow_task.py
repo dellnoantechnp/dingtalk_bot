@@ -126,7 +126,7 @@ def create_and_update_card(req_data_dict: Dict[str, str]) -> Dict[str, str]:
     return resp.to_map()
 
 
-@app.task(bind=True, retry_kwargs={'max_retries': 300})
+@app.task(bind=True, max_retries=300)
 def monitor_workflow_status(self, namespace: str, task_name: str, out_track_id: str):
     """
     任务 B：只负责更新，不负责创建
