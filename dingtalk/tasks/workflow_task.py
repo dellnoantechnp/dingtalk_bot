@@ -132,6 +132,7 @@ def monitor_workflow_status(self, namespace: str, task_name: str, out_track_id: 
     任务 B：只负责更新，不负责创建
     """
     service = ArgoWorkflowsService()
+    task_id = self.request.id
 
     try:
         # 1. 查状态
@@ -145,14 +146,13 @@ def monitor_workflow_status(self, namespace: str, task_name: str, out_track_id: 
 
         # 3. 递归判断
         if task_data.status in ["Succeeded", "Failed", "Error"]:
-            return f"Finished: {task_data.status}"
+            return f"Finished: {task_data.status} on {task_id}"
 
         # 4. 继续轮询
         raise self.retry(countdown=10)
 
     except MaxRetriesExceededError:
         # 处理重试次数耗尽的情况
-        task_id = self.request.id
         return f"Max retries exceeded on {task_id}"
 
     except Exception as exc:
