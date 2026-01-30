@@ -152,7 +152,8 @@ def monitor_workflow_status(self, namespace: str, task_name: str, out_track_id: 
 
     except MaxRetriesExceededError:
         # 处理重试次数耗尽的情况
-        return "Max retries exceeded"
+        task_id = self.request.id
+        return f"Max retries exceeded on {task_id}"
 
     except Exception as exc:
         # 这里的异常处理只针对轮询过程
