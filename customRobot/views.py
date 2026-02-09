@@ -569,6 +569,7 @@ def new_notification(request):
         GET=request.GET.dict(),
         POST=request.POST.dict(),
     )
+    logger.info(f"new_notification: req_data={req_data}")
     task = create_and_update_card.delay(req_data.model_dump(mode='json'))
     task_id = task.id
     return JsonResponse({"task_id": task_id})
