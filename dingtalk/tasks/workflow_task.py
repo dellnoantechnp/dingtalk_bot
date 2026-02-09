@@ -139,7 +139,7 @@ def monitor_workflow_status(self, namespace: str, task_name: str, out_track_id: 
 
     for _ in range(MAX_RETRY):
         R+=1
-        time.sleep(10)
+        time.sleep(20)
         try:
             # 1. 查状态
             task_data = service.get_result(namespace, task_name)

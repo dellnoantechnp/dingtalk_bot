@@ -1,6 +1,6 @@
 import logging
 from typing import Optional, Callable
-from core.redis_client import get_redis_cluster
+from core.redis_client import get_redis_cluster, redis_get, redis_set
 from dingtalk.Models.dingtalk_card_struct import DingTalkCardData
 
 logger = logging.getLogger("dingtalk_bot")
@@ -31,15 +31,15 @@ class CardRepository:
             logger.error("Save failed: out_track_id is missing")
             return False
 
-        redis_client = get_redis_cluster()
+        #redis_client = get_redis_cluster()
         key = cls._get_key(card_data.out_track_id)
 
         try:
             # model_dump_json 会处理所有嵌套对象和 Enum
             json_str = card_data.model_dump_json(by_alias=True)
             logger.debug(f"Save data to redis key: {key}")
-            redis_client.set(key, json_str, ex=cls.EXPIRE_SECONDS)
-            return True
+            ret = redis_set(key, json_str, cls.EXPIRE_SECONDS)
+            return ret.ok
         except Exception as e:
             logger.error(f"Redis save error: {e}")
             return False
@@ -47,14 +47,15 @@ class CardRepository:
     @classmethod
     def load(cls, out_track_id: str) -> Optional[DingTalkCardData]:
         """读取对象"""
-        redis_client = get_redis_cluster()
+        #redis_client = get_redis_cluster()
         key = cls._get_key(out_track_id)
 
         try:
-            raw_data = redis_client.get(key)
-            if not raw_data:
+            raw_data = redis_get(key)
+            if not raw_data.ok:
+                logger.error(f"Load failed: Redis data not found for key={key}")
                 return None
-            return DingTalkCardData.model_validate_json(raw_data)
+            return DingTalkCardData.model_validate_json(raw_data.value)
         except Exception as e:
             logger.error(f"Redis load error: {e}")
             return None
