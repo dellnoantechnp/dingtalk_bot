@@ -68,7 +68,7 @@ def fetch_task_info(namespace: str, task: str) -> Dict[str, str]:
     retry_backoff_max=10,
 )
 def create_and_update_card(req_data_dict: Dict[str, str]) -> Dict[str, str]:
-    logger.debug("create_and_update_card starting...")
+    logger.info(f"create_and_update_card starting... req_data: {req_data_dict}")
     namespace = settings.ARGO_WORKFLOWS_WORKER_NAMESPACE
     req_data = ReqDataModel(**req_data_dict)
 
