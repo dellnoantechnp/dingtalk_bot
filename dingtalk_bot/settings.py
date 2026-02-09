@@ -239,7 +239,7 @@ LOGGING = {
         },
         'dingtalk_bot': {
             'handlers': ['console'],
-            'level': 'ERROR',
+            'level': 'INFO',
             'propagate': False,  # 是否向上传递日志流
         },
         'django.request': {
