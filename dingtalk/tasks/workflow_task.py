@@ -130,7 +130,6 @@ def monitor_workflow_status(self, namespace: str, task_name: str, out_track_id: 
     R=0
     service = ArgoWorkflowsService()
     task_id = self.request.id
-    update_notice = DingTalkClient(out_track_id=out_track_id)
 
     for _ in range(MAX_RETRY):
         R+=1
@@ -141,6 +140,7 @@ def monitor_workflow_status(self, namespace: str, task_name: str, out_track_id: 
 
             # 2. 更新卡片 (Update)
             # 这里只做更新操作
+            update_notice = DingTalkClient(out_track_id=out_track_id)
             update_notice.parse_workflow_task_data(task_data)
             update_notice.update(user_id=None)
 

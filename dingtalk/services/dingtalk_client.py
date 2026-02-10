@@ -339,6 +339,7 @@ class DingTalkClient(AbstractIMClient, DingtalkBase):
         self.data.card_parm_map.cicd_elapse = workflow_task_status.duration
         self.data.card_parm_map.cicd_status = DingTalkCardParmCICDStatus(label=workflow_task_status.status)
         self.data.card_parm_map.progress = workflow_task_status.progress
+        self.__persistent_card()
         # self.data.card_parm_map.
         # pass
 
