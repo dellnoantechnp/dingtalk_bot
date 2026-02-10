@@ -112,18 +112,13 @@ def create_and_update_card(req_data_dict: Dict[str, str]) -> Dict[str, str]:
         for user in users:
             logger.info(notice.search_userid_by_name(name=user).body)
 
-    # @notice.before_send
-    # def update_alert_text():
-    #     notice._alert_content = notice.data.card_parm_map.repository + " 更新"
+    # send card
+    resp = notice.send()
+    logger.info(resp.body)
 
-    # notice._alert_content = notice.data.card_parm_map.repository
-
+    # monitor and update card
     monitor_workflow_status.delay(namespace=namespace, task_name=task_name, out_track_id=notice.data.out_track_id)
 
-    # @notice.before_send([test1])
-    resp = notice.send()
-
-    logger.info(resp.body)
     return resp.to_map()
 
 
