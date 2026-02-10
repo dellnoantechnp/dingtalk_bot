@@ -205,8 +205,15 @@ class DingTalkClient(AbstractIMClient, DingtalkBase):
                 card_param_map=user_private_data.model_dump(mode='json')
             )
             private_data = {user_id: private_data_value_key}
+        elif self.data.private_data:
+            private_data_obj = {}
+            for user in self.data.private_data:
+                private_data_obj[user] = dingtalkcard__1__0_models.PrivateDataValue(
+                    card_param_map=self.data.private_data[user].model_dump(mode='json')
+                )
+            private_data = private_data_obj
         else:
-            private_data = self.data.private_data
+            private_data = {}
 
         update_card_request = dingtalkcard__1__0_models.UpdateCardRequest(
             out_track_id=self.data.out_track_id,
