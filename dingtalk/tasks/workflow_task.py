@@ -146,7 +146,9 @@ def monitor_workflow_status(self, namespace: str, task_name: str, out_track_id: 
 
             # 3. 递归判断
             if task_data.status in ["Succeeded", "Failed", "Error"]:
-                return f"Finished: {task_data.status} on task {task_id}"
+                if task_data.status in ["Failed", "Error"]:
+                    logger.warning(f"Failed: task={task_name} status is {task_data.status} on task_id={task_id} !!!!")
+                return f"Finished: {task_data.status} on task={task_name} task_id={task_id}"
 
             logger.info(f"Retry count {R} on task {task_id} ...")
             # # 4. 继续轮询
