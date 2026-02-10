@@ -200,19 +200,23 @@ class DingTalkClient(AbstractIMClient, DingtalkBase):
 
         if user_id:
             # 添加 private 逻辑
+            logger.debug(f"private data add user={user_id}")
             user_private_data = private_param_data.get(user_id)
             private_data_value_key = dingtalkcard__1__0_models.PrivateDataValue(
                 card_param_map=user_private_data.model_dump(mode='json')
             )
             private_data = {user_id: private_data_value_key}
         elif self.data.private_data:
+            logger.debug(f"private data load old data")
             private_data_obj = {}
             for user in self.data.private_data:
+                logger.debug(f"private data load user={user}")
                 private_data_obj[user] = dingtalkcard__1__0_models.PrivateDataValue(
                     card_param_map=self.data.private_data[user].model_dump(mode='json')
                 )
             private_data = private_data_obj
         else:
+            logger.debug(f"private data is none.")
             private_data = {}
 
         update_card_request = dingtalkcard__1__0_models.UpdateCardRequest(
@@ -329,18 +333,23 @@ class DingTalkClient(AbstractIMClient, DingtalkBase):
         # old public variable
         old_approve_value = self.data.card_parm_map.approve
         old_reject_value = self.data.card_parm_map.reject
-        if "approve" in action:
-            self.data.card_parm_map.approve = old_approve_value + 1
-            self.data.private_data.update({callback_data.userId: DingTalkCardPrivateDataItem(approve_action=True)})
-            logger.info(f"receive approve vote on userId {callback_data.userId}, "
-                        f"now approve is {old_approve_value}->{self.data.card_parm_map.approve}")
-        elif "reject" in action:
-            self.data.card_parm_map.reject = old_reject_value + 1
-            self.data.private_data.update({callback_data.userId: DingTalkCardPrivateDataItem(reject_action=True)})
-            logger.info(f"receive reject vote on userId {callback_data.userId}, "
-                        f"now reject is {old_reject_value}->{self.data.card_parm_map.reject}")
+
+        user_id = callback_data.userId
+        if user_id not in self.data.private_data.keys():
+            if "approve" in action:
+                self.data.card_parm_map.approve = old_approve_value + 1
+                self.data.private_data.update({callback_data.userId: DingTalkCardPrivateDataItem(approve_action=True)})
+                logger.info(f"receive approve vote on userId {callback_data.userId}, "
+                            f"now approve is {old_approve_value}->{self.data.card_parm_map.approve}")
+            elif "reject" in action:
+                self.data.card_parm_map.reject = old_reject_value + 1
+                self.data.private_data.update({callback_data.userId: DingTalkCardPrivateDataItem(reject_action=True)})
+                logger.info(f"receive reject vote on userId {callback_data.userId}, "
+                            f"now reject is {old_reject_value}->{self.data.card_parm_map.reject}")
+            else:
+                raise ValueError(f'callback data {callback_data} not supported')
         else:
-            raise ValueError(f'callback data {callback_data} not supported')
+            logger.warning(f"userId {callback_data.userId} is exist. skipping action ...")
 
     def parse_workflow_task_data(self, workflow_task_status: WorkflowTaskStatusModel):
         self.data.card_parm_map.cicd_elapse = workflow_task_status.duration
