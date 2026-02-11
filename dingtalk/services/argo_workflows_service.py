@@ -54,7 +54,7 @@ class ArgoWorkflowsService:
             if change_log.value and environment.value:
                 output_parameter = [change_log, environment]
             else:
-                output_parameter = Null
+                output_parameter = []
 
             wts = WorkflowTaskStatusModel.model_validate({
                 "namespace": namespace,
