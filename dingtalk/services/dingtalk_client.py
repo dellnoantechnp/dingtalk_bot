@@ -357,6 +357,7 @@ class DingTalkClient(AbstractIMClient, DingtalkBase):
         self.data.card_parm_map.progress = workflow_task_status.progress
 
         if workflow_task_status.outputs:
+            # 提取 output 输出内容至 card 内容
             for item in workflow_task_status.outputs:
                 if item.name == "CHANGE_LOG":
                     logger.info(f"parse CHANGE_LOG content, name={item.name} description={item.description}")
