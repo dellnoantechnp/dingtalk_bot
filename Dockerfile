@@ -13,6 +13,11 @@ RUN uv sync --frozen --no-dev
 # -----------------------------
 FROM --platform=$TARGETPLATFORM python:3.13-slim
 
+LABEL org.opencontainers.image.base.name="docker.io/dellnoantechnp/dingtalk-bot:latest" \
+      org.opencontainers.image.description="A CICD interactive message sender to DingTalk IM" \
+      org.opencontainers.image.source="https://github.com/dellnoantechnp/dingtalk_bot" \
+      org.opencontainers.image.title="dingtalk-bot"
+
 ENV PYTHONDONTWRITEBYTECODE=1 \
     PYTHONUNBUFFERED=1
 

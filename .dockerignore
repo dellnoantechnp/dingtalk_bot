@@ -1,0 +1,14 @@
+# Ignore .git/ directory
+/.git
+/.gitignore
+
+# Ignore Docker
+/Dockerfile*
+/.dockerignore
+
+# Ignore cursor
+/.cursorignore
+
+# Ignore logs dir
+/logs
+**/logs
