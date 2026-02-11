@@ -27,7 +27,7 @@ from alibabacloud_tea_util import models as util_models
 import logging
 
 from dingtalk.type.types import TeaType, T
-from utils.markdown_template import render_git_log_to_md
+from utils.markdown_template import render_git_log_to_md, parse_user_name_from_git_log
 
 logger = logging.getLogger("dingtalk_bot")
 
@@ -362,6 +362,14 @@ class DingTalkClient(AbstractIMClient, DingtalkBase):
                 if item.name == "CHANGE_LOG":
                     logger.info(f"parse CHANGE_LOG content, name={item.name} description={item.description}")
                     self.data.card_parm_map.markdown_content = render_git_log_to_md(item.value)
+
+                    # 如果获取到了 change_log 对象
+                    users = parse_user_name_from_git_log(item.value)
+                    logger.debug("users: {}".format(users))
+                    # TODO: add userid find feature
+                    # for user in users:
+                    #     logger.info(notice.search_userid_by_name(name=user).body)
+
                 if item.name == "CI_ENVIRONMENT_NAME":
                     logger.info(f"parse CI_ENVIRONMENT_NAME content, name={item.name} description={item.description}")
                     self.data.card_parm_map.environment = item.value

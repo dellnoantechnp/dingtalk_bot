@@ -79,28 +79,27 @@ def create_and_update_card(req_data_dict: Dict[str, str]) -> Dict[str, str]:
         name=task_name
     )
 
-
-    # get workflows "CHANGE_LOG" output
-    change_log = workflow_instance.get_output_parameter(
-        namespace=namespace,
-        name=task_name,
-        template_name="change-log",
-        output_parameter = "CHANGE_LOG"
-    )
-    if change_log.ok:
-        req_data.POST["markdown_content"] = change_log.value
-
-    # get workflows "CI_ENVIRONMENT_NAME" output
-    environment = workflow_instance.get_output_parameter(
-        namespace=namespace,
-        name=task_name,
-        template_name="change-log",
-        output_parameter="CI_ENVIRONMENT_NAME"
-    )
-    if environment.ok:
-        req_data.POST["environment"] = environment.value
-
-    req_data.POST["cicd_elapse"] = task_data.duration
+    # # get workflows "CHANGE_LOG" output
+    # change_log = workflow_instance.get_output_parameter(
+    #     namespace=namespace,
+    #     name=task_name,
+    #     template_name="change-log",
+    #     output_parameter = "CHANGE_LOG"
+    # )
+    # if change_log.ok:
+    #     req_data.POST["markdown_content"] = change_log.value
+    #
+    # # get workflows "CI_ENVIRONMENT_NAME" output
+    # environment = workflow_instance.get_output_parameter(
+    #     namespace=namespace,
+    #     name=task_name,
+    #     template_name="change-log",
+    #     output_parameter="CI_ENVIRONMENT_NAME"
+    # )
+    # if environment.ok:
+    #     req_data.POST["environment"] = environment.value
+    #
+    # req_data.POST["cicd_elapse"] = task_data.duration
 
     # 创建通知对象
     notice = DingTalkClient(
@@ -109,13 +108,6 @@ def create_and_update_card(req_data_dict: Dict[str, str]) -> Dict[str, str]:
     )
     notice.parse_api_data(req_data=req_data)
     notice.parse_workflow_task_data(task_data)
-
-    if change_log.value:
-        # 如果获取到了 change_log 对象
-        users = parse_user_name_from_git_log(change_log.value)
-        logger.debug("users: {}".format(users))
-        for user in users:
-            logger.info(notice.search_userid_by_name(name=user).body)
 
     # send card
     resp = notice.send()
