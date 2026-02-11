@@ -33,7 +33,7 @@ class ArgoWorkflowsService:
             progress = ret.status.progress
             namespace = ret.metadata.namespace
             name = ret.metadata.name
-            logger.debug(f"get workflow result: {namespace}/{name}, status={status}, progress={progress}")
+            logger.info(f"get workflow result: {namespace}/{name}, status={status}, progress={progress}")
 
             nodes = ret.status.nodes if ret.status.nodes else {}
             nodes_status = sorted([self.__node(nodes.get(node))
@@ -51,7 +51,7 @@ class ArgoWorkflowsService:
                                                    template_name="change-log", output_parameter="CHANGE_LOG")
             environment = self.get_output_parameter(namespace=namespace, name=name,
                                       template_name="change-log", output_parameter="CI_ENVIRONMENT_NAME")
-            if change_log.value and environment.value:
+            if change_log.ok and environment.ok:
                 output_parameter = [change_log, environment]
             else:
                 output_parameter = []

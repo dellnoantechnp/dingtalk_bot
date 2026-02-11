@@ -355,6 +355,16 @@ class DingTalkClient(AbstractIMClient, DingtalkBase):
         self.data.card_parm_map.cicd_elapse = workflow_task_status.duration
         self.data.card_parm_map.cicd_status = DingTalkCardParmCICDStatus(label=workflow_task_status.status)
         self.data.card_parm_map.progress = workflow_task_status.progress
+
+        if workflow_task_status.outputs:
+            for item in workflow_task_status.outputs:
+                if item.name == "CHANGE_LOG":
+                    logger.info(f"parse CHANGE_LOG content, name={item.name} description={item.description}")
+                    self.data.card_parm_map.markdown_content = render_git_log_to_md(item.value)
+                if item.name == "CI_ENVIRONMENT_NAME":
+                    logger.info(f"parse CI_ENVIRONMENT_NAME content, name={item.name} description={item.description}")
+                    self.data.card_parm_map.environment = item.value
+
         self.__persistent_card()
         # self.data.card_parm_map.
         # pass

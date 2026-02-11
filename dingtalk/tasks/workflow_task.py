@@ -79,6 +79,7 @@ def create_and_update_card(req_data_dict: Dict[str, str]) -> Dict[str, str]:
         name=task_name
     )
 
+
     # get workflows "CHANGE_LOG" output
     change_log = workflow_instance.get_output_parameter(
         namespace=namespace,
