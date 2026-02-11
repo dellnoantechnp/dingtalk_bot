@@ -1,4 +1,6 @@
-from pydantic import BaseModel, Field
+from typing import Self
+
+from pydantic import BaseModel, Field, model_validator
 
 
 class WorkflowOutputParameterModel(BaseModel):
@@ -9,3 +11,7 @@ class WorkflowOutputParameterModel(BaseModel):
     name: str = Field(default=None, description="Parameters name")
     value: str = Field(default=None, description="Parameters value")
     description: str = Field(default=None, description="Parameters description string")
+
+    @property
+    def ok(self) -> bool:
+        return bool(self.value)
