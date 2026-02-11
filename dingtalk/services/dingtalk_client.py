@@ -439,8 +439,12 @@ class DingTalkClient(AbstractIMClient, DingtalkBase):
         )
         self.__persistent_card()
         if resp.status_code == 200:
+            if not resp.body.result.deliver_results[0].success:
+                logger.error(f"send interactive card failed, error={resp.body.result.__str__()}")
+                raise RuntimeError(f"send interactive card failed, error={resp.body.result.__str__()}")
             return resp
         else:
+            logger.error(f"send interactive card error, status_code={resp.status_code} result={resp.body.__str__()}")
             raise RuntimeError(resp)
 
     def update(self, user_id: Optional[str]):
