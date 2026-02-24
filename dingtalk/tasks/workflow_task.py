@@ -15,6 +15,7 @@ from dingtalk.Models.dingtalk_card_struct import SpaceTypeEnum
 from dingtalk.Models.request_data_model import ReqDataModel
 from dingtalk.services.argo_workflows_service import ArgoWorkflowsService
 from dingtalk.services.dingtalk_client import DingTalkClient
+from dingtalk_bot.settings import UPDATE_INTERVAL_SECONDS
 from utils.markdown_template import parse_user_name_from_git_log
 
 logger = logging.getLogger("dingtalk_bot")
@@ -130,7 +131,7 @@ def monitor_workflow_status(self, namespace: str, task_name: str, out_track_id: 
 
     for _ in range(MAX_RETRY):
         R+=1
-        time.sleep(20)
+        time.sleep(UPDATE_INTERVAL_SECONDS)
         try:
             # 1. 查状态
             task_data = service.get_result(namespace, task_name)
