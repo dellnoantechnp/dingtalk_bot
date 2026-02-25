@@ -46,7 +46,7 @@ ARGO_WORKFLOWS_TOKEN = os.environ.get("ARGO_WORKFLOWS_TOKEN", "undefined")
 ARGO_WORKFLOWS_WORKER_NAMESPACE = os.environ.get("ARGO_WORKFLOWS_WORKER_NAMESPACE", "Undefined_workflows_task_namespace")
 
 # update card interval
-UPDATE_INTERVAL_SECONDS = os.environ.get("UPDATE_INTERVAL_SECONDS", "20")
+UPDATE_INTERVAL_SECONDS = int(os.environ.get("UPDATE_INTERVAL_SECONDS", "20"))
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
