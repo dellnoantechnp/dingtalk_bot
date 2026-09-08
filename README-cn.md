@@ -1,5 +1,7 @@
 # dingtalk-bot
 
+[English description](./README.md)
+
 一个向钉钉即时通讯推送 CICD 交互消息的机器人服务。
 
 ## 项目简介

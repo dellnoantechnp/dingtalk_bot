@@ -1,5 +1,8 @@
 # dingtalk-bot
 
+[中文说明](./README-cn.md)
+
+
 A CICD interactive card message sender to DingTalk IM.
 
 ## Overview
